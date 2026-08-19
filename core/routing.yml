@@ -2,7 +2,7 @@ version: 1
 default_profile: balanced
 profiles:
   balanced:
-    description: Reliable default for general coding and refactors
+    description: Cost-aware daily coding default with open-weight lead and frontier escalation
     roles:
       default:
         primary: z-ai/glm-5.3

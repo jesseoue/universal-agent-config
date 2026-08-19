@@ -110,6 +110,159 @@ The optimized default follows a cost-aware escalation ladder:
 
 Escalation is explicit: cheap/open lanes run first, DeepSeek Pro handles deep planning, and frontier spend is reserved for high blast radius or repeated cheap-model failure. This mirrors the OpenConfig model rather than blindly putting the most expensive model at every turn.
 
+## Cost-saving workflow patterns
+
+The savings do not come from one magic model. They come from separating planning, execution, background work, and review, then giving each stage only the context and model it needs.
+
+### 1. Plan first, then execute in bounded steps
+
+Use the read-only planning lane before spending implementation turns:
+
+```text
+Plan this change, but do not edit files.
+Read the affected code and return:
+1. Current behavior
+2. Files that must change
+3. Risks and blast radius
+4. Rollback plan
+5. Exact verification commands
+6. An ordered implementation plan with reversible steps
+```
+
+Then implement only a bounded slice:
+
+```text
+Implement steps 1-3 only. Stop after the targeted checks and report results.
+Do not start steps 4+.
+```
+
+Why it saves money:
+
+- The expensive planning model produces a compact plan once.
+- The daily lead executes smaller, better-specified edits.
+- You avoid long exploratory tool loops when the route is already known.
+- Read-only planning cannot accidentally create a large cleanup diff.
+
+### 2. Fan out bounded sub-agents
+
+Use parallel sub-agents for independent investigation, not for loosely related work. Give each one a narrow question and a hard stopping point:
+
+```text
+Use three read-only sub-agents:
+
+Agent 1: Map every caller of getUserBillingState.
+Agent 2: Trace the wallet ledger write path and identify transaction boundaries.
+Agent 3: Find tests that cover billing state and report gaps.
+
+Each agent may use at most 3 read/search turns, must not edit files, and must return:
+- exact file:line references
+- one confidence level per claim
+- unknowns that need runtime verification
+
+Then synthesize the findings into one implementation plan.
+```
+
+Good sub-agent boundaries:
+
+| Pattern | Use it for | Boundary |
+| --- | --- | --- |
+| Investigator | Trace callers, data flow, or dependencies | Read-only, 3 turns, cite file:line |
+| Test auditor | Map test coverage and reproduce failures | Read/run only, no fixes |
+| Plan reviewer | Attack a proposed migration or rollout plan | Read-only, return risks and rollback checks |
+| Implementation worker | Apply one already-planned step | One bounded task, targeted checks, then stop |
+
+Avoid “research everything and report back” sub-agents. If the question cannot be answered in three focused turns, split it into smaller questions.
+
+### 3. Budget turns and tool loops
+
+Unbounded retries are the most common hidden cost. Ask for explicit loop limits:
+
+```text
+Fix the failing test with this loop budget:
+- reproduce once
+- diagnose once
+- apply one focused fix
+- run the narrowest relevant test
+- repeat at most 3 times
+
+If it still fails, stop. Report the exact error, what changed, the commands run, and
+the next best diagnostic step. Do not rewrite unrelated code to make the test pass.
+```
+
+Useful loop policies:
+
+| Loop | Recommended budget | Stop condition |
+| --- | --- | --- |
+| Reproduce and diagnose | 1-2 turns | Exact failing command and error captured |
+| Fix and retest | 3 cycles max | Still failing after third focused attempt |
+| Dependency research | 3 lookups max | Enough evidence to decide, not exhaustive research |
+| Refactor expansion | One dependency layer | Stop when unrelated consumers appear |
+
+### 4. Keep housekeeping on the cheap lane
+
+Never use the frontier lane for work that does not need it:
+
+```text
+Generate only:
+- a 50-character title
+- a 3-bullet summary
+- a compact handoff note with commands and blockers
+```
+
+Route titles, summaries, compaction, formatting, and simple classification to the background model. Keep the main thread for decisions and tool-driven coding.
+
+### 5. Reset context deliberately
+
+Long threads make every turn more expensive because the agent reprocesses stale context. Use this reset pattern:
+
+```text
+Create a fresh thread with this handoff:
+1. Goal in one sentence
+2. Files already changed
+3. Verification already run
+4. Remaining work
+5. Exact next command or edit
+```
+
+Reset when:
+
+- the task moves from research to implementation
+- the model family or base URL changes
+- a bug fix is complete and unrelated work begins
+- the conversation contains many failed attempts
+- a fresh reviewer should evaluate the result
+
+## Modeled monthly savings
+
+This is a transparent model, not a guarantee. Your savings depend on token volume, cache hit rate, provider availability, and how aggressively you use the workflow patterns above.
+
+Assumptions:
+
+- 10,000,000 input tokens and 1,000,000 output tokens per month
+- Prices checked from the live OpenRouter catalog on 2026-08-19
+- Blended profile: 65% daily lead, 15% deep planning, 10% background, 10% frontier
+- Cache-read savings are excluded, so actual cost can be lower
+
+| Strategy | Input mix | Output mix | Monthly cost | Saving vs all Opus | Saving vs all Sonnet |
+| --- | --- | --- | ---: | ---: | ---: |
+| All Claude Opus 5 | 100% Opus | 100% Opus | `$75.00` | — | — |
+| All Claude Sonnet 5 | 100% Sonnet | 100% Sonnet | `$30.00` | `$45.00` | — |
+| Universal balanced blend | GLM 5.3 / DeepSeek Pro / Laguna / Sonnet | Same split | `$20.86` | `$54.14` | `$13.64` |
+
+At that volume, the balanced blend is about **72% cheaper than all-Opus** and **45% cheaper than all-Sonnet**. At 50M input / 5M output tokens per month, the same mix scales to roughly **$270.72/month saved versus Opus** and **$68.22/month saved versus Sonnet**.
+
+The larger gain is usually behavioral: planning once, using cheap background models, bounding retries, and resetting context can reduce both prompt size and wasted turns before price-per-token even matters.
+
+Per-token prices used:
+
+| Model | Input per 1M tokens | Output per 1M tokens |
+| --- | ---: | ---: |
+| Poolside Laguna S 2.1 | `$0.09` | `$0.18` |
+| GLM 5.3 | `$1.40` | `$4.40` |
+| DeepSeek V4 Pro 0813 | `$0.66` | `$1.98` |
+| Claude Sonnet 5 | `$2.00` | `$10.00` |
+| Claude Opus 5 | `$5.00` | `$25.00` |
+
 ### Native translations
 
 | Agent | How the routing model is expressed |
@@ -205,7 +358,7 @@ Available profiles:
 
 | Profile | Strategy |
 | --- | --- |
-| `balanced` | Frontier default with open-weight fallbacks |
+| `balanced` | Cost-aware GLM lead with DeepSeek planning and deliberate frontier escalation |
 | `open-weight` | Open-weight-first routing |
 | `low-cost` | Cheap high-volume routing |
 | `frontier` | Maximum-quality frontier routing |
@@ -230,9 +383,8 @@ bash tests/test_installer.sh
 
 ## CI/CD
 
-Every pull request runs:
+Every push to `main` and every pull request runs:
 
-- OpenRouter catalog refresh
 - Deterministic generation
 - Structural and cross-reference validation
 - Pytest generation tests
@@ -241,7 +393,7 @@ Every pull request runs:
 - Gitleaks secret scan
 - Stale generated-artifact detection
 
-Daily jobs detect OpenRouter model drift and fail when canonical metadata changes.
+The scheduled CI job and the dedicated model-drift workflow detect OpenRouter metadata changes. The drift workflow refreshes the canonical catalog, regenerates artifacts, and fails when the checked-in model metadata is stale.
 
 Tagged releases run the full verification suite before creating a GitHub Release.
 
