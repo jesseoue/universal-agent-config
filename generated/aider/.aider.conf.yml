@@ -1,5 +1,5 @@
-model: openrouter/anthropic/claude-sonnet-5
-editor-model: openrouter/deepseek/deepseek-v4-flash-0731
+model: openrouter/z-ai/glm-5.3
+editor-model: openrouter/poolside/laguna-s-2.1
 map-tokens: 4096
 auto-commits: false
 dirty-commits: false

@@ -1,13 +1,16 @@
 model_list:
 - model_name: uac-default
   litellm_params:
-    model: openrouter/anthropic/claude-sonnet-5
-- model_name: uac-default
-  litellm_params:
-    model: openrouter/deepseek/deepseek-v4-pro-0813
-- model_name: uac-default
-  litellm_params:
     model: openrouter/z-ai/glm-5.3
+- model_name: uac-default
+  litellm_params:
+    model: openrouter/moonshotai/kimi-k2.7-code
+- model_name: uac-default
+  litellm_params:
+    model: openrouter/poolside/laguna-s-2.1
+- model_name: uac-background
+  litellm_params:
+    model: openrouter/poolside/laguna-s-2.1
 - model_name: uac-background
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash-0731
@@ -38,6 +41,7 @@ router_settings:
     - uac-default
     - uac-default
   - uac-background:
+    - uac-background
     - uac-background
   - uac-reasoning:
     - uac-reasoning

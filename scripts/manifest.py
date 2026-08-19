@@ -5,7 +5,7 @@ from pathlib import Path
 from common import dump_json
 
 ADAPTERS = {
-    "opencode": ["opencode.json", "AGENTS.md"],
+    "opencode": ["opencode.json", "AGENTS.md", "omo.jsonc"],
     "omp": ["config.yml", "models.yml", "mcp.json"],
     "claude-code": ["settings.json", "CLAUDE.md", ".mcp.json"],
     "codex": ["config.toml", "AGENTS.md"],
@@ -24,12 +24,14 @@ ADAPTERS = {
 }
 
 
-def generate_manifest(models, routing, policy) -> None:
+def generate_manifest(models, routing, policy, starters) -> None:
     manifest = {
         "name": "universal-agent-config",
         "version": 1,
         "updated": str(models["updated"]),
         "default_profile": routing["default_profile"],
+        "default_starter": starters["default_starter"],
+        "starter_count": len(starters["starters"]),
         "adapters": ADAPTERS,
         "model_count": len(models["models"]),
     }

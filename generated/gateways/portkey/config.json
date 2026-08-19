@@ -6,13 +6,13 @@
     {
       "name": "default",
       "override_params": {
-        "model": "anthropic/claude-sonnet-5"
+        "model": "z-ai/glm-5.3"
       }
     },
     {
       "name": "background",
       "override_params": {
-        "model": "deepseek/deepseek-v4-flash-0731"
+        "model": "poolside/laguna-s-2.1"
       }
     },
     {

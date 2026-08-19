@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 
 from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
-def generate_aider(models, routing, policy, providers) -> None:
+def generate_aider(models, routing, policy, providers, starters=None) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     default_model = profile["roles"]["default"]["primary"]
     config = {

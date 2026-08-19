@@ -32,22 +32,23 @@ def main() -> None:
     providers = load_yaml(ROOT / "core" / "providers.yml")
     gateways = load_yaml(ROOT / "core" / "gateways.yml")
     tools = load_yaml(ROOT / "core" / "tools.yml")
+    starters = load_yaml(ROOT / "core" / "starters.yml")
 
     if GENERATED.exists():
         shutil.rmtree(GENERATED)
     GENERATED.mkdir(parents=True)
 
-    generate_opencode(models, routing, policy, providers)
-    generate_omp(models, routing, policy, providers)
-    generate_claude_code(models, routing, policy, providers, tools)
-    generate_codex(models, routing, policy, providers, tools)
-    generate_cursor(models, routing, policy, providers)
-    generate_aider(models, routing, policy, providers)
-    generate_goose(models, routing, policy, providers, tools)
+    generate_opencode(models, routing, policy, providers, starters)
+    generate_omp(models, routing, policy, providers, starters)
+    generate_claude_code(models, routing, policy, providers, tools, starters)
+    generate_codex(models, routing, policy, providers, tools, starters)
+    generate_cursor(models, routing, policy, providers, starters)
+    generate_aider(models, routing, policy, providers, starters)
+    generate_goose(models, routing, policy, providers, tools, starters)
     generate_gateway_configs(models, routing, policy, providers, gateways)
     generate_provider_taxonomy(providers)
     generate_tool_contract(tools)
-    generate_manifest(models, routing, policy)
+    generate_manifest(models, routing, policy, starters)
 
     print("Generated adapters:", ", ".join(sorted(p.name for p in GENERATED.iterdir() if p.is_dir())))
 

@@ -112,7 +112,7 @@ doctor() {
   local failed=false
   local destination target
   local installed=0
-  local supported=5
+  local supported=6
 
   echo "Universal Agent Config doctor"
   if [[ "$(id -u)" != 0 ]]; then
@@ -136,6 +136,7 @@ doctor() {
 
   local destinations=(
     "$DEST_HOME/opencode/opencode.json"
+    "$HOME/.omo/omo.jsonc"
     "$HOME/.omp/agent/config.yml"
     "$HOME/.claude/settings.json"
     "$HOME/.codex/config.toml"
@@ -168,6 +169,7 @@ uninstall_all() {
   local destinations=(
     "$DEST_HOME/opencode/opencode.json"
     "$DEST_HOME/opencode/AGENTS.md"
+    "$HOME/.omo/omo.jsonc"
     "$HOME/.omp/agent/config.yml"
     "$HOME/.omp/agent/models.yml"
     "$HOME/.omp/agent/mcp.json"
@@ -209,6 +211,7 @@ case "$AGENT" in
     [[ "$DRY_RUN" == true ]] || mkdir -p "$target"
     install_file "$REPO/generated/opencode/opencode.json" "$target/opencode.json"
     install_file "$REPO/generated/opencode/AGENTS.md" "$target/AGENTS.md"
+    install_file "$REPO/generated/opencode/omo.jsonc" "$HOME/.omo/omo.jsonc"
     ;;
   omp)
     target="$HOME/.omp/agent"

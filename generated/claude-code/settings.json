@@ -1,7 +1,9 @@
 {
   "env": {
+    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+    "ANTHROPIC_API_KEY": "${OPENROUTER_API_KEY}",
     "ANTHROPIC_MODEL": "anthropic/claude-sonnet-5",
-    "ANTHROPIC_SMALL_FAST_MODEL": "deepseek/deepseek-v4-flash-0731",
+    "ANTHROPIC_SMALL_FAST_MODEL": "anthropic/claude-haiku-4.5",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
   },
   "permissions": {
@@ -9,15 +11,22 @@
       "Read",
       "Edit",
       "Bash",
-      "WebFetch"
+      "WebFetch",
+      "WebSearch"
     ],
     "deny": [
       "Bash(rm -rf *)",
-      "Read(.env)",
-      "Read(**/.env)",
+      "Read(**/.env*)",
+      "Read(**/.dev.vars*)",
       "Read(**/secrets/**)"
     ]
   },
   "model": "anthropic/claude-sonnet-5",
-  "fallbackModel": "deepseek/deepseek-v4-pro-0813"
+  "fallbackModel": [
+    "anthropic/claude-opus-5",
+    "anthropic/claude-haiku-4.5"
+  ],
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 500000,
+  "effortLevel": "high"
 }

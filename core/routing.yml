@@ -5,19 +5,42 @@ profiles:
     description: Reliable default for general coding and refactors
     roles:
       default:
-        primary: anthropic/claude-sonnet-5
+        primary: z-ai/glm-5.3
         fallbacks:
-          - deepseek/deepseek-v4-pro-0813
-          - z-ai/glm-5.3
+          - moonshotai/kimi-k2.7-code
+          - poolside/laguna-s-2.1
       background:
-        primary: deepseek/deepseek-v4-flash-0731
+        primary: poolside/laguna-s-2.1
         fallbacks:
+          - deepseek/deepseek-v4-flash-0731
           - google/gemini-3.7-flash
       reasoning:
         primary: deepseek/deepseek-v4-pro-0813
         fallbacks:
           - anthropic/claude-opus-5
           - anthropic/claude-sonnet-5
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5
+  implement:
+    description: Edit-capable implementation worker with bounded delegation
+    roles:
+      default:
+        primary: z-ai/glm-5.3
+        fallbacks:
+          - qwen/qwen3.8-max
+          - poolside/laguna-s-2.1
+          - meituan/longcat-2.0
+      background:
+        primary: poolside/laguna-s-2.1
+        fallbacks:
+          - deepseek/deepseek-v4-flash-0731
+      reasoning:
+        primary: deepseek/deepseek-v4-pro-0813
+        fallbacks:
+          - z-ai/glm-5.3
+          - moonshotai/kimi-k2.7-code
       vision:
         primary: google/gemini-3.7-flash
         fallbacks:

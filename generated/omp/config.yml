@@ -1,27 +1,40 @@
 modelRoles:
-  default: openrouter/anthropic/claude-sonnet-5
-  smol: openrouter/deepseek/deepseek-v4-flash-0731
+  default: openrouter/z-ai/glm-5.3
+  smol: openrouter/poolside/laguna-s-2.1
   slow: openrouter/deepseek/deepseek-v4-pro-0813
   plan: openrouter/deepseek/deepseek-v4-pro-0813
   vision: openrouter/google/gemini-3.7-flash
-  designer: openrouter/anthropic/claude-sonnet-5
-  commit: openrouter/deepseek/deepseek-v4-flash-0731
-  tiny: openrouter/deepseek/deepseek-v4-flash-0731
+  designer: openrouter/z-ai/glm-5.3
+  commit: openrouter/poolside/laguna-s-2.1
+  tiny: openrouter/poolside/laguna-s-2.1
+  task: openrouter/z-ai/glm-5.3
+  advisor: openrouter/deepseek/deepseek-v4-pro-0813
 retry:
   maxRetries: 5
   modelFallback: true
   fallbackRevertPolicy: cooldown-expiry
   fallbackChains:
     default:
-    - deepseek/deepseek-v4-pro-0813
-    - z-ai/glm-5.3
+    - moonshotai/kimi-k2.7-code
+    - poolside/laguna-s-2.1
     smol:
+    - deepseek/deepseek-v4-flash-0731
     - google/gemini-3.7-flash
     slow:
     - anthropic/claude-opus-5
     - anthropic/claude-sonnet-5
     vision:
     - anthropic/claude-sonnet-5
+cycleOrder:
+- smol
+- default
+- slow
+modelProviderOrder:
+- openrouter
+advisor:
+  enabled: true
+  syncBacklog: 'off'
+  immuneTurns: 3
 tools:
   read: true
   edit: true
@@ -40,6 +53,7 @@ thinkingBudgets:
 compaction:
   strategy: snapcompact
   reserveTokens: 16384
+  midTurnEnabled: true
   keepRecentTokens: 20000
   autoContinue: true
 logging:

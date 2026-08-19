@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+  "models": {
+    "default": {
+      "model": "openrouter/z-ai/glm-5.3"
+    },
+    "fast": {
+      "model": "openrouter/poolside/laguna-s-2.1"
+    },
+    "reasoning": {
+      "model": "openrouter/deepseek/deepseek-v4-pro-0813"
+    }
+  },
+  "telemetry": {
+    "enabled": false
+  },
+  "[opencode]": {
+    "agents": {
+      "sisyphus": {
+        "model": "default",
+        "reasoning": "medium"
+      },
+      "hephaestus": {
+        "model": "default",
+        "reasoning": "high"
+      },
+      "prometheus": {
+        "model": "reasoning",
+        "reasoning": "high"
+      },
+      "librarian": {
+        "model": "fast"
+      },
+      "explore": {
+        "model": "fast"
+      },
+      "oracle": {
+        "model": "reasoning",
+        "reasoning": "high"
+      }
+    },
+    "background_task": {
+      "defaultConcurrency": 10,
+      "staleTimeoutMs": 180000,
+      "providerConcurrency": {
+        "openrouter": 12
+      },
+      "modelConcurrency": {
+        "openrouter/z-ai/glm-5.3": 8,
+        "openrouter/poolside/laguna-s-2.1": 10,
+        "openrouter/deepseek/deepseek-v4-pro-0813": 5,
+        "openrouter/nousresearch/hermes-4-405b": 2
+      },
+      "maxDepth": 2,
+      "maxToolCalls": 200,
+      "circuitBreaker": {
+        "enabled": true,
+        "maxToolCalls": 160,
+        "consecutiveThreshold": 8
+      }
+    },
+    "mcp_env_allowlist": [
+      "CONTEXT7_API_KEY"
+    ],
+    "tmux": {
+      "enabled": false
+    }
+  }
+}

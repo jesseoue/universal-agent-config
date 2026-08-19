@@ -63,15 +63,9 @@ def generate_tool_contract(tools) -> None:
     }
     dump_yaml(omp_config, omp_config_path)
 
-    # OpenCode already carries MCP and logging; normalize permission fields.
+    # OpenCode already carries MCP, logging, and native starter permissions.
     opencode_path = Path("generated") / "opencode" / "opencode.json"
     opencode = load_json(opencode_path)
-    opencode["permission"] = {
-        "read": "allow" if tool_profile["read"] else "deny",
-        "edit": "allow" if tool_profile["edit"] else "deny",
-        "bash": "allow" if tool_profile["shell"] else "deny",
-        "webfetch": "allow" if tool_profile["browser"] else "deny",
-    }
     opencode["logLevel"] = logging["level"].upper()
     opencode["tool_output"] = logging["tool_output"]
     dump_json(opencode, opencode_path)
@@ -80,11 +74,11 @@ def generate_tool_contract(tools) -> None:
     claude_path = Path("generated") / "claude-code" / "settings.json"
     claude = load_json(claude_path)
     claude["permissions"] = {
-        "allow": ["Read"] + (["Edit", "Bash", "WebFetch"] if tool_profile["edit"] else []),
+        "allow": ["Read"] + (["Edit", "Bash", "WebFetch", "WebSearch"] if tool_profile["edit"] else []),
         "deny": [
             "Bash(rm -rf *)",
-            "Read(.env)",
-            "Read(**/.env)",
+            "Read(**/.env*)",
+            "Read(**/.dev.vars*)",
             "Read(**/secrets/**)",
         ],
     }

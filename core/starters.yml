@@ -1,0 +1,133 @@
+version: 2
+description: Opinionated starting points translated into each agent's native model-role system.
+default_starter: balanced
+philosophy:
+  principle: Cheap fast turns by default, deliberate expensive reasoning only when the task earns it.
+  frontier_policy: Never make frontier spend the default. Escalate only for architecture, high-blast-radius changes, or repeated cheap-model failure.
+  provider_policy: Prefer OpenRouter so every adapter shares one catalog, one key, and one routing vocabulary.
+starters:
+  balanced:
+    description: Daily coding lane with strong tool behavior and cost discipline.
+    routing_profile: balanced
+    agent: sisyphus
+    primary_model: z-ai/glm-5.3
+    background_model: poolside/laguna-s-2.1
+    deep_model: deepseek/deepseek-v4-pro-0813
+    frontier_model: anthropic/claude-sonnet-5
+    fallback_models:
+      - moonshotai/kimi-k2.7-code
+      - poolside/laguna-s-2.1
+      - qwen/qwen3.8-max
+    reasoning_effort: medium
+    background_model_role: background
+    mcp_server: context7
+    timeout:
+      request_seconds: 300
+      stalled_chunk_seconds: 60
+      mcp_seconds: 30
+  review:
+    description: Read-only review lane that never edits files.
+    routing_profile: balanced
+    agent: review
+    reasoning_effort: high
+    background_model_role: background
+    mcp_server: context7
+    permissions:
+      read: true
+      edit: false
+      shell: false
+      browser: true
+      web_search: true
+  plan:
+    description: Deep planning lane; use frontier only when blast radius justifies the spend.
+    routing_profile: balanced
+    agent: prometheus
+    primary_model: deepseek/deepseek-v4-pro-0813
+    background_model: deepseek/deepseek-v4-flash-0731
+    frontier_model: anthropic/claude-opus-5
+    fallback_models:
+      - z-ai/glm-5.3
+      - moonshotai/kimi-k2.7-code
+      - qwen/qwen3.8-max
+    reasoning_effort: high
+    background_model_role: background
+    mcp_server: context7
+    permissions:
+      read: true
+      edit: false
+      shell: false
+      browser: true
+      web_search: true
+  content:
+    description: Toolless long-form analysis and sensitive-content review.
+    routing_profile: content-analysis
+    agent: analyze
+    reasoning_effort: medium
+    background_model_role: background
+    mcp_server: null
+    permissions:
+      read: true
+      edit: false
+      shell: false
+      browser: false
+      web_search: false
+  implement:
+    description: Edit-capable implementation worker for bounded code changes.
+    routing_profile: balanced
+    agent: hephaestus
+    primary_model: z-ai/glm-5.3
+    background_model: poolside/laguna-s-2.1
+    deep_model: deepseek/deepseek-v4-pro-0813
+    fallback_models:
+      - qwen/qwen3.8-max
+      - poolside/laguna-s-2.1
+      - meituan/longcat-2.0
+    reasoning_effort: high
+    permissions:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+adapters:
+  opencode:
+    pin: oh-my-openagent@4.19.4
+    native_starters:
+      sisyphus: balanced
+      hephaestus: implement
+      prometheus: plan
+      review: review
+      analyze: content
+    housekeeping_model: poolside/laguna-s-2.1
+  omp:
+    role_overrides:
+      default: balanced
+      smol: balanced
+      slow: plan
+      plan: plan
+      task: balanced
+      advisor: plan
+  claude-code:
+    provider: openrouter-anthropic-compatible
+    base_url: https://openrouter.ai/api
+    model: anthropic/claude-sonnet-5
+    fallback_model: anthropic/claude-opus-5
+    small_fast_model: anthropic/claude-haiku-4.5
+    rationale: Claude Code supports Anthropic-compatible LLM gateways through ANTHROPIC_BASE_URL, preserving the single OpenRouter key model.
+  codex:
+    native_starters:
+      default: balanced
+      subagent: balanced
+      reasoning: plan
+    agents:
+      enabled: true
+      max_concurrent_threads: 4
+      default_subagent_model: z-ai/glm-5.3
+      default_subagent_reasoning_effort: medium
+  cursor:
+    rule_starter: balanced
+  aider:
+    model_starter: balanced
+  goose:
+    model_starter: balanced
+    planner_starter: plan

@@ -7,13 +7,14 @@ from common import dump_json, dump_toml, dump_yaml, load_json, load_yaml, model_
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def generate_goose(models, routing, policy, providers, tools=None) -> None:
+def generate_goose(models, routing, policy, providers, tools=None, starters=None) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     provider = providers["openrouter"]
     default_model = profile["roles"]["default"]["primary"]
     contract = (tools or load_yaml(ROOT / "core" / "tools.yml"))["contract"]
     tool_profile = contract["profiles"][routing["default_profile"]]
     logging = contract["logging"]
+    adapter = (starters or load_yaml(ROOT / "core" / "starters.yml"))["adapters"]["goose"]
 
     config = {
         "default": {
@@ -21,6 +22,11 @@ def generate_goose(models, routing, policy, providers, tools=None) -> None:
             "model": default_model,
             "temperature": 0.2,
         },
+        "GOOSE_PLANNER_PROVIDER": "openrouter",
+        "GOOSE_PLANNER_MODEL": routing["profiles"]["balanced"]["roles"]["reasoning"]["primary"],
+        "GOOSE_MAX_TURNS": 100,
+        "GOOSE_AUTO_COMPACT_THRESHOLD": 0.8,
+        "GOOSE_TELEMETRY_ENABLED": False,
         "provider": {
             "openrouter": {
                 "base_url": provider["base_url"],

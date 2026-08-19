@@ -14,7 +14,7 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 
 | | |
 | --- | --- |
-| **Agents** | OpenCode · omp · Claude Code · Codex · Cursor · Aider · Goose |
+| **Agents** | OpenCode + OMO · omp · Claude Code · Codex · Cursor · Aider · Goose |
 | **Routing** | OpenRouter · Cloudflare · Vercel · LiteLLM · Portkey |
 | **Taxonomy** | Model gateways · model providers · media providers · inference runtimes |
 | **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
@@ -69,7 +69,7 @@ Remove the symlinks later:
 
 | Agent | Generated config | Install target | Status |
 | --- | --- | --- | --- |
-| OpenCode | `opencode.json` + `AGENTS.md` | `~/.config/opencode` | Generated |
+| OpenCode + OMO | `opencode.json`, `AGENTS.md`, `omo.jsonc` | `~/.config/opencode` + `~/.omo` | Generated |
 | omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` | Generated |
 | Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` | Generated |
 | Codex | `config.toml` + `AGENTS.md` | `~/.codex` | Generated |
@@ -88,6 +88,33 @@ Generated means the native config is produced and structurally validated. It doe
 | Vercel AI Gateway | Developer gateway | Vercel-native apps, OIDC auth, provider failover, and spend visibility | Strongest when your runtime also lives on Vercel |
 | LiteLLM Proxy | Self-hosted proxy | Direct provider contracts, Azure/Bedrock/Vertex, virtual keys, budgets | You operate the proxy and its state |
 | Portkey AI Gateway | Managed governance gateway | Guardrails, audit, policy, and managed failover | External account and routing policy state |
+
+## Opinionated routing model
+
+The optimized default follows a cost-aware escalation ladder:
+
+| Lane | Default model | Use it for | Why |
+| --- | --- | --- | --- |
+| Daily lead | GLM 5.3 | Tool loops, orchestration, ordinary coding | Strong tool behavior without frontier pricing |
+| Cheap worker | Laguna S 2.1 | Titles, summaries, compaction, bounded subagents | High throughput and low cost |
+| Deep work | DeepSeek V4 Pro 0813 | Planning, architecture, difficult debugging | Deliberate quality escalation |
+| Frontier | Claude Sonnet/Opus | High-blast-radius or repeated-failure work | Explicit opt-in spend, not a daily default |
+| Vision | Gemini Flash | Screenshots and multimodal input | Fast, inexpensive image lane |
+| Analysis | Hermes 4 405B | Toolless long-form analysis | Isolated because it does not support tool calls |
+
+Escalation is explicit: cheap/open lanes run first, DeepSeek Pro handles deep planning, and frontier spend is reserved for high blast radius or repeated cheap-model failure. This mirrors the OpenConfig model rather than blindly putting the most expensive model at every turn.
+
+### Native translations
+
+| Agent | How the routing model is expressed |
+| --- | --- |
+| OpenCode + OMO | GLM lead, cheap title/summary/compaction agents, DeepSeek planning, review/analysis agents, OMO concurrency/circuit-breaker caps |
+| omp | `modelRoles` for default/smol/slow/plan/task/advisor, ordered fallback chains, snapcompact, tool output and approval limits |
+| Claude Code | Anthropic-compatible OpenRouter gateway, native model and capped fallback chain, small-fast model, auto-compact and effort settings |
+| Codex | OpenRouter `model_providers`, medium main reasoning, GLM default subagent model, bounded concurrent agent threads, provider/MCP timeouts |
+| Goose | OpenRouter default model, dedicated DeepSeek planner model, 100-turn cap, 80% auto-compact threshold, disabled telemetry |
+| Cursor | Rule-based routing guidance for lead, deep, background, and vision lanes |
+| Aider | GLM default with cheap editor-model lane |
 
 ## Tool, plugin, and MCP contract
 
@@ -116,11 +143,11 @@ Adapter-specific output:
 
 | Adapter | Tool/MCP output |
 | --- | --- |
-| OpenCode | Permission rules, remote MCP, error logging, tool output caps |
-| omp | Tool flags, approval mode, HTTP MCP, logging redaction |
-| Claude Code | Permission arrays, `.mcp.json`, nonessential traffic disabled |
-| Codex | `model_providers`, MCP servers, sandbox/approval policy, logging |
-| Goose | Extensions, permission mode, tool flags, OTel disabled |
+| OpenCode + OMO | Native starter agents, remote MCP, error logging, tool output caps, pinned OMO plugin, unified `omo.jsonc` |
+| omp | Role models, fallback chains, tool flags, approval mode, HTTP MCP, logging redaction |
+| Claude Code | Permission arrays, `.mcp.json`, nonessential traffic disabled, OpenRouter Anthropic-compatible gateway |
+| Codex | `model_providers`, MCP servers, sandbox/approval policy, agent defaults, logging |
+| Goose | Extensions, permission mode, tool flags, planner model, OTel disabled |
 
 ## Provider and media taxonomy
 

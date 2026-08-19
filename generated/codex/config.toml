@@ -1,6 +1,8 @@
-model = "anthropic/claude-sonnet-5"
+model = "z-ai/glm-5.3"
 model_provider = "openrouter"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
+model_reasoning_summary = "concise"
+model_verbosity = "low"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 log_level = "error"
@@ -9,6 +11,10 @@ log_level = "error"
 name = "OpenRouter"
 base_url = "https://openrouter.ai/api/v1"
 env_key = "OPENROUTER_API_KEY"
+request_max_retries = 5
+stream_idle_timeout_ms = 60000
+stream_max_retries = 5
+wire_api = "responses"
 
 [model_providers.openrouter.http_headers]
 HTTP-Referer = "https://github.com/jesseoue/universal-agent-config"
@@ -20,6 +26,15 @@ args = [
     "-y",
     "@upstash/context7-mcp",
 ]
+startup_timeout_sec = 10
+tool_timeout_sec = 30
+required = false
 
 [mcp_servers.context7.env]
 CONTEXT7_API_KEY = "${CONTEXT7_API_KEY}"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 4
+default_subagent_model = "z-ai/glm-5.3"
+default_subagent_reasoning_effort = "medium"

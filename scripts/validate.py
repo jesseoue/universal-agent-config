@@ -65,6 +65,7 @@ def validate_generated(models, routing) -> list[str]:
     expected = {
         "opencode/opencode.json",
         "opencode/AGENTS.md",
+        "opencode/omo.jsonc",
         "omp/config.yml",
         "omp/models.yml",
         "omp/mcp.json",
@@ -101,6 +102,8 @@ def validate_generated(models, routing) -> list[str]:
             errors.append("OpenCode generated model set does not match canonical models")
         if config.get("enabled_providers") != ["openrouter"]:
             errors.append("OpenCode config must enable only OpenRouter")
+        if config.get("plugin") != ["oh-my-openagent@4.19.4"]:
+            errors.append("OpenCode config must pin oh-my-openagent")
 
     omp = generated / "omp" / "config.yml"
     if omp.is_file():
@@ -245,12 +248,16 @@ def validate_generated_tool_contract(tools) -> list[str]:
         errors.append("OpenCode log level must be ERROR")
     if opencode["tool_output"]["max_lines"] != 300 or opencode["tool_output"]["max_bytes"] != 12000:
         errors.append("OpenCode tool output limits are incorrect")
-    if opencode["permission"]["bash"] != "allow":
-        errors.append("OpenCode shell permission must be allow for the balanced profile")
     if opencode["mcp"]["context7"]["headers"]["CONTEXT7_API_KEY"] != "{env:CONTEXT7_API_KEY}":
         errors.append("OpenCode Context7 auth header is incorrect")
+    if opencode["agent"]["review"]["tools"]["edit"] is not False:
+        errors.append("OpenCode review starter must disable edit")
+    if opencode["compaction"]["prune"] is not True:
+        errors.append("OpenCode compaction pruning must be enabled")
+    if opencode["permission"]["bash"] != "allow":
+        errors.append("OpenCode shell permission must be allow for the balanced profile")
 
-    if "Read(.env)" not in claude["permissions"]["deny"]:
+    if "Read(**/.env*)" not in claude["permissions"]["deny"]:
         errors.append("Claude Code must deny reading .env files")
     if claude["env"].get("CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC") != "1":
         errors.append("Claude Code nonessential traffic must be disabled")
@@ -263,6 +270,8 @@ def validate_generated_tool_contract(tools) -> list[str]:
         errors.append("Codex config must use model_providers.openrouter")
     if "context7" not in codex.get("mcp_servers", {}):
         errors.append("Codex config must include Context7 MCP")
+    if codex.get("agents", {}).get("enabled") is not True:
+        errors.append("Codex multi-agent tools must be enabled")
 
     claude_mcp = load_json(ROOT / "generated" / "claude-code" / ".mcp.json")
     if "context7" not in claude_mcp.get("mcpServers", {}):
@@ -320,18 +329,61 @@ def validate_gateways(gateways) -> list[str]:
     return errors
 
 
+def validate_starters(models, routing, starters) -> list[str]:
+    errors = []
+    starter_names = set(starters["starters"])
+    if starters["default_starter"] not in starter_names:
+        errors.append("default starter is missing")
+
+    for starter_name, starter in starters["starters"].items():
+        if starter["routing_profile"] not in routing["profiles"]:
+            errors.append(f"starter {starter_name} references unknown routing profile")
+        referenced_models = [
+            starter[key]
+            for key in ("primary_model", "background_model", "deep_model", "frontier_model")
+            if key in starter
+        ] + starter.get("fallback_models", [])
+        for model_id in referenced_models:
+            if model_id not in models["models"]:
+                errors.append(f"starter {starter_name} references unknown model: {model_id}")
+
+    opencode = starters["adapters"]["opencode"]
+    if not opencode.get("pin"):
+        errors.append("OpenCode starter must pin the OMO plugin")
+    for native_starter in opencode["native_starters"].values():
+        if native_starter not in starter_names:
+            errors.append("OpenCode native starter is missing")
+
+    claude = starters["adapters"]["claude-code"]
+    for field in ("model", "fallback_model"):
+        if claude[field] not in models["models"]:
+            errors.append(f"Claude Code starter references unknown model: {claude[field]}")
+
+    codex = starters["adapters"]["codex"]["agents"]
+    if codex["default_subagent_model"] not in models["models"]:
+        errors.append("Codex default subagent model is unknown")
+    if codex["max_concurrent_threads"] < 1:
+        errors.append("Codex concurrent thread cap must be positive")
+
+    if starters["philosophy"].get("frontier_default", False):
+        errors.append("frontier spend must not be the public default")
+    return errors
+
+
 def main() -> int:
     models = load_yaml(ROOT / "core" / "models.yml")
     routing = load_yaml(ROOT / "core" / "routing.yml")
     policy = load_yaml(ROOT / "core" / "policy.yml")
     providers = load_yaml(ROOT / "core" / "providers.yml")
     gateways = load_yaml(ROOT / "core" / "gateways.yml")
+    starters = load_yaml(ROOT / "core" / "starters.yml")
     errors = validate_core(models, routing, policy, providers)
     errors.extend(validate_generated(models, routing))
     errors.extend(validate_gateways(gateways))
     errors.extend(validate_provider_taxonomy(models, providers))
     errors.extend(validate_tool_contract(models, routing, policy, load_yaml(ROOT / "core" / "tools.yml")))
     errors.extend(validate_generated_tool_contract(load_yaml(ROOT / "core" / "tools.yml")))
+    errors.extend(validate_starters(models, routing, starters))
 
     if errors:
         print("Validation failed:")

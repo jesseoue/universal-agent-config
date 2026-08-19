@@ -10,6 +10,31 @@ defaults:
   max_retries: 5
   request_timeout_seconds: 300
   stalled_chunk_timeout_seconds: 60
+performance:
+  description: Default speed and stability policy for agent transports.
+  mcp_timeout_seconds: 30
+  mcp_startup_timeout_seconds: 10
+  reasoning_effort: medium
+  background_uses_small_model: true
+  tool_output:
+    max_lines: 300
+    max_bytes: 12000
+  compaction:
+    auto: true
+    prune: true
+    reserve_tokens: 16384
+    keep_recent_tokens: 20000
+    tail_turns: 2
+  concurrency:
+    default: 10
+    provider: 12
+    expensive: 5
+    analysis: 2
+    max_depth: 2
+  escalation:
+    frontier_default: false
+    trigger_after_failed_attempts: 2
+    high_blast_radius_only: true
 profiles:
   balanced:
     inherits: defaults
@@ -18,6 +43,8 @@ profiles:
   low-cost:
     inherits: defaults
   frontier:
+    inherits: defaults
+  implement:
     inherits: defaults
   content-analysis:
     inherits: defaults

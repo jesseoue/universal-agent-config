@@ -10,6 +10,7 @@ This repository is a canonical model-routing and agent-policy monorepo.
 - `core/providers.yml`: OpenRouter transport and attribution.
 - `core/gateways.yml`: routing-technology matrix and gateway-specific semantics.
 - `core/tools.yml`: canonical tool, MCP, plugin, provider-tool semantics, and logging contract.
+- `core/starters.yml`: opinionated starter lanes and adapter-specific model-role translation.
 - `core/prompts/core.md`: shared agent behavior policy.
 
 ## Rules
@@ -23,6 +24,8 @@ This repository is a canonical model-routing and agent-policy monorepo.
 7. Never commit API keys or local absolute paths.
 8. Keep adapter translation in `scripts/generators/` and shared serialization in `scripts/common.py`.
 9. Add generated-artifact checks when introducing a new adapter or tool interface.
+10. Frontier models are deliberate escalation lanes, not defaults. Keep cheap parallel work on the background model and deep planning on the explicit planning model.
+11. Adapter config keys must be documented by the target agent. If a desired limit is unsupported, record it in the adapter rationale instead of inventing a key.
 
 ## Adapter workflow
 

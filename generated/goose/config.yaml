@@ -1,7 +1,12 @@
 default:
   provider: openrouter
-  model: anthropic/claude-sonnet-5
+  model: z-ai/glm-5.3
   temperature: 0.2
+GOOSE_PLANNER_PROVIDER: openrouter
+GOOSE_PLANNER_MODEL: deepseek/deepseek-v4-pro-0813
+GOOSE_MAX_TURNS: 100
+GOOSE_AUTO_COMPACT_THRESHOLD: 0.8
+GOOSE_TELEMETRY_ENABLED: false
 provider:
   openrouter:
     base_url: https://openrouter.ai/api/v1

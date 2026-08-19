@@ -60,8 +60,9 @@ def test_tool_contract_and_generated_permissions():
     assert omp["logging"]["level"] == "error"
 
     opencode = json.loads((GENERATED / "opencode" / "opencode.json").read_text())
-    assert opencode["permission"]["bash"] == "allow"
     assert opencode["logLevel"] == "ERROR"
+    assert opencode["plugin"] == ["oh-my-openagent@4.19.4"]
+    assert opencode["agent"]["review"]["tools"]["edit"] is False
 
     goose = yaml.safe_load((GENERATED / "goose" / "config.yaml").read_text())
     assert goose["tools"]["shell"] is True
@@ -99,10 +100,36 @@ def test_codex_config():
     config = tomllib.loads((GENERATED / "codex" / "config.toml").read_text())
     assert config["model_provider"] == "openrouter"
     assert config["model_providers"]["openrouter"]["base_url"] == "https://openrouter.ai/api/v1"
+    assert config["agents"]["default_subagent_model"] == "z-ai/glm-5.3"
+    assert config["model_providers"]["openrouter"]["stream_idle_timeout_ms"] == 60000
 
 
 def test_omp_configs():
     config = yaml.safe_load((GENERATED / "omp" / "config.yml").read_text())
     models = yaml.safe_load((GENERATED / "omp" / "models.yml").read_text())
-    assert config["modelRoles"]["default"] == "openrouter/anthropic/claude-sonnet-5"
+    assert config["modelRoles"]["default"] == "openrouter/z-ai/glm-5.3"
     assert models["providers"]["openrouter"]["api"] == "openai-completions"
+
+
+def test_opinionated_starters_and_omo():
+    starters = yaml.safe_load((ROOT / "core" / "starters.yml").read_text())
+    assert starters["starters"]["balanced"]["primary_model"] == "z-ai/glm-5.3"
+    assert starters["starters"]["balanced"]["background_model"] == "poolside/laguna-s-2.1"
+    assert starters["starters"]["plan"]["primary_model"] == "deepseek/deepseek-v4-pro-0813"
+    assert starters["philosophy"]["frontier_policy"].startswith("Never make frontier spend")
+
+    opencode = json.loads((GENERATED / "opencode" / "opencode.json").read_text())
+    omo = json.loads((GENERATED / "opencode" / "omo.jsonc").read_text())
+    assert opencode["plugin"] == ["oh-my-openagent@4.19.4"]
+    assert opencode["permission"]["bash"] == "allow"
+    assert opencode["compaction"]["tail_turns"] == 2
+    assert opencode["agent"]["prometheus"]["model"] == "openrouter/deepseek/deepseek-v4-pro-0813"
+    assert omo["[opencode]"]["background_task"]["defaultConcurrency"] == 10
+    assert omo["telemetry"]["enabled"] is False
+
+
+def test_claude_code_uses_openrouter_anthropic_compatible_gateway():
+    config = json.loads((GENERATED / "claude-code" / "settings.json").read_text())
+    assert config["env"]["ANTHROPIC_BASE_URL"] == "https://openrouter.ai/api"
+    assert config["env"]["ANTHROPIC_API_KEY"] == "${OPENROUTER_API_KEY}"
+    assert config["model"] == "anthropic/claude-sonnet-5"

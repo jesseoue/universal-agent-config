@@ -47,6 +47,13 @@ contract:
       browser: true
       web_search: true
       confirm_destructive_commands: true
+    implement:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+      confirm_destructive_commands: true
     content-analysis:
       read: true
       edit: false

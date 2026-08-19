@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 
 from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
-def generate_omp(models, routing, policy, providers) -> None:
+def generate_omp(models, routing, policy, providers, starters=None) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     provider = providers["openrouter"]
     roles = {
@@ -20,6 +20,8 @@ def generate_omp(models, routing, policy, providers) -> None:
         "designer": profile["roles"]["default"]["primary"],
         "commit": profile["roles"]["background"]["primary"],
         "tiny": profile["roles"]["background"]["primary"],
+        "task": profile["roles"]["default"]["primary"],
+        "advisor": profile["roles"]["reasoning"]["primary"],
     }
 
     chains = {}
@@ -40,6 +42,13 @@ def generate_omp(models, routing, policy, providers) -> None:
             "fallbackRevertPolicy": "cooldown-expiry",
             "fallbackChains": chains,
         },
+        "cycleOrder": ["smol", "default", "slow"],
+        "modelProviderOrder": ["openrouter"],
+        "advisor": {
+            "enabled": True,
+            "syncBacklog": "off",
+            "immuneTurns": 3,
+        },
         "tools": {
             "approvalMode": "normal",
             "bash": {"autoBackground": True},
@@ -56,8 +65,16 @@ def generate_omp(models, routing, policy, providers) -> None:
         "compaction": {
             "strategy": "snapcompact",
             "reserveTokens": 16384,
+            "midTurnEnabled": True,
             "keepRecentTokens": 20000,
+            "midTurnEnabled": True,
             "autoContinue": True,
+        },
+        "tools": {
+            "format": "auto",
+            "approvalMode": "write",
+            "maxTimeout": 300,
+            "outputMaxColumns": 768,
         },
     }
 
