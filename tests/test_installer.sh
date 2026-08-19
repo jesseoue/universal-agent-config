@@ -22,3 +22,10 @@ test -L "$TEMP_HOME/.codex/config.toml"
 test -L "$TEMP_HOME/.config/goose/config.yaml"
 
 echo "installer sandbox tests OK"
+
+HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" doctor >/dev/null
+HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" uninstall >/dev/null
+test ! -e "$TEMP_HOME/.config/opencode/opencode.json"
+test ! -e "$TEMP_HOME/.omp/agent/config.yml"
+
+echo "doctor and uninstall sandbox tests OK"

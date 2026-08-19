@@ -7,10 +7,17 @@ AGENT=""
 PROFILE="${UAC_PROFILE:-balanced}"
 DEST_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 DRY_RUN=false
+VERSION="0.1.0"
+COMMAND="install"
 
 usage() {
   cat <<'EOF'
-Usage: install.sh --agent AGENT [--profile PROFILE] [--dry-run]
+Usage: install.sh [command] --agent AGENT [--dry-run]
+
+Commands:
+  install       Install one agent (default)
+  doctor        Check environment, generated files, and install state
+  uninstall     Remove Universal Agent Config symlinks
 
 Agents:
   opencode     ~/.config/opencode
@@ -32,6 +39,10 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    install|doctor|uninstall)
+      COMMAND="$1"; shift ;;
+    --version) echo "universal-agent-config $VERSION"; exit 0 ;;
+    --all) AGENT="all"; shift ;;
     --agent) AGENT="${2:?missing agent}"; shift 2 ;;
     --profile) PROFILE="${2:?missing profile}"; shift 2 ;;
     --dry-run) DRY_RUN=true; shift ;;
@@ -40,7 +51,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -n "$AGENT" ]] || { usage >&2; exit 2; }
+if [[ "$COMMAND" == "install" && -z "$AGENT" ]]; then
+  usage >&2
+  exit 2
+fi
 
 if [[ "$(id -u)" == 0 ]]; then
   echo "error: refusing to install as root" >&2
@@ -75,7 +89,114 @@ install_file() {
   echo "installed $destination"
 }
 
+uninstall_file() {
+  local destination="$1"
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "would remove $destination"
+    return
+  fi
+  if [[ -L "$destination" ]]; then
+    local target
+    target="$(readlink "$destination")"
+    if [[ "$target" == "$REPO"/generated/* ]]; then
+      rm "$destination"
+      echo "removed $destination"
+    else
+      echo "kept non-UAC symlink: $destination"
+    fi
+  fi
+}
+
+doctor() {
+  local failed=false
+  local destination target
+
+  echo "Universal Agent Config doctor"
+  if [[ "$(id -u)" != 0 ]]; then
+    echo "  ✓ not running as root"
+  else
+    echo "  ✗ running as root"
+    failed=true
+  fi
+  if python3 --version >/dev/null 2>&1; then
+    echo "  ✓ Python 3 available"
+  else
+    echo "  ✗ Python 3 missing"
+    failed=true
+  fi
+  if [[ -f "$REPO/generated/manifest.json" ]]; then
+    echo "  ✓ generated manifest present"
+  else
+    echo "  ✗ generated manifest missing; run scripts/generate.py"
+    failed=true
+  fi
+
+  local destinations=(
+    "$DEST_HOME/opencode/opencode.json"
+    "$HOME/.omp/agent/config.yml"
+    "$HOME/.claude/settings.json"
+    "$HOME/.codex/config.toml"
+    "$DEST_HOME/goose/config.yaml"
+  )
+  for destination in "${destinations[@]}"; do
+    if [[ -L "$destination" ]]; then
+      target="$(readlink "$destination")"
+      if [[ "$target" == "$REPO"/generated/* ]]; then
+        echo "  ✓ installed: $destination"
+      else
+        echo "  ⚠ other symlink: $destination"
+      fi
+    else
+      echo "  - not installed: $destination"
+    fi
+  done
+
+  if [[ "$failed" == true ]]; then
+    echo "Doctor failed."
+    return 1
+  fi
+  echo "Doctor passed."
+}
+
+uninstall_all() {
+  local destinations=(
+    "$DEST_HOME/opencode/opencode.json"
+    "$DEST_HOME/opencode/AGENTS.md"
+    "$HOME/.omp/agent/config.yml"
+    "$HOME/.omp/agent/models.yml"
+    "$HOME/.omp/agent/mcp.json"
+    "$HOME/.claude/settings.json"
+    "$HOME/.claude/CLAUDE.md"
+    "$HOME/.codex/config.toml"
+    "$HOME/.codex/AGENTS.md"
+    "$DEST_HOME/goose/config.yaml"
+    "$PWD/.cursor/rules/universal-agent-config.mdc"
+    "$PWD/.aider.conf.yml"
+  )
+  local destination
+  for destination in "${destinations[@]}"; do
+    uninstall_file "$destination"
+  done
+}
+
+if [[ "$COMMAND" == "doctor" ]]; then
+  doctor
+  exit $?
+fi
+
+if [[ "$COMMAND" == "uninstall" ]]; then
+  uninstall_all
+  exit 0
+fi
+
 case "$AGENT" in
+  all)
+    "$0" install --agent opencode --profile "$PROFILE"
+    "$0" install --agent omp --profile "$PROFILE"
+    "$0" install --agent claude-code --profile "$PROFILE"
+    "$0" install --agent codex --profile "$PROFILE"
+    "$0" install --agent goose --profile "$PROFILE"
+    ;;
   opencode)
     target="$DEST_HOME/opencode"
     [[ "$DRY_RUN" == true ]] || mkdir -p "$target"
@@ -119,4 +240,4 @@ case "$AGENT" in
     ;;
 esac
 
-echo "Done. Profile metadata: $PROFILE (set UAC_PROFILE before generation for future variants)."
+echo "Done. Routing profile metadata: $PROFILE."

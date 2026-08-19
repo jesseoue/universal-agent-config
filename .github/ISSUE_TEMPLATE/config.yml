@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/jesseoue/universal-agent-config/discussions
+    about: Ask questions and share routing setups
+  - name: Security advisories
+    url: https://github.com/jesseoue/universal-agent-config/security/advisories/new
+    about: Report security vulnerabilities privately

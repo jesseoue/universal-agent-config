@@ -1,40 +1,83 @@
-# Universal Agent Config — One Config for Every Coding Agent
+# Universal Agent Config
 
-**Universal Agent Config** is the open-source model-routing and agent-policy framework for people who use more than one AI coding agent. Define your model lanes once, generate native configuration for every major agent, and keep provider drift out of your dotfiles.
+[![CI](https://github.com/jesseoue/universal-agent-config/actions/workflows/ci.yml/badge.svg)](https://github.com/jesseoue/universal-agent-config/actions/workflows/ci.yml)
+[![Model drift](https://github.com/jesseoue/universal-agent-config/actions/workflows/model-drift.yml/badge.svg)](https://github.com/jesseoue/universal-agent-config/actions/workflows/model-drift.yml)
+[![GitHub release](https://img.shields.io/github/v/release/jesseoue/universal-agent-config?display_name=tag&sort=semver)](https://github.com/jesseoue/universal-agent-config/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Open issues](https://img.shields.io/github/issues/jesseoue/universal-agent-config)](https://github.com/jesseoue/universal-agent-config/issues)
+[![Good first issues](https://img.shields.io/github/issues/jesseoue/universal-agent-config/good%20first%20issue?label=good%20first%20issues)](https://github.com/jesseoue/universal-agent-config/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+[![Stars](https://img.shields.io/github/stars/jesseoue/universal-agent-config?style=social)](https://github.com/jesseoue/universal-agent-config/stargazers)
+
+**One config. Seven coding agents. Five routing technologies.**
+
+Universal Agent Config keeps model routing, fallbacks, permissions, and prompts in one canonical repo, then generates native configs for OpenCode, omp, Claude Code, Codex, Cursor, Aider, and Goose.
+
+| | |
+| --- | --- |
+| **Agents** | OpenCode · omp · Claude Code · Codex · Cursor · Aider · Goose |
+| **Routing** | OpenRouter · Cloudflare AI Gateway · Vercel AI Gateway · LiteLLM · Portkey |
+| **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
+| **Install** | User-local · dry-run · backups · uninstall · doctor |
+
+## 30-second start
 
 ```bash
 git clone https://github.com/jesseoue/universal-agent-config.git
 cd universal-agent-config
 ./scripts/install.sh --agent opencode
+./scripts/install.sh doctor
 ```
 
-## Why this exists
+Then set your OpenRouter key:
 
-Every coding agent wants a different file in a different directory. Every model changes monthly. Every routing gateway has different auth, model naming, and failover semantics. The result is config sprawl: OpenCode JSON, omp YAML, Claude Code settings, Codex TOML, Cursor rules, Aider YAML, and Goose YAML, all drifting independently.
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+```
 
-Universal Agent Config fixes that with one canonical source of truth:
+Add another agent without duplicating policy:
 
-- Model routing and fallback lanes
-- Provider and gateway routing strategy
-- Tool permissions and safety defaults
-- Shared agent behavior policy
-- Generated native configuration for every supported agent
+```bash
+./scripts/install.sh --agent claude-code
+./scripts/install.sh --agent codex
+./scripts/install.sh --agent goose
+```
 
-## Supported coding agents
+Preview everything before touching your machine:
 
-| Agent | Generated config | Install target |
-| --- | --- | --- |
-| OpenCode | `opencode.json` + `AGENTS.md` | `~/.config/opencode` |
-| omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` |
-| Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` |
-| Codex | `config.toml` + `AGENTS.md` | `~/.codex` |
-| Cursor | `.cursor/rules/universal-agent-config.mdc` | Project `.cursor/rules/` |
-| Aider | `.aider.conf.yml` | Project root |
-| Goose | `config.yaml` | `~/.config/goose` |
+```bash
+./scripts/install.sh --agent opencode --dry-run
+```
 
-## Supported routing technologies
+Remove the symlinks later:
 
-Universal Agent Config treats routing technology as a deliberate deployment decision.
+```bash
+./scripts/install.sh uninstall
+```
+
+## Why developers star this
+
+- Stop maintaining seven copies of the same AI model routing policy.
+- Change one canonical model lane and regenerate every native agent config.
+- Model metadata is refreshed from the live OpenRouter catalog, not guessed.
+- Daily drift detection catches model changes before your coding agent does.
+- Clean user-local install: no root, backups, dry-run, doctor, and uninstall.
+- Gateway choice is explicit: hosted marketplace, edge control plane, developer gateway, self-hosted proxy, or managed governance gateway.
+
+## Compatibility matrix
+
+| Agent | Generated config | Install target | Status |
+| --- | --- | --- | --- |
+| OpenCode | `opencode.json` + `AGENTS.md` | `~/.config/opencode` | Generated |
+| omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` | Generated |
+| Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` | Generated |
+| Codex | `config.toml` + `AGENTS.md` | `~/.codex` | Generated |
+| Cursor | `.cursor/rules/universal-agent-config.mdc` | Project `.cursor/rules/` | Generated |
+| Aider | `.aider.conf.yml` | Project root | Generated |
+| Goose | `config.yaml` | `~/.config/goose` | Generated |
+
+Generated means the native config is produced and structurally validated. It does not yet mean live end-to-end runtime tests are implemented for every agent CLI; those are tracked in [Issues](https://github.com/jesseoue/universal-agent-config/issues).
+
+## Routing technology decision matrix
 
 | Gateway | Type | Best for | Main tradeoff |
 | --- | --- | --- | --- |
@@ -43,31 +86,6 @@ Universal Agent Config treats routing technology as a deliberate deployment deci
 | Vercel AI Gateway | Developer gateway | Vercel-native apps, OIDC auth, provider failover, and spend visibility | Strongest when your runtime also lives on Vercel |
 | LiteLLM Proxy | Self-hosted proxy | Direct provider contracts, Azure/Bedrock/Vertex, virtual keys, budgets | You operate the proxy and its state |
 | Portkey AI Gateway | Managed governance gateway | Guardrails, audit, policy, and managed failover | External account and routing policy state |
-
-Generated gateway starter configs are committed under `generated/gateways/`.
-
-## Quick start
-
-```bash
-python3 -m pip install pyyaml tomli-w pytest
-python3 scripts/generate.py
-python3 scripts/validate.py
-./scripts/install.sh --agent opencode
-```
-
-Set your routing key:
-
-```bash
-export OPENROUTER_API_KEY=sk-or-...
-```
-
-Install another agent without duplicating policy:
-
-```bash
-./scripts/install.sh --agent claude-code
-./scripts/install.sh --agent codex
-./scripts/install.sh --agent goose
-```
 
 ## How routing works
 
@@ -146,6 +164,23 @@ tests/              Deterministic generation and sandbox installer tests
 ## Contributing
 
 Read [AGENTS.md](AGENTS.md), edit the canonical files under `core/`, regenerate, validate, and submit a PR. Do not manually edit `generated/`.
+
+## Community
+
+- ⭐ Star the repo if this saves you time
+- 🐛 [Report an issue](https://github.com/jesseoue/universal-agent-config/issues/new?template=bug_report.md)
+- 🚀 [Request an agent adapter](https://github.com/jesseoue/universal-agent-config/issues/new?template=feature_request.md)
+- 💬 [Start a discussion](https://github.com/jesseoue/universal-agent-config/discussions)
+- 🛡️ [Report a security issue](https://github.com/jesseoue/universal-agent-config/security/advisories/new)
+- 🤝 Read [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## What’s next
+
+- Runtime smoke tests for every agent CLI
+- Homebrew and npm distribution
+- Provider health dashboard
+- Gateway-aware install commands
+- Automatic drift pull requests
 
 ## License
 
