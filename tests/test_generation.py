@@ -16,7 +16,7 @@ def test_all_adapters_generated():
     }
     actual = {
         p.name for p in GENERATED.iterdir()
-        if p.is_dir() and p.name != "gateways"
+        if p.is_dir() and p.name not in {"gateways", "providers"}
     }
     assert actual == expected
 
@@ -31,6 +31,23 @@ def test_litellm_gateway_config():
     config = yaml.safe_load((GENERATED / "gateways" / "litellm" / "config.yaml").read_text())
     assert config["litellm_settings"]["num_retries"] == 5
     assert config["router_settings"]["fallbacks"]
+
+
+def test_provider_taxonomy():
+    taxonomy = json.loads((GENERATED / "providers" / "taxonomy.json").read_text())
+    assert len(taxonomy["model_gateways"]) == 5
+    assert {item["name"] for item in taxonomy["media_providers"]} == {"fal", "replicate"}
+    assert len(taxonomy["inference_runtimes"]) == 4
+
+
+def test_hermes_is_isolated_from_tool_lanes():
+    core_models = yaml.safe_load((ROOT / "core" / "models.yml").read_text())
+    hermes = core_models["models"]["nousresearch/hermes-4-405b"]
+    assert hermes["supports_tools"] is False
+    policy = yaml.safe_load((ROOT / "core" / "policy.yml").read_text())
+    content = policy["profiles"]["content-analysis"]
+    assert content["allow_shell"] is False
+    assert content["allow_edit"] is False
 
 
 def test_generation_is_deterministic():

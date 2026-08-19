@@ -151,6 +151,96 @@
           "tool_call": true,
           "attachment": true
         },
+        "nousresearch/hermes-4-405b": {
+          "name": "Hermes 4 405B",
+          "id": "nousresearch/hermes-4-405b",
+          "family": "hermes",
+          "provider": {
+            "only": [
+              "nebius"
+            ]
+          },
+          "contextWindow": 131072,
+          "maxTokens": 32768,
+          "reasoning": false,
+          "tool_call": false,
+          "attachment": false
+        },
+        "cognitivecomputations/dolphin-mistral-24b-venice-edition": {
+          "name": "Dolphin Mistral 24B Venice Edition",
+          "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+          "family": "dolphin",
+          "provider": {
+            "only": [
+              "venice"
+            ]
+          },
+          "contextWindow": 128000,
+          "maxTokens": 8192,
+          "reasoning": false,
+          "tool_call": false,
+          "attachment": false
+        },
+        "mistralai/codestral-2508": {
+          "name": "Codestral 2508",
+          "id": "mistralai/codestral-2508",
+          "family": "mistral",
+          "provider": {
+            "only": [
+              "mistral"
+            ]
+          },
+          "contextWindow": 256000,
+          "maxTokens": 32768,
+          "reasoning": false,
+          "tool_call": true,
+          "attachment": true
+        },
+        "qwen/qwen3-coder-plus": {
+          "name": "Qwen3 Coder Plus",
+          "id": "qwen/qwen3-coder-plus",
+          "family": "qwen",
+          "provider": {
+            "only": [
+              "qwen"
+            ]
+          },
+          "contextWindow": 1000000,
+          "maxTokens": 65536,
+          "reasoning": false,
+          "tool_call": true,
+          "attachment": false
+        },
+        "minimax/minimax-m3": {
+          "name": "MiniMax M3",
+          "id": "minimax/minimax-m3",
+          "family": "minimax",
+          "provider": {
+            "only": [
+              "minimax"
+            ]
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 512000,
+          "reasoning": false,
+          "tool_call": true,
+          "attachment": true
+        },
+        "meituan/longcat-2.0": {
+          "name": "LongCat 2.0",
+          "id": "meituan/longcat-2.0",
+          "family": "longcat",
+          "provider": {
+            "only": [
+              "meituan"
+            ]
+          },
+          "contextWindow": 1048756,
+          "maxTokens": 262144,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": false
+        },
         "x-ai/grok-4.20": {
           "name": "Grok 4.20",
           "id": "x-ai/grok-4.20",

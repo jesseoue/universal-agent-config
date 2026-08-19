@@ -394,6 +394,53 @@ def generate_gateway_configs(models, routing, policy, providers, gateways) -> No
     dump_json(portkey_config, GENERATED / "gateways" / "portkey" / "config.json")
 
 
+def generate_provider_taxonomy(providers) -> None:
+    taxonomy = providers["taxonomy"]
+    categories = taxonomy["categories"]
+    media = taxonomy["media_providers"]
+
+    matrix = {
+        "model_gateways": [
+            {"name": "OpenRouter", "category": categories["model_gateway"]["description"], "default": True},
+            {"name": "Cloudflare AI Gateway", "category": "edge control plane"},
+            {"name": "Vercel AI Gateway", "category": "developer gateway"},
+            {"name": "LiteLLM Proxy", "category": "self-hosted proxy"},
+            {"name": "Portkey AI Gateway", "category": "managed governance gateway"},
+        ],
+        "model_providers": [
+            {"name": provider_name, "models": policy["preferred"] + policy.get("alternates", [])}
+            for provider_name, policy in taxonomy["provider_policies"].items()
+            if provider_name != "hermes"
+        ],
+        "media_providers": [
+            {
+                "name": media_name,
+                "protocol": provider["protocol"],
+                "base_url": provider.get("base_url"),
+                "api_key_env": provider.get("api_key_env"),
+                "best_for": provider["best_for"],
+                "caveats": provider["caveats"],
+            }
+            for media_name, provider in media.items()
+            if provider.get("category") == "media_provider"
+        ],
+        "inference_runtimes": [
+            {"name": "vLLM", "category": categories["inference_runtime"]["description"]},
+            {"name": "Ollama", "category": "local model runtime"},
+            {"name": "llama.cpp", "category": "local GGUF runtime"},
+            {"name": "SGLang", "category": "high-performance serving"},
+        ],
+    }
+    dump_json(matrix, GENERATED / "providers" / "taxonomy.json")
+    dump_yaml(
+        {
+            "FAL_KEY": "required for Fal media generation",
+            "REPLICATE_API_TOKEN": "required for Replicate media generation",
+        },
+        GENERATED / "providers" / "media.env.example.yml",
+    )
+
+
 def dump_toml(data, path: Path) -> None:
     try:
         import tomli_w
@@ -417,6 +464,7 @@ def generate_manifest(models, routing, policy) -> None:
             "cursor": [".cursor/rules/universal-agent-config.mdc"],
             "aider": [".aider.conf.yml"],
             "goose": ["config.yaml"],
+            "providers": ["taxonomy.json", "media.env.example.yml"],
             "gateways": {
                 "openrouter": ["env.example.yml"],
                 "cloudflare": ["env.example.yml", "connection.json"],
@@ -449,6 +497,7 @@ def main() -> None:
     generate_aider(models, routing, policy, providers)
     generate_goose(models, routing, policy, providers)
     generate_gateway_configs(models, routing, policy, providers, gateways)
+    generate_provider_taxonomy(providers)
     generate_manifest(models, routing, policy)
 
     print("Generated adapters:", ", ".join(sorted(p.name for p in GENERATED.iterdir() if p.is_dir())))

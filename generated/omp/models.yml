@@ -86,6 +86,60 @@ providers:
           openRouterRouting:
             only:
             - moonshot
+      nousresearch/hermes-4-405b:
+        contextWindow: 131072
+        maxTokens: 32768
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - nebius
+      cognitivecomputations/dolphin-mistral-24b-venice-edition:
+        contextWindow: 128000
+        maxTokens: 8192
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - venice
+      mistralai/codestral-2508:
+        contextWindow: 256000
+        maxTokens: 32768
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - mistral
+      qwen/qwen3-coder-plus:
+        contextWindow: 1000000
+        maxTokens: 65536
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - qwen
+      minimax/minimax-m3:
+        contextWindow: 1048576
+        maxTokens: 512000
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - minimax
+      meituan/longcat-2.0:
+        contextWindow: 1048756
+        maxTokens: 262144
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - meituan
       x-ai/grok-4.20:
         contextWindow: 2000000
         maxTokens: 32768

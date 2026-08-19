@@ -30,6 +30,10 @@
     "goose": [
       "config.yaml"
     ],
+    "providers": [
+      "taxonomy.json",
+      "media.env.example.yml"
+    ],
     "gateways": {
       "openrouter": [
         "env.example.yml"
@@ -49,5 +53,5 @@
       ]
     }
   },
-  "model_count": 9
+  "model_count": 15
 }

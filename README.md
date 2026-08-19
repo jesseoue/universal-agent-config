@@ -15,7 +15,8 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 | | |
 | --- | --- |
 | **Agents** | OpenCode · omp · Claude Code · Codex · Cursor · Aider · Goose |
-| **Routing** | OpenRouter · Cloudflare AI Gateway · Vercel AI Gateway · LiteLLM · Portkey |
+| **Routing** | OpenRouter · Cloudflare · Vercel · LiteLLM · Portkey |
+| **Taxonomy** | Model gateways · model providers · media providers · inference runtimes |
 | **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
 | **Install** | User-local · dry-run · backups · uninstall · doctor |
 
@@ -87,6 +88,40 @@ Generated means the native config is produced and structurally validated. It doe
 | LiteLLM Proxy | Self-hosted proxy | Direct provider contracts, Azure/Bedrock/Vertex, virtual keys, budgets | You operate the proxy and its state |
 | Portkey AI Gateway | Managed governance gateway | Guardrails, audit, policy, and managed failover | External account and routing policy state |
 
+## Provider and media taxonomy
+
+Universal Agent Config separates four commonly confused layers:
+
+| Layer | Examples | Purpose |
+| --- | --- | --- |
+| Model gateway | OpenRouter, Cloudflare, Vercel, LiteLLM, Portkey | Route requests across model providers |
+| Model provider | Anthropic, OpenAI, Google, DeepSeek, Z.ai, Qwen, Mistral, Moonshot, Nous Research | Serve the model endpoint |
+| Media provider | Fal, Replicate | Generate image, video, audio, speech, or 3D assets |
+| Inference runtime | vLLM, Ollama, llama.cpp, SGLang | Serve open models on your own infrastructure |
+
+These layers are not interchangeable. Coding agents generally need an OpenAI-compatible chat endpoint with tool calling. Media providers use queue or prediction APIs with model-specific schemas and are not drop-in replacements for chat model providers.
+
+### Hermes policy
+
+Hermes 4 405B is supported as a dedicated `content-analysis` lane, not as a coding-agent default:
+
+- Text reasoning and sensitive-content analysis
+- No tool calling
+- No shell, edit, or browser permission
+- Falls back only to Dolphin Mistral Venice Edition
+- Never silently falls back to a tool-capable frontier model
+
+This keeps the lane semantically honest: Hermes is useful for long-form analysis, but it is not the right model for tool-driven coding workflows.
+
+### Media providers
+
+| Provider | Protocol | Best for | Main nuance |
+| --- | --- | --- | --- |
+| Fal | Queue API | Fast image, video, audio, speech, and 3D generation | Model-specific endpoint schemas; async queue operations |
+| Replicate | Predictions API | Community models and reproducible media generation | Prediction lifecycle uses create/poll/cancel; not chat-compatible |
+
+Media generation is represented in the provider taxonomy and generated environment template, but is not wired as a chat-model adapter.
+
 ## How routing works
 
 Model metadata comes directly from the live [OpenRouter model catalog](https://openrouter.ai/api/v1/models). The canonical registry records context windows, output limits, tool support, vision support, and reasoning support.
@@ -106,6 +141,7 @@ Available profiles:
 | `open-weight` | Open-weight-first routing |
 | `low-cost` | Cheap high-volume routing |
 | `frontier` | Maximum-quality frontier routing |
+| `content-analysis` | Toolless Hermes analysis with isolated permissions |
 
 ## Maintenance workflow
 

@@ -19,6 +19,11 @@ profiles:
     inherits: defaults
   frontier:
     inherits: defaults
+  content-analysis:
+    inherits: defaults
+    allow_shell: false
+    allow_edit: false
+    allow_browser: false
 advanced:
   description: Explicit opt-in profile for experienced users.
   inherits: defaults

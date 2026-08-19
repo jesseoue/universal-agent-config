@@ -37,7 +37,9 @@ def validate_core(models, routing, policy, providers) -> list[str]:
                     errors.append(f"{profile_name}.{role_name} references unknown model: {model_id}")
             if lane["primary"] not in model_ids:
                 continue
-            if not models["models"][lane["primary"]]["supports_tools"]:
+            profile_policy = policy.get("profiles", {}).get(profile_name, {})
+            toolless_allowed = not profile_policy.get("allow_shell", True) and not profile_policy.get("allow_edit", True)
+            if not toolless_allowed and not models["models"][lane["primary"]]["supports_tools"]:
                 errors.append(f"{profile_name}.{role_name} primary must support tools")
             if role_name == "vision":
                 for model_id in referenced:
@@ -79,6 +81,8 @@ def validate_generated(models, routing) -> list[str]:
         "gateways/vercel/env.example.yml",
         "gateways/litellm/config.yaml",
         "gateways/portkey/config.json",
+        "providers/taxonomy.json",
+        "providers/media.env.example.yml",
         "manifest.json",
     }
     for relative in expected:
@@ -123,6 +127,44 @@ def validate_generated(models, routing) -> list[str]:
         config = load_yaml(goose_config)
         if config["default"]["model"] not in models["models"]:
             errors.append("Goose config references unknown model")
+
+    return errors
+
+
+def validate_provider_taxonomy(models, providers) -> list[str]:
+    errors = []
+    taxonomy = providers["taxonomy"]
+    categories = taxonomy["categories"]
+    expected = {"model_gateway", "model_provider", "media_provider", "inference_runtime"}
+    if set(categories) != expected:
+        errors.append(f"provider taxonomy categories mismatch: {sorted(categories)}")
+
+    for lane_name, policy in taxonomy["provider_policies"].items():
+        model_ids = []
+        if "primary" in policy:
+            model_ids.append(policy["primary"])
+        if "fallback" in policy:
+            model_ids.append(policy["fallback"])
+        for model_id in model_ids:
+            if model_id not in models["models"]:
+                errors.append(f"provider taxonomy {lane_name} references unknown model: {model_id}")
+
+    media = taxonomy["media_providers"]
+    if set(media) != {"fal", "replicate", "openrouter_media"}:
+        errors.append("media provider set is incomplete")
+    for provider_name in ("fal", "replicate"):
+        if media[provider_name].get("category") != "media_provider":
+            errors.append(f"{provider_name} must be categorized as a media provider")
+        if "Not an OpenAI-compatible chat API" not in " ".join(media[provider_name]["caveats"]):
+            errors.append(f"{provider_name} must document protocol incompatibility")
+
+    generated = load_json(ROOT / "generated" / "providers" / "taxonomy.json")
+    if len(generated["model_gateways"]) != 5:
+        errors.append("generated taxonomy must include five model gateways")
+    if len(generated["media_providers"]) != 2:
+        errors.append("generated taxonomy must include Fal and Replicate")
+    if len(generated["inference_runtimes"]) != 4:
+        errors.append("generated taxonomy must include four inference runtimes")
 
     return errors
 
@@ -172,6 +214,7 @@ def main() -> int:
     errors = validate_core(models, routing, policy, providers)
     errors.extend(validate_generated(models, routing))
     errors.extend(validate_gateways(gateways))
+    errors.extend(validate_provider_taxonomy(models, providers))
 
     if errors:
         print("Validation failed:")

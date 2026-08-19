@@ -81,3 +81,21 @@ profiles:
         primary: google/gemini-3.7-flash
         fallbacks:
           - anthropic/claude-sonnet-5
+  content-analysis:
+    description: Long-form reasoning and sensitive-content analysis without tool calls
+    roles:
+      default:
+        primary: nousresearch/hermes-4-405b
+        fallbacks:
+          - cognitivecomputations/dolphin-mistral-24b-venice-edition
+      background:
+        primary: cognitivecomputations/dolphin-mistral-24b-venice-edition
+        fallbacks: []
+      reasoning:
+        primary: nousresearch/hermes-4-405b
+        fallbacks:
+          - cognitivecomputations/dolphin-mistral-24b-venice-edition
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5

@@ -1,0 +1,115 @@
+{
+  "model_gateways": [
+    {
+      "name": "OpenRouter",
+      "category": "Routes requests across multiple model providers",
+      "default": true
+    },
+    {
+      "name": "Cloudflare AI Gateway",
+      "category": "edge control plane"
+    },
+    {
+      "name": "Vercel AI Gateway",
+      "category": "developer gateway"
+    },
+    {
+      "name": "LiteLLM Proxy",
+      "category": "self-hosted proxy"
+    },
+    {
+      "name": "Portkey AI Gateway",
+      "category": "managed governance gateway"
+    }
+  ],
+  "model_providers": [
+    {
+      "name": "coding",
+      "models": [
+        "anthropic/claude-sonnet-5",
+        "deepseek/deepseek-v4-pro-0813",
+        "z-ai/glm-5.3",
+        "qwen/qwen3-coder-plus",
+        "mistralai/codestral-2508",
+        "moonshotai/kimi-k3"
+      ]
+    },
+    {
+      "name": "vision",
+      "models": [
+        "google/gemini-3.7-flash",
+        "anthropic/claude-sonnet-5",
+        "qwen/qwen3.8-max",
+        "minimax/minimax-m3"
+      ]
+    },
+    {
+      "name": "cost_efficient",
+      "models": [
+        "deepseek/deepseek-v4-flash-0731",
+        "qwen/qwen3-coder-flash",
+        "meituan/longcat-2.0",
+        "minimax/minimax-m3"
+      ]
+    },
+    {
+      "name": "long_context",
+      "models": [
+        "x-ai/grok-4.20",
+        "deepseek/deepseek-v4-pro-0813",
+        "z-ai/glm-5.3",
+        "minimax/minimax-m3"
+      ]
+    }
+  ],
+  "media_providers": [
+    {
+      "name": "fal",
+      "protocol": "fal-queue-api",
+      "base_url": "https://fal.run",
+      "api_key_env": "FAL_KEY",
+      "best_for": [
+        "Fast image, video, audio, speech, and 3D generation",
+        "Direct model endpoints with queue semantics"
+      ],
+      "caveats": [
+        "Not an OpenAI-compatible chat API",
+        "Each model has its own endpoint schema",
+        "Async queue operations require polling or webhook integration"
+      ]
+    },
+    {
+      "name": "replicate",
+      "protocol": "replicate-predictions-api",
+      "base_url": "https://api.replicate.com/v1",
+      "api_key_env": "REPLICATE_API_TOKEN",
+      "best_for": [
+        "Community model registry and reproducible predictions",
+        "Image, video, audio, and custom models"
+      ],
+      "caveats": [
+        "Not an OpenAI-compatible chat API",
+        "Prediction lifecycle uses create/poll/cancel semantics",
+        "Model versions and hardware choices affect cost and latency"
+      ]
+    }
+  ],
+  "inference_runtimes": [
+    {
+      "name": "vLLM",
+      "category": "Runs open models on user-owned or self-hosted infrastructure"
+    },
+    {
+      "name": "Ollama",
+      "category": "local model runtime"
+    },
+    {
+      "name": "llama.cpp",
+      "category": "local GGUF runtime"
+    },
+    {
+      "name": "SGLang",
+      "category": "high-performance serving"
+    }
+  ]
+}

@@ -1,4 +1,65 @@
 version: 1
+taxonomy:
+  categories:
+    model_gateway:
+      description: Routes requests across multiple model providers
+      examples: [openrouter, cloudflare-ai-gateway, vercel-ai-gateway, litellm, portkey]
+    model_provider:
+      description: Serves or hosts model endpoints
+      examples: [anthropic, openai, google, deepseek, z-ai, qwen, mistral, moonshot, nousresearch, nebius]
+    media_provider:
+      description: Generates or edits image, video, audio, speech, or 3D assets
+      examples: [fal, replicate]
+    inference_runtime:
+      description: Runs open models on user-owned or self-hosted infrastructure
+      examples: [vllm, ollama, llama.cpp, sglng]
+  provider_policies:
+    hermes:
+      primary: nousresearch/hermes-4-405b
+      fallback: cognitivecomputations/dolphin-mistral-24b-venice-edition
+      lane: content-analysis
+      policy: no tools, no edit, no shell
+      reason: Hermes is a text reasoning model, not a tool-calling coding agent
+    coding:
+      preferred: [anthropic/claude-sonnet-5, deepseek/deepseek-v4-pro-0813, z-ai/glm-5.3]
+      alternates: [qwen/qwen3-coder-plus, mistralai/codestral-2508, moonshotai/kimi-k3]
+    vision:
+      preferred: [google/gemini-3.7-flash, anthropic/claude-sonnet-5]
+      alternates: [qwen/qwen3.8-max, minimax/minimax-m3]
+    cost_efficient:
+      preferred: [deepseek/deepseek-v4-flash-0731, qwen/qwen3-coder-flash]
+      alternates: [meituan/longcat-2.0, minimax/minimax-m3]
+    long_context:
+      preferred: [x-ai/grok-4.20, deepseek/deepseek-v4-pro-0813]
+      alternates: [z-ai/glm-5.3, minimax/minimax-m3]
+  media_providers:
+    fal:
+      category: media_provider
+      base_url: https://fal.run
+      api_key_env: FAL_KEY
+      protocol: fal-queue-api
+      best_for:
+        - Fast image, video, audio, speech, and 3D generation
+        - Direct model endpoints with queue semantics
+      caveats:
+        - Not an OpenAI-compatible chat API
+        - Each model has its own endpoint schema
+        - Async queue operations require polling or webhook integration
+    replicate:
+      category: media_provider
+      base_url: https://api.replicate.com/v1
+      api_key_env: REPLICATE_API_TOKEN
+      protocol: replicate-predictions-api
+      best_for:
+        - Community model registry and reproducible predictions
+        - Image, video, audio, and custom models
+      caveats:
+        - Not an OpenAI-compatible chat API
+        - Prediction lifecycle uses create/poll/cancel semantics
+        - Model versions and hardware choices affect cost and latency
+    openrouter_media:
+      category: model_provider
+      note: OpenRouter contains some multimodal understanding models, but not general media generation jobs
 openrouter:
   base_url: https://openrouter.ai/api/v1
   api_key_env: OPENROUTER_API_KEY
