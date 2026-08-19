@@ -1,0 +1,41 @@
+modelRoles:
+  default: openrouter/anthropic/claude-sonnet-5
+  smol: openrouter/deepseek/deepseek-v4-flash-0731
+  slow: openrouter/deepseek/deepseek-v4-pro-0813
+  plan: openrouter/deepseek/deepseek-v4-pro-0813
+  vision: openrouter/google/gemini-3.7-flash
+  designer: openrouter/anthropic/claude-sonnet-5
+  commit: openrouter/deepseek/deepseek-v4-flash-0731
+  tiny: openrouter/deepseek/deepseek-v4-flash-0731
+retry:
+  maxRetries: 5
+  modelFallback: true
+  fallbackRevertPolicy: cooldown-expiry
+  fallbackChains:
+    default:
+    - deepseek/deepseek-v4-pro-0813
+    - z-ai/glm-5.3
+    smol:
+    - google/gemini-3.7-flash
+    slow:
+    - anthropic/claude-opus-5
+    - anthropic/claude-sonnet-5
+    vision:
+    - anthropic/claude-sonnet-5
+tools:
+  approvalMode: normal
+  bash:
+    autoBackground: true
+thinkingBudgets:
+  defaultThinkingLevel: high
+  minimal: 1024
+  low: 2048
+  medium: 4096
+  high: 8192
+  xhigh: 16384
+  max: 32768
+compaction:
+  strategy: snapcompact
+  reserveTokens: 16384
+  keepRecentTokens: 20000
+  autoContinue: true

@@ -1,0 +1,8 @@
+model: openrouter/anthropic/claude-sonnet-5
+editor-model: openrouter/deepseek/deepseek-v4-flash-0731
+map-tokens: 4096
+auto-commits: false
+dirty-commits: false
+attribute-author: false
+attribute-committer: false
+dark-mode: true

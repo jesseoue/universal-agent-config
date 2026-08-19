@@ -1,0 +1,14 @@
+model = "anthropic/claude-sonnet-5"
+model_provider = "openrouter"
+model_reasoning_effort = "high"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[providers.openrouter]
+name = "OpenRouter"
+base_url = "https://openrouter.ai/api/v1"
+env_key = "OPENROUTER_API_KEY"
+
+[providers.openrouter.http_headers]
+HTTP-Referer = "https://github.com/jesseoue/universal-agent-config"
+X-Title = "Universal Agent Config"

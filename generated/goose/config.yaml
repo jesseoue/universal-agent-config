@@ -1,0 +1,8 @@
+default:
+  provider: openrouter
+  model: anthropic/claude-sonnet-5
+  temperature: 0.2
+provider:
+  openrouter:
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY

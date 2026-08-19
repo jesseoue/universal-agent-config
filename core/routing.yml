@@ -1,0 +1,83 @@
+version: 1
+default_profile: balanced
+profiles:
+  balanced:
+    description: Reliable default for general coding and refactors
+    roles:
+      default:
+        primary: anthropic/claude-sonnet-5
+        fallbacks:
+          - deepseek/deepseek-v4-pro-0813
+          - z-ai/glm-5.3
+      background:
+        primary: deepseek/deepseek-v4-flash-0731
+        fallbacks:
+          - google/gemini-3.7-flash
+      reasoning:
+        primary: deepseek/deepseek-v4-pro-0813
+        fallbacks:
+          - anthropic/claude-opus-5
+          - anthropic/claude-sonnet-5
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5
+  open-weight:
+    description: Open-weight-first routing with frontier fallbacks
+    roles:
+      default:
+        primary: deepseek/deepseek-v4-pro-0813
+        fallbacks:
+          - z-ai/glm-5.3
+          - anthropic/claude-sonnet-5
+      background:
+        primary: deepseek/deepseek-v4-flash-0731
+        fallbacks:
+          - google/gemini-3.7-flash
+      reasoning:
+        primary: deepseek/deepseek-v4-pro-0813
+        fallbacks:
+          - z-ai/glm-5.3
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5
+  low-cost:
+    description: Low-cost routing for high-volume background work
+    roles:
+      default:
+        primary: deepseek/deepseek-v4-flash-0731
+        fallbacks:
+          - google/gemini-3.7-flash
+      background:
+        primary: deepseek/deepseek-v4-flash-0731
+        fallbacks:
+          - google/gemini-3.7-flash
+      reasoning:
+        primary: deepseek/deepseek-v4-pro-0813
+        fallbacks:
+          - z-ai/glm-5.3
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5
+  frontier:
+    description: Frontier-first routing when quality matters more than cost
+    roles:
+      default:
+        primary: anthropic/claude-sonnet-5
+        fallbacks:
+          - openai/gpt-5.6-sol-pro
+          - moonshotai/kimi-k3
+      background:
+        primary: deepseek/deepseek-v4-flash-0731
+        fallbacks:
+          - google/gemini-3.7-flash
+      reasoning:
+        primary: anthropic/claude-opus-5
+        fallbacks:
+          - deepseek/deepseek-v4-pro-0813
+      vision:
+        primary: google/gemini-3.7-flash
+        fallbacks:
+          - anthropic/claude-sonnet-5

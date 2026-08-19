@@ -1,0 +1,35 @@
+{
+  "name": "universal-agent-config",
+  "version": 1,
+  "updated": "2026-08-19",
+  "default_profile": "balanced",
+  "adapters": {
+    "opencode": [
+      "opencode.json",
+      "AGENTS.md"
+    ],
+    "omp": [
+      "config.yml",
+      "models.yml",
+      "mcp.json"
+    ],
+    "claude-code": [
+      "settings.json",
+      "CLAUDE.md"
+    ],
+    "codex": [
+      "config.toml",
+      "AGENTS.md"
+    ],
+    "cursor": [
+      ".cursor/rules/universal-agent-config.mdc"
+    ],
+    "aider": [
+      ".aider.conf.yml"
+    ],
+    "goose": [
+      "config.yaml"
+    ]
+  },
+  "model_count": 9
+}

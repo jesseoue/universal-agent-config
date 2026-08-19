@@ -1,0 +1,21 @@
+{
+  "env": {
+    "ANTHROPIC_MODEL": "anthropic/claude-sonnet-5",
+    "ANTHROPIC_SMALL_FAST_MODEL": "deepseek/deepseek-v4-flash-0731",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Bash"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Read(.env)",
+      "Read(**/.env)"
+    ]
+  },
+  "model": "anthropic/claude-sonnet-5",
+  "fallbackModel": "deepseek/deepseek-v4-pro-0813"
+}

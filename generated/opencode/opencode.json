@@ -1,0 +1,190 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "openrouter/anthropic/claude-sonnet-5",
+  "small_model": "openrouter/deepseek/deepseek-v4-flash-0731",
+  "enabled_providers": [
+    "openrouter"
+  ],
+  "disabled_providers": [],
+  "provider": {
+    "openrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenRouter",
+      "options": {
+        "baseURL": "https://openrouter.ai/api/v1",
+        "apiKey": "{env:OPENROUTER_API_KEY}",
+        "headers": {
+          "HTTP-Referer": "https://github.com/jesseoue/universal-agent-config",
+          "X-Title": "Universal Agent Config"
+        },
+        "timeout": 300000,
+        "headerTimeout": 300000,
+        "chunkTimeout": 60000
+      },
+      "models": {
+        "anthropic/claude-sonnet-5": {
+          "name": "Claude Sonnet 5",
+          "id": "anthropic/claude-sonnet-5",
+          "family": "claude",
+          "provider": {
+            "only": [
+              "anthropic"
+            ]
+          },
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true
+        },
+        "anthropic/claude-opus-5": {
+          "name": "Claude Opus 5",
+          "id": "anthropic/claude-opus-5",
+          "family": "claude",
+          "provider": {
+            "only": [
+              "anthropic"
+            ]
+          },
+          "contextWindow": 1000000,
+          "maxTokens": 128000,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true
+        },
+        "deepseek/deepseek-v4-pro-0813": {
+          "name": "DeepSeek V4 Pro 0813",
+          "id": "deepseek/deepseek-v4-pro-0813",
+          "family": "deepseek",
+          "provider": {
+            "only": [
+              "siliconflow",
+              "fireworks",
+              "novita",
+              "parasail",
+              "alibaba"
+            ]
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 384000,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": false
+        },
+        "deepseek/deepseek-v4-flash-0731": {
+          "name": "DeepSeek V4 Flash 0731",
+          "id": "deepseek/deepseek-v4-flash-0731",
+          "family": "deepseek",
+          "provider": {
+            "only": [
+              "deepinfra",
+              "baseten",
+              "novita",
+              "siliconflow",
+              "parasail"
+            ]
+          },
+          "contextWindow": 1310720,
+          "maxTokens": 393216,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": false
+        },
+        "google/gemini-3.7-flash": {
+          "name": "Gemini 3.7 Flash",
+          "id": "google/gemini-3.7-flash",
+          "family": "gemini",
+          "provider": {
+            "only": [
+              "google-ai-studio",
+              "google-vertex"
+            ]
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 65536,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true
+        },
+        "z-ai/glm-5.3": {
+          "name": "GLM 5.3",
+          "id": "z-ai/glm-5.3",
+          "family": "glm",
+          "provider": {
+            "only": [
+              "z-ai"
+            ]
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 131072,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": false
+        },
+        "openai/gpt-5.6-sol-pro": {
+          "name": "GPT-5.6 Sol Pro",
+          "id": "openai/gpt-5.6-sol-pro",
+          "family": "openai",
+          "provider": {
+            "only": [
+              "openai"
+            ]
+          },
+          "contextWindow": 1050000,
+          "maxTokens": 128000,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true
+        },
+        "moonshotai/kimi-k3": {
+          "name": "Kimi K3",
+          "id": "moonshotai/kimi-k3",
+          "family": "kimi",
+          "provider": {
+            "only": [
+              "moonshot"
+            ]
+          },
+          "contextWindow": 1048576,
+          "maxTokens": 32768,
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true
+        },
+        "x-ai/grok-4.20": {
+          "name": "Grok 4.20",
+          "id": "x-ai/grok-4.20",
+          "family": "grok",
+          "provider": {
+            "only": [
+              "x-ai"
+            ]
+          },
+          "contextWindow": 2000000,
+          "maxTokens": 32768,
+          "reasoning": false,
+          "tool_call": true,
+          "attachment": true
+        }
+      },
+      "modelsCache": "revalidate"
+    }
+  },
+  "instructions": "AGENTS.md",
+  "share": false,
+  "logLevel": "ERROR",
+  "tool_output": {
+    "max_lines": 300,
+    "max_bytes": 12000
+  },
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true,
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      }
+    }
+  }
+}

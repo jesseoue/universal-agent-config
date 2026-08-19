@@ -1,0 +1,97 @@
+providers:
+  openrouter:
+    baseUrl: https://openrouter.ai/api/v1
+    api: openai-completions
+    apiKey: OPENROUTER_API_KEY
+    authHeader: true
+    modelOverrides:
+      anthropic/claude-sonnet-5:
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - anthropic
+      anthropic/claude-opus-5:
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - anthropic
+      deepseek/deepseek-v4-pro-0813:
+        contextWindow: 1048576
+        maxTokens: 384000
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - siliconflow
+            - fireworks
+            - novita
+            - parasail
+            - alibaba
+      deepseek/deepseek-v4-flash-0731:
+        contextWindow: 1310720
+        maxTokens: 393216
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - deepinfra
+            - baseten
+            - novita
+            - siliconflow
+            - parasail
+      google/gemini-3.7-flash:
+        contextWindow: 1048576
+        maxTokens: 65536
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - google-ai-studio
+            - google-vertex
+      z-ai/glm-5.3:
+        contextWindow: 1048576
+        maxTokens: 131072
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - z-ai
+      openai/gpt-5.6-sol-pro:
+        contextWindow: 1050000
+        maxTokens: 128000
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - openai
+      moonshotai/kimi-k3:
+        contextWindow: 1048576
+        maxTokens: 32768
+        reasoning: true
+        compat:
+          supportsReasoningEffort: true
+          openRouterRouting:
+            only:
+            - moonshot
+      x-ai/grok-4.20:
+        contextWindow: 2000000
+        maxTokens: 32768
+        reasoning: false
+        compat:
+          supportsReasoningEffort: false
+          openRouterRouting:
+            only:
+            - x-ai

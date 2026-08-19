@@ -1,0 +1,25 @@
+version: 1
+defaults:
+  provider: openrouter
+  telemetry: false
+  preserve_secrets: true
+  confirm_destructive_commands: true
+  allow_shell: true
+  allow_edit: true
+  allow_browser: true
+  max_retries: 5
+  request_timeout_seconds: 300
+  stalled_chunk_timeout_seconds: 60
+profiles:
+  balanced:
+    inherits: defaults
+  open-weight:
+    inherits: defaults
+  low-cost:
+    inherits: defaults
+  frontier:
+    inherits: defaults
+advanced:
+  description: Explicit opt-in profile for experienced users.
+  inherits: defaults
+  confirm_destructive_commands: false

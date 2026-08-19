@@ -1,0 +1,9 @@
+version: 1
+openrouter:
+  base_url: https://openrouter.ai/api/v1
+  api_key_env: OPENROUTER_API_KEY
+  transport: chat-completions
+  auth_header: bearer
+  attribution:
+    http_referer: https://github.com/jesseoue/universal-agent-config
+    x_title: Universal Agent Config
