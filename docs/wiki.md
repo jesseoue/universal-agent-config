@@ -19,6 +19,10 @@ This repository uses versioned docs instead of the separate GitHub wiki. They re
 
 No. It generates native configuration files. Once installed, those files do not require this repository unless you deliberately link them.
 
+### Could this become a self-hosted provider layer?
+
+Yes, as a separate deployment mode. The hosted app remains client-only, but the canonical policy model can be hosted privately, connected to a self-hosted gateway, and used to distribute organization-wide agent configuration. That mode requires auth, tenancy, secret management, audit, and operational ownership that the public generator intentionally avoids.
+
 ### Does it send my code anywhere?
 
 The generated routing policy uses your selected provider or gateway. Universal Agent Config itself does not telemetry-track usage, and generated defaults disable telemetry where supported.

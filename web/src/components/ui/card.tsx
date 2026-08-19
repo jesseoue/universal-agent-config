@@ -12,7 +12,7 @@ export function Card({ className, as = "div", type, ...props }: CardProps) {
     <Component
       {...(as === "button" ? { type: type ?? "button" } : {})}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-colors",
+        "studio-focus group relative overflow-hidden rounded-3xl border border-line bg-white/[0.023] text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/35 hover:bg-white/[0.04]",
         className,
       )}
       {...props}
@@ -21,9 +21,9 @@ export function Card({ className, as = "div", type, ...props }: CardProps) {
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-sm font-semibold tracking-tight text-white", className)} {...props} />;
+  return <h3 className={cn("text-base font-semibold tracking-tight text-text", className)} {...props} />;
 }
 
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm leading-relaxed text-white/55", className)} {...props} />;
+  return <p className={cn("text-sm leading-relaxed text-muted", className)} {...props} />;
 }

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("generates a configuration package", async ({ page }) => {
   await page.addInitScript(() => window.localStorage.removeItem("universal-agent-config-wizard"));
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Build the perfect config");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Turn one policy into every coding-agent config");
   await page.evaluate(() => window.localStorage.removeItem("universal-agent-config-wizard"));
   await page.reload();
   await expect(page.getByRole("heading", { name: "Preset", level: 2 })).toBeVisible();

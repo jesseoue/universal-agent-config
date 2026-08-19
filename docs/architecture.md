@@ -67,3 +67,15 @@ This makes an adapter change auditable: the diff shows both canonical policy and
 - `web/src/components/generator-studio.tsx` is the client boundary for wizard state, preview, copy, and ZIP download.
 
 The app collects no keys, has no API route, and requests no external CDN assets at runtime.
+
+### Provider-level hosting path
+
+The public app stays client-only. A self-hosted deployment can evolve the same policy model into an organization's provider layer:
+
+1. host the Next.js app and canonical catalog in a private container;
+2. connect it to a self-hosted gateway such as LiteLLM Proxy or Cloudflare AI Gateway;
+3. expose an internal catalog, policy validation, and artifact generation service;
+4. distribute generated defaults to developer machines and repositories;
+5. centralize versioning, drift detection, audit, and rollback.
+
+That path requires authentication, tenancy, gateway credentials, runtime observability, and deployment controls that are deliberately absent from the public app.
