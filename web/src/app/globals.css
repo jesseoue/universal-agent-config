@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-studio-background: #080a08;
+  --color-studio-panel: rgba(255, 255, 255, 0.025);
+  --color-studio-border: rgba(255, 255, 255, 0.1);
+  --color-studio-accent: #d9f871;
+  --color-studio-accent-muted: rgba(217, 248, 113, 0.14);
+  --color-studio-text: #ffffff;
+  --color-studio-muted: rgba(255, 255, 255, 0.58);
+}
+
+* {
+  border-color: var(--color-studio-border);
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(217, 248, 113, 0.08), transparent 32rem),
+    radial-gradient(circle at 85% 8%, rgba(64, 192, 255, 0.07), transparent 36rem),
+    linear-gradient(180deg, #080a08 0%, #060706 100%);
+  color: var(--color-studio-text);
+}
+
+.studio-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.studio-panel {
+  border: 1px solid var(--color-studio-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    rgba(8, 10, 8, 0.86);
+  backdrop-filter: blur(16px);
+}
+
+.studio-code {
+  scrollbar-color: rgba(217, 248, 113, 0.45) transparent;
+  scrollbar-width: thin;
+}
+
+.studio-code::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.studio-code::-webkit-scrollbar-thumb {
+  background: rgba(217, 248, 113, 0.35);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

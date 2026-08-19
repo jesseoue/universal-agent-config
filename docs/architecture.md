@@ -56,3 +56,14 @@ This makes an adapter change auditable: the diff shows both canonical policy and
 - Conservative defaults: telemetry off, secrets local, destructive actions confirmed.
 - Evidence over guesses: unsupported config keys are not invented.
 - Model facts are time-sensitive and must be refreshed from the catalog before making live claims.
+
+## Web generator
+
+`web/` is a client-only Next.js 16 App Router application. It is not a runtime dependency for generated configs.
+
+- `web/scripts/sync-catalog.mjs` converts canonical YAML into `web/src/data/catalog.json`.
+- `web/src/lib/` contains typed catalog, configuration, validation, and generator logic.
+- `web/src/app/(generator)/page.tsx` is the sole public route and keeps SEO metadata in the server layer.
+- `web/src/components/generator-studio.tsx` is the client boundary for wizard state, preview, copy, and ZIP download.
+
+The app collects no keys, has no API route, and requests no external CDN assets at runtime.

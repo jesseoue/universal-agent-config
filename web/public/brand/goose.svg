@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="goose">
+  <rect width="48" height="48" rx="12" fill="#111311"/>
+  <path d="M8 34V14h8l8 11 8-11h8v20h-8v-9l-8 10-8-10v9H8z" fill="#d9f871" opacity=".92"/>
+  <text x="24" y="43" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.55)">GO</text>
+</svg>

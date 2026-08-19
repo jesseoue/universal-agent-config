@@ -24,6 +24,12 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 
 ## 30-second start
 
+Try the web generator first:
+
+[https://universal-agent-config.leadmagic.sh](https://universal-agent-config.leadmagic.sh)
+
+Then use the repository when you want to manage canonical policy directly:
+
 ```bash
 git clone https://github.com/jesseoue/universal-agent-config.git
 cd universal-agent-config
@@ -531,6 +537,7 @@ Doctor verifies:
 ```text
 core/               Canonical models, routing, gateways, policy, prompts
 generated/          Native configs for every supported agent and gateway
+web/                Client-only Next.js 16 configuration generator
 scripts/            Generation, validation, refresh, and installer
 tests/              Deterministic generation and sandbox installer tests
 .github/workflows/  CI, model drift detection, and release automation

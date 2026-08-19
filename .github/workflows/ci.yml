@@ -12,6 +12,36 @@ permissions:
   contents: read
 
 jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run sync:catalog
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run test
+      - run: pnpm run build
+      - name: Check catalog and build outputs
+        run: |
+          if git diff --exit-code; then
+            echo "web catalog is current"
+          else
+            echo "web/src/data/catalog.json is stale; run pnpm run sync:catalog" >&2
+            exit 1
+          fi
+
   validate:
     runs-on: ubuntu-latest
     steps:

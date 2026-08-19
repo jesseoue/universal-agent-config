@@ -15,6 +15,15 @@ This guide is the repo-managed replacement for a separate Git-backed wiki. It is
 
 ## Development loop
 
+For the web generator:
+
+```bash
+cd web
+pnpm install
+pnpm run sync:catalog
+pnpm run verify
+```
+
 ```bash
 git clone https://github.com/jesseoue/universal-agent-config.git
 cd universal-agent-config

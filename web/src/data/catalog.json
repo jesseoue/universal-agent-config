@@ -1,0 +1,1045 @@
+{
+  "version": 1,
+  "updated": "2026-08-19",
+  "models": [
+    {
+      "id": "anthropic/claude-sonnet-5",
+      "displayName": "Claude Sonnet 5",
+      "family": "claude",
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "anthropic"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 2,
+        "outputPerMillion": 10
+      }
+    },
+    {
+      "id": "anthropic/claude-opus-5",
+      "displayName": "Claude Opus 5",
+      "family": "claude",
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "anthropic"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 5,
+        "outputPerMillion": 25
+      }
+    },
+    {
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "displayName": "DeepSeek V4 Pro 0813",
+      "family": "deepseek",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 384000,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": true,
+      "providers": [
+        "siliconflow",
+        "fireworks",
+        "novita",
+        "parasail",
+        "alibaba"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.66,
+        "outputPerMillion": 1.9800000000000002
+      }
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash-0731",
+      "displayName": "DeepSeek V4 Flash 0731",
+      "family": "deepseek",
+      "contextWindow": 1310720,
+      "maxOutputTokens": 393216,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": true,
+      "providers": [
+        "deepinfra",
+        "baseten",
+        "novita",
+        "siliconflow",
+        "parasail"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.14,
+        "outputPerMillion": 0.28
+      }
+    },
+    {
+      "id": "google/gemini-3.7-flash",
+      "displayName": "Gemini 3.7 Flash",
+      "family": "gemini",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 65536,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "google-ai-studio",
+        "google-vertex"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.375,
+        "outputPerMillion": 1.875
+      }
+    },
+    {
+      "id": "poolside/laguna-s-2.1",
+      "displayName": "Laguna S 2.1",
+      "family": "poolside",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 131072,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": true,
+      "providers": [
+        "poolside"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.09,
+        "outputPerMillion": 0.18
+      }
+    },
+    {
+      "id": "moonshotai/kimi-k2.7-code",
+      "displayName": "Kimi K2.7 Code",
+      "family": "kimi",
+      "contextWindow": 262144,
+      "maxOutputTokens": 262144,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "moonshot"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.71,
+        "outputPerMillion": 3.5
+      }
+    },
+    {
+      "id": "qwen/qwen3.8-max",
+      "displayName": "Qwen 3.8 Max",
+      "family": "qwen",
+      "contextWindow": 1000000,
+      "maxOutputTokens": 131072,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "qwen"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 2,
+        "outputPerMillion": 6
+      }
+    },
+    {
+      "id": "z-ai/glm-5.3",
+      "displayName": "GLM 5.3",
+      "family": "glm",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 131072,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": true,
+      "providers": [
+        "z-ai"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 1.4,
+        "outputPerMillion": 4.4
+      }
+    },
+    {
+      "id": "openai/gpt-5.6-sol-pro",
+      "displayName": "GPT-5.6 Sol Pro",
+      "family": "openai",
+      "contextWindow": 1050000,
+      "maxOutputTokens": 128000,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "openai"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 2.5,
+        "outputPerMillion": 15
+      }
+    },
+    {
+      "id": "moonshotai/kimi-k3",
+      "displayName": "Kimi K3",
+      "family": "kimi",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 32768,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": true,
+      "providers": [
+        "moonshot"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 3,
+        "outputPerMillion": 15
+      }
+    },
+    {
+      "id": "nousresearch/hermes-4-405b",
+      "displayName": "Hermes 4 405B",
+      "family": "hermes",
+      "contextWindow": 131072,
+      "maxOutputTokens": 32768,
+      "supportsTools": false,
+      "supportsVision": false,
+      "reasoning": false,
+      "providers": [
+        "nebius"
+      ],
+      "lane": "content-analysis",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 1,
+        "outputPerMillion": 3
+      }
+    },
+    {
+      "id": "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+      "displayName": "Dolphin Mistral 24B Venice Edition",
+      "family": "dolphin",
+      "contextWindow": 128000,
+      "maxOutputTokens": 8192,
+      "supportsTools": false,
+      "supportsVision": false,
+      "reasoning": false,
+      "providers": [
+        "venice"
+      ],
+      "lane": "content-analysis",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.19999999999999998,
+        "outputPerMillion": 0.8999999999999999
+      }
+    },
+    {
+      "id": "mistralai/codestral-2508",
+      "displayName": "Codestral 2508",
+      "family": "mistral",
+      "contextWindow": 256000,
+      "maxOutputTokens": 32768,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": false,
+      "providers": [
+        "mistral"
+      ],
+      "lane": "coding",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.3,
+        "outputPerMillion": 0.8999999999999999
+      }
+    },
+    {
+      "id": "qwen/qwen3-coder-plus",
+      "displayName": "Qwen3 Coder Plus",
+      "family": "qwen",
+      "contextWindow": 1000000,
+      "maxOutputTokens": 65536,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": false,
+      "providers": [
+        "qwen"
+      ],
+      "lane": "coding",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.65,
+        "outputPerMillion": 3.25
+      }
+    },
+    {
+      "id": "minimax/minimax-m3",
+      "displayName": "MiniMax M3",
+      "family": "minimax",
+      "contextWindow": 1048576,
+      "maxOutputTokens": 512000,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": false,
+      "providers": [
+        "minimax"
+      ],
+      "lane": "coding",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.3,
+        "outputPerMillion": 1.2
+      }
+    },
+    {
+      "id": "meituan/longcat-2.0",
+      "displayName": "LongCat 2.0",
+      "family": "longcat",
+      "contextWindow": 1048756,
+      "maxOutputTokens": 262144,
+      "supportsTools": true,
+      "supportsVision": false,
+      "reasoning": true,
+      "providers": [
+        "meituan"
+      ],
+      "lane": "coding",
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 0.3,
+        "outputPerMillion": 1.2
+      }
+    },
+    {
+      "id": "x-ai/grok-4.20",
+      "displayName": "Grok 4.20",
+      "family": "grok",
+      "contextWindow": 2000000,
+      "maxOutputTokens": 32768,
+      "supportsTools": true,
+      "supportsVision": true,
+      "reasoning": false,
+      "providers": [
+        "x-ai"
+      ],
+      "lane": null,
+      "liveVerified": "2026-08-19",
+      "pricing": {
+        "inputPerMillion": 1.25,
+        "outputPerMillion": 2.5
+      }
+    }
+  ],
+  "routing": {
+    "defaultProfile": "balanced",
+    "profiles": [
+      {
+        "id": "balanced",
+        "description": "Cost-aware daily coding default with open-weight lead and frontier escalation",
+        "roles": {
+          "default": {
+            "primary": "z-ai/glm-5.3",
+            "fallbacks": [
+              "moonshotai/kimi-k2.7-code",
+              "poolside/laguna-s-2.1"
+            ]
+          },
+          "background": {
+            "primary": "poolside/laguna-s-2.1",
+            "fallbacks": [
+              "deepseek/deepseek-v4-flash-0731",
+              "google/gemini-3.7-flash"
+            ]
+          },
+          "reasoning": {
+            "primary": "deepseek/deepseek-v4-pro-0813",
+            "fallbacks": [
+              "anthropic/claude-opus-5",
+              "anthropic/claude-sonnet-5"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      },
+      {
+        "id": "implement",
+        "description": "Edit-capable implementation worker with bounded delegation",
+        "roles": {
+          "default": {
+            "primary": "z-ai/glm-5.3",
+            "fallbacks": [
+              "qwen/qwen3.8-max",
+              "poolside/laguna-s-2.1",
+              "meituan/longcat-2.0"
+            ]
+          },
+          "background": {
+            "primary": "poolside/laguna-s-2.1",
+            "fallbacks": [
+              "deepseek/deepseek-v4-flash-0731"
+            ]
+          },
+          "reasoning": {
+            "primary": "deepseek/deepseek-v4-pro-0813",
+            "fallbacks": [
+              "z-ai/glm-5.3",
+              "moonshotai/kimi-k2.7-code"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      },
+      {
+        "id": "open-weight",
+        "description": "Open-weight-first routing with frontier fallbacks",
+        "roles": {
+          "default": {
+            "primary": "deepseek/deepseek-v4-pro-0813",
+            "fallbacks": [
+              "z-ai/glm-5.3",
+              "anthropic/claude-sonnet-5"
+            ]
+          },
+          "background": {
+            "primary": "deepseek/deepseek-v4-flash-0731",
+            "fallbacks": [
+              "google/gemini-3.7-flash"
+            ]
+          },
+          "reasoning": {
+            "primary": "deepseek/deepseek-v4-pro-0813",
+            "fallbacks": [
+              "z-ai/glm-5.3"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      },
+      {
+        "id": "low-cost",
+        "description": "Low-cost routing for high-volume background work",
+        "roles": {
+          "default": {
+            "primary": "deepseek/deepseek-v4-flash-0731",
+            "fallbacks": [
+              "google/gemini-3.7-flash"
+            ]
+          },
+          "background": {
+            "primary": "deepseek/deepseek-v4-flash-0731",
+            "fallbacks": [
+              "google/gemini-3.7-flash"
+            ]
+          },
+          "reasoning": {
+            "primary": "deepseek/deepseek-v4-pro-0813",
+            "fallbacks": [
+              "z-ai/glm-5.3"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      },
+      {
+        "id": "frontier",
+        "description": "Frontier-first routing when quality matters more than cost",
+        "roles": {
+          "default": {
+            "primary": "anthropic/claude-sonnet-5",
+            "fallbacks": [
+              "openai/gpt-5.6-sol-pro",
+              "moonshotai/kimi-k3"
+            ]
+          },
+          "background": {
+            "primary": "deepseek/deepseek-v4-flash-0731",
+            "fallbacks": [
+              "google/gemini-3.7-flash"
+            ]
+          },
+          "reasoning": {
+            "primary": "anthropic/claude-opus-5",
+            "fallbacks": [
+              "deepseek/deepseek-v4-pro-0813"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      },
+      {
+        "id": "content-analysis",
+        "description": "Long-form reasoning and sensitive-content analysis without tool calls",
+        "roles": {
+          "default": {
+            "primary": "nousresearch/hermes-4-405b",
+            "fallbacks": [
+              "cognitivecomputations/dolphin-mistral-24b-venice-edition"
+            ]
+          },
+          "background": {
+            "primary": "cognitivecomputations/dolphin-mistral-24b-venice-edition",
+            "fallbacks": []
+          },
+          "reasoning": {
+            "primary": "nousresearch/hermes-4-405b",
+            "fallbacks": [
+              "cognitivecomputations/dolphin-mistral-24b-venice-edition"
+            ]
+          },
+          "vision": {
+            "primary": "google/gemini-3.7-flash",
+            "fallbacks": [
+              "anthropic/claude-sonnet-5"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "policy": {
+    "version": 1,
+    "defaults": {
+      "provider": "openrouter",
+      "telemetry": false,
+      "preserve_secrets": true,
+      "confirm_destructive_commands": true,
+      "allow_shell": true,
+      "allow_edit": true,
+      "allow_browser": true,
+      "max_retries": 5,
+      "request_timeout_seconds": 300,
+      "stalled_chunk_timeout_seconds": 60
+    },
+    "performance": {
+      "description": "Default speed and stability policy for agent transports.",
+      "mcp_timeout_seconds": 30,
+      "mcp_startup_timeout_seconds": 10,
+      "reasoning_effort": "medium",
+      "background_uses_small_model": true,
+      "tool_output": {
+        "max_lines": 300,
+        "max_bytes": 12000
+      },
+      "compaction": {
+        "auto": true,
+        "prune": true,
+        "reserve_tokens": 16384,
+        "keep_recent_tokens": 20000,
+        "tail_turns": 2
+      },
+      "concurrency": {
+        "default": 10,
+        "provider": 12,
+        "expensive": 5,
+        "analysis": 2,
+        "max_depth": 2
+      },
+      "escalation": {
+        "frontier_default": false,
+        "trigger_after_failed_attempts": 2,
+        "high_blast_radius_only": true
+      }
+    },
+    "profiles": {
+      "balanced": {
+        "inherits": "defaults"
+      },
+      "open-weight": {
+        "inherits": "defaults"
+      },
+      "low-cost": {
+        "inherits": "defaults"
+      },
+      "frontier": {
+        "inherits": "defaults"
+      },
+      "implement": {
+        "inherits": "defaults"
+      },
+      "content-analysis": {
+        "inherits": "defaults",
+        "allow_shell": false,
+        "allow_edit": false,
+        "allow_browser": false
+      }
+    },
+    "advanced": {
+      "description": "Explicit opt-in profile for experienced users.",
+      "inherits": "defaults",
+      "confirm_destructive_commands": false
+    }
+  },
+  "gateways": [
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "category": "hosted-model-marketplace",
+      "base_url": "https://openrouter.ai/api/v1",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "protocol": "openai-chat-completions",
+      "model_format": "provider/model",
+      "best_for": [
+        "Broad model and provider access with one key",
+        "Fast setup across many agents",
+        "Long-tail and newly released models"
+      ],
+      "caveats": [
+        "Hosted control plane; account, credits, and routing policy live with OpenRouter",
+        "Provider routing is controlled by OpenRouter rather than your infrastructure",
+        "Credit purchases can carry platform fees"
+      ]
+    },
+    {
+      "id": "cloudflare",
+      "name": "Cloudflare AI Gateway",
+      "category": "edge-control-plane",
+      "base_url_template": "https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1",
+      "api_key_env": "CLOUDFLARE_API_TOKEN",
+      "protocol": "openai-chat-completions",
+      "model_format": "provider/model",
+      "headers": {
+        "cf-aig-gateway-id": "default"
+      },
+      "best_for": [
+        "Teams already using Cloudflare Workers or Cloudflare security tooling",
+        "Edge caching, retries, logs, rate limits, and DLP",
+        "Keeping provider credentials and contracts under your control"
+      ],
+      "caveats": [
+        "Requires a Cloudflare account ID and API token",
+        "Dynamic routes are managed in Cloudflare rather than local config",
+        "Gateway Run tokens are account-scoped, so key policy must be carefully designed"
+      ]
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel AI Gateway",
+      "category": "developer-gateway",
+      "base_url": "https://ai-gateway.vercel.sh",
+      "api_key_env": "AI_GATEWAY_API_KEY",
+      "protocol": "provider-model-strings",
+      "model_format": "provider/model",
+      "best_for": [
+        "Vercel-native deployments and OIDC-based auth",
+        "Fast multi-agent setup with provider failover and spend visibility",
+        "Claude Code compatibility through an Anthropic-compatible endpoint"
+      ],
+      "caveats": [
+        "Strongest when your runtime and observability already live on Vercel",
+        "OIDC token lifetime is short outside Vercel deployments",
+        "Gateway-specific routing options belong in application provider options"
+      ]
+    },
+    {
+      "id": "litellm",
+      "name": "LiteLLM Proxy",
+      "category": "self-hosted-proxy",
+      "base_url_env": "LITELLM_PROXY_API_BASE",
+      "api_key_env": "LITELLM_PROXY_API_KEY",
+      "protocol": "openai-compatible",
+      "model_format": "litellm-proxy/model-name",
+      "best_for": [
+        "Self-hosted control over provider keys and logs",
+        "Existing Azure, Bedrock, Vertex, or direct-provider contracts",
+        "Virtual keys, budgets, cooldowns, retries, and ordered fallbacks"
+      ],
+      "caveats": [
+        "You operate the proxy and its persistence layer",
+        "Model IDs are normalized through LiteLLM rather than the provider catalog",
+        "Production reliability usually requires Redis-backed router state"
+      ]
+    },
+    {
+      "id": "portkey",
+      "name": "Portkey AI Gateway",
+      "category": "managed-governance-gateway",
+      "base_url": "https://api.portkey.ai/v1",
+      "api_key_env": "PORTKEY_API_KEY",
+      "protocol": "openai-compatible",
+      "model_format": "@provider/model",
+      "best_for": [
+        "Managed routing, guardrails, governance, and audit trails",
+        "Fallback and load-balancing config stored as reusable policies",
+        "Organizations that need centralized policy without operating a proxy"
+      ],
+      "caveats": [
+        "Provider credentials and routing policies are managed in Portkey",
+        "Some model pricing must be configured for accurate cost analytics",
+        "Saved config IDs are external state"
+      ]
+    }
+  ],
+  "defaultGateway": "openrouter",
+  "tools": {
+    "version": 1,
+    "contract": {
+      "tools": [
+        "read",
+        "edit",
+        "shell",
+        "browser",
+        "web_search"
+      ],
+      "interfaces": {
+        "mcp": {
+          "enabled": true,
+          "transports": [
+            "stdio",
+            "http",
+            "sse"
+          ],
+          "default_profile": "balanced"
+        },
+        "plugin": {
+          "enabled": true,
+          "model_compatibility": "required",
+          "default_profile": "balanced"
+        },
+        "native_tools": {
+          "enabled": true,
+          "translation": "adapter"
+        }
+      },
+      "profiles": {
+        "balanced": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true,
+          "confirm_destructive_commands": true
+        },
+        "open-weight": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true,
+          "confirm_destructive_commands": true
+        },
+        "low-cost": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true,
+          "confirm_destructive_commands": true
+        },
+        "frontier": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true,
+          "confirm_destructive_commands": true
+        },
+        "implement": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true,
+          "confirm_destructive_commands": true
+        },
+        "content-analysis": {
+          "read": true,
+          "edit": false,
+          "shell": false,
+          "browser": false,
+          "web_search": false,
+          "confirm_destructive_commands": true
+        }
+      },
+      "servers": {
+        "context7": {
+          "type": "http",
+          "url": "https://mcp.context7.com/mcp",
+          "auth": {
+            "env": "CONTEXT7_API_KEY",
+            "required": false
+          },
+          "purpose": "library and framework documentation",
+          "compatible_profiles": [
+            "balanced",
+            "open-weight",
+            "low-cost",
+            "frontier"
+          ]
+        }
+      },
+      "logging": {
+        "level": "error",
+        "telemetry": false,
+        "redact": [
+          "OPENROUTER_API_KEY",
+          "CONTEXT7_API_KEY",
+          "CLOUDFLARE_API_TOKEN",
+          "AI_GATEWAY_API_KEY",
+          "LITELLM_PROXY_API_KEY",
+          "PORTKEY_API_KEY",
+          "FAL_KEY",
+          "REPLICATE_API_TOKEN"
+        ],
+        "tool_output": {
+          "max_lines": 300,
+          "max_bytes": 12000
+        }
+      }
+    },
+    "provider_tool_semantics": {
+      "openrouter": {
+        "tools": "model_capability",
+        "transport": "openai-tools",
+        "strict_schema": "provider_dependent",
+        "note": "OpenRouter passes tool calls through when the selected model supports tools."
+      },
+      "cloudflare": {
+        "tools": "passthrough",
+        "transport": "openai-tools",
+        "strict_schema": "provider_dependent",
+        "note": "Cloudflare AI Gateway routes OpenAI-compatible requests; tool handling depends on target provider."
+      },
+      "vercel": {
+        "tools": "provider-options",
+        "transport": "ai-sdk-provider-options",
+        "strict_schema": "provider_dependent",
+        "note": "Tool calling uses the AI SDK provider/model contract and gateway routing options."
+      },
+      "litellm": {
+        "tools": "normalized",
+        "transport": "openai-tools",
+        "strict_schema": "normalized",
+        "note": "LiteLLM normalizes provider tool schemas behind its OpenAI-compatible API."
+      },
+      "portkey": {
+        "tools": "passthrough",
+        "transport": "openai-tools",
+        "strict_schema": "provider_dependent",
+        "note": "Portkey routes OpenAI-compatible tool payloads; provider support remains decisive."
+      }
+    },
+    "media_providers": {
+      "fal": {
+        "tools": "unsupported",
+        "transport": "model-specific-queue-api",
+        "note": "Media generation endpoints are not tool-call transports."
+      },
+      "replicate": {
+        "tools": "unsupported",
+        "transport": "predictions-api",
+        "note": "Prediction lifecycle is model-specific and not an agent tool-call API."
+      }
+    }
+  },
+  "starters": {
+    "version": 2,
+    "description": "Opinionated starting points translated into each agent's native model-role system.",
+    "default_starter": "balanced",
+    "philosophy": {
+      "principle": "Cheap fast turns by default, deliberate expensive reasoning only when the task earns it.",
+      "frontier_policy": "Never make frontier spend the default. Escalate only for architecture, high-blast-radius changes, or repeated cheap-model failure.",
+      "provider_policy": "Prefer OpenRouter so every adapter shares one catalog, one key, and one routing vocabulary."
+    },
+    "starters": {
+      "balanced": {
+        "description": "Daily coding lane with strong tool behavior and cost discipline.",
+        "routing_profile": "balanced",
+        "agent": "sisyphus",
+        "primary_model": "z-ai/glm-5.3",
+        "background_model": "poolside/laguna-s-2.1",
+        "deep_model": "deepseek/deepseek-v4-pro-0813",
+        "frontier_model": "anthropic/claude-sonnet-5",
+        "fallback_models": [
+          "moonshotai/kimi-k2.7-code",
+          "poolside/laguna-s-2.1",
+          "qwen/qwen3.8-max"
+        ],
+        "reasoning_effort": "medium",
+        "background_model_role": "background",
+        "mcp_server": "context7",
+        "timeout": {
+          "request_seconds": 300,
+          "stalled_chunk_seconds": 60,
+          "mcp_seconds": 30
+        }
+      },
+      "review": {
+        "description": "Read-only review lane that never edits files.",
+        "routing_profile": "balanced",
+        "agent": "review",
+        "reasoning_effort": "high",
+        "background_model_role": "background",
+        "mcp_server": "context7",
+        "permissions": {
+          "read": true,
+          "edit": false,
+          "shell": false,
+          "browser": true,
+          "web_search": true
+        }
+      },
+      "plan": {
+        "description": "Deep planning lane; use frontier only when blast radius justifies the spend.",
+        "routing_profile": "balanced",
+        "agent": "prometheus",
+        "primary_model": "deepseek/deepseek-v4-pro-0813",
+        "background_model": "deepseek/deepseek-v4-flash-0731",
+        "frontier_model": "anthropic/claude-opus-5",
+        "fallback_models": [
+          "z-ai/glm-5.3",
+          "moonshotai/kimi-k2.7-code",
+          "qwen/qwen3.8-max"
+        ],
+        "reasoning_effort": "high",
+        "background_model_role": "background",
+        "mcp_server": "context7",
+        "permissions": {
+          "read": true,
+          "edit": false,
+          "shell": false,
+          "browser": true,
+          "web_search": true
+        }
+      },
+      "content": {
+        "description": "Toolless long-form analysis and sensitive-content review.",
+        "routing_profile": "content-analysis",
+        "agent": "analyze",
+        "reasoning_effort": "medium",
+        "background_model_role": "background",
+        "mcp_server": null,
+        "permissions": {
+          "read": true,
+          "edit": false,
+          "shell": false,
+          "browser": false,
+          "web_search": false
+        }
+      },
+      "implement": {
+        "description": "Edit-capable implementation worker for bounded code changes.",
+        "routing_profile": "balanced",
+        "agent": "hephaestus",
+        "primary_model": "z-ai/glm-5.3",
+        "background_model": "poolside/laguna-s-2.1",
+        "deep_model": "deepseek/deepseek-v4-pro-0813",
+        "fallback_models": [
+          "qwen/qwen3.8-max",
+          "poolside/laguna-s-2.1",
+          "meituan/longcat-2.0"
+        ],
+        "reasoning_effort": "high",
+        "permissions": {
+          "read": true,
+          "edit": true,
+          "shell": true,
+          "browser": true,
+          "web_search": true
+        }
+      }
+    },
+    "adapters": {
+      "opencode": {
+        "pin": "oh-my-openagent@4.19.4",
+        "native_starters": {
+          "sisyphus": "balanced",
+          "hephaestus": "implement",
+          "prometheus": "plan",
+          "review": "review",
+          "analyze": "content"
+        },
+        "housekeeping_model": "poolside/laguna-s-2.1"
+      },
+      "omp": {
+        "role_overrides": {
+          "default": "balanced",
+          "smol": "balanced",
+          "slow": "plan",
+          "plan": "plan",
+          "task": "balanced",
+          "advisor": "plan"
+        }
+      },
+      "claude-code": {
+        "provider": "openrouter-anthropic-compatible",
+        "base_url": "https://openrouter.ai/api",
+        "model": "anthropic/claude-sonnet-5",
+        "fallback_model": "anthropic/claude-opus-5",
+        "small_fast_model": "anthropic/claude-haiku-4.5",
+        "rationale": "Claude Code supports Anthropic-compatible LLM gateways through ANTHROPIC_BASE_URL, preserving the single OpenRouter key model."
+      },
+      "codex": {
+        "native_starters": {
+          "default": "balanced",
+          "subagent": "balanced",
+          "reasoning": "plan"
+        },
+        "agents": {
+          "enabled": true,
+          "max_concurrent_threads": 4,
+          "default_subagent_model": "z-ai/glm-5.3",
+          "default_subagent_reasoning_effort": "medium"
+        }
+      },
+      "cursor": {
+        "rule_starter": "balanced"
+      },
+      "aider": {
+        "model_starter": "balanced"
+      },
+      "goose": {
+        "model_starter": "balanced",
+        "planner_starter": "plan"
+      }
+    }
+  }
+}

@@ -7,3 +7,11 @@ __pycache__/
 dist/
 build/
 node_modules/
+
+# Web generator local state
+web/.vercel/
+web/.env.local
+web/.next/
+web/node_modules/
+web/test-results/
+web/playwright-report/
