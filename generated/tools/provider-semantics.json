@@ -1,0 +1,32 @@
+{
+  "openrouter": {
+    "tools": "model_capability",
+    "transport": "openai-tools",
+    "strict_schema": "provider_dependent",
+    "note": "OpenRouter passes tool calls through when the selected model supports tools."
+  },
+  "cloudflare": {
+    "tools": "passthrough",
+    "transport": "openai-tools",
+    "strict_schema": "provider_dependent",
+    "note": "Cloudflare AI Gateway routes OpenAI-compatible requests; tool handling depends on target provider."
+  },
+  "vercel": {
+    "tools": "provider-options",
+    "transport": "ai-sdk-provider-options",
+    "strict_schema": "provider_dependent",
+    "note": "Tool calling uses the AI SDK provider/model contract and gateway routing options."
+  },
+  "litellm": {
+    "tools": "normalized",
+    "transport": "openai-tools",
+    "strict_schema": "normalized",
+    "note": "LiteLLM normalizes provider tool schemas behind its OpenAI-compatible API."
+  },
+  "portkey": {
+    "tools": "passthrough",
+    "transport": "openai-tools",
+    "strict_schema": "provider_dependent",
+    "note": "Portkey routes OpenAI-compatible tool payloads; provider support remains decisive."
+  }
+}

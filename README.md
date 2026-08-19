@@ -19,6 +19,7 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 | **Taxonomy** | Model gateways · model providers · media providers · inference runtimes |
 | **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
 | **Install** | User-local · dry-run · backups · uninstall · doctor |
+| **Tools** | Native tools · MCP · plugins · provider-aware semantics |
 
 ## 30-second start
 
@@ -87,6 +88,39 @@ Generated means the native config is produced and structurally validated. It doe
 | Vercel AI Gateway | Developer gateway | Vercel-native apps, OIDC auth, provider failover, and spend visibility | Strongest when your runtime also lives on Vercel |
 | LiteLLM Proxy | Self-hosted proxy | Direct provider contracts, Azure/Bedrock/Vertex, virtual keys, budgets | You operate the proxy and its state |
 | Portkey AI Gateway | Managed governance gateway | Guardrails, audit, policy, and managed failover | External account and routing policy state |
+
+## Tool, plugin, and MCP contract
+
+All adapters translate one canonical tool contract:
+
+- Native tools: `read`, `edit`, `shell`, `browser`, `web_search`
+- Interfaces: native tools, MCP, and plugins
+- Profiles mirror routing profiles and policy permissions
+- Context7 is the default MCP documentation server
+- Tool output is capped at 300 lines / 12,000 bytes
+- Logging is `error` level, telemetry-free, and redacts every supported provider key
+
+Provider semantics are explicit:
+
+| Provider | Tool handling | Transport |
+| --- | --- | --- |
+| OpenRouter | Model capability | OpenAI tools |
+| Cloudflare | Passthrough | OpenAI tools |
+| Vercel | Provider options | AI SDK provider options |
+| LiteLLM | Normalized | OpenAI tools |
+| Portkey | Passthrough | OpenAI tools |
+
+Fal and Replicate are intentionally unsupported for agent tool calling because they use media queue/prediction APIs rather than chat tool-call transports.
+
+Adapter-specific output:
+
+| Adapter | Tool/MCP output |
+| --- | --- |
+| OpenCode | Permission rules, remote MCP, error logging, tool output caps |
+| omp | Tool flags, approval mode, HTTP MCP, logging redaction |
+| Claude Code | Permission arrays, `.mcp.json`, nonessential traffic disabled |
+| Codex | `model_providers`, MCP servers, sandbox/approval policy, logging |
+| Goose | Extensions, permission mode, tool flags, OTel disabled |
 
 ## Provider and media taxonomy
 
@@ -176,6 +210,24 @@ Every pull request runs:
 Daily jobs detect OpenRouter model drift and fail when canonical metadata changes.
 
 Tagged releases run the full verification suite before creating a GitHub Release.
+
+## Doctor, health, and installation help
+
+```bash
+./scripts/install.sh doctor
+./scripts/install.sh health
+./scripts/install.sh --agent opencode --dry-run
+./scripts/install.sh --agent claude-code
+./scripts/install.sh uninstall
+```
+
+Doctor verifies:
+
+- not running as root
+- Python availability
+- generated manifest presence
+- installed OpenCode, omp, Claude Code, Codex, and Goose symlinks
+- install commands and supported agents
 
 ## Security and safety defaults
 

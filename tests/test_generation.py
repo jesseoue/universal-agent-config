@@ -16,7 +16,7 @@ def test_all_adapters_generated():
     }
     actual = {
         p.name for p in GENERATED.iterdir()
-        if p.is_dir() and p.name not in {"gateways", "providers"}
+        if p.is_dir() and p.name not in {"gateways", "providers", "tools"}
     }
     assert actual == expected
 
@@ -50,6 +50,32 @@ def test_hermes_is_isolated_from_tool_lanes():
     assert content["allow_edit"] is False
 
 
+def test_tool_contract_and_generated_permissions():
+    contract = yaml.safe_load((GENERATED / "tools" / "contract.yml").read_text())
+    assert contract["interfaces"]["mcp"]["enabled"] is True
+    assert contract["logging"]["telemetry"] is False
+
+    omp = yaml.safe_load((GENERATED / "omp" / "config.yml").read_text())
+    assert omp["tools"]["approvalMode"] == "normal"
+    assert omp["logging"]["level"] == "error"
+
+    opencode = json.loads((GENERATED / "opencode" / "opencode.json").read_text())
+    assert opencode["permission"]["bash"] == "allow"
+    assert opencode["logLevel"] == "ERROR"
+
+    goose = yaml.safe_load((GENERATED / "goose" / "config.yaml").read_text())
+    assert goose["tools"]["shell"] is True
+    assert goose["logging"]["level"] == "error"
+
+
+def test_provider_tool_semantics():
+    semantics = json.loads((GENERATED / "tools" / "provider-semantics.json").read_text())
+    assert set(semantics) == {"openrouter", "cloudflare", "vercel", "litellm", "portkey"}
+    assert semantics["openrouter"]["tools"] == "model_capability"
+    assert semantics["litellm"]["tools"] == "normalized"
+    assert semantics["vercel"]["transport"] == "ai-sdk-provider-options"
+
+
 def test_generation_is_deterministic():
     before = {
         p.relative_to(GENERATED).as_posix(): p.read_bytes()
@@ -72,7 +98,7 @@ def test_opencode_config():
 def test_codex_config():
     config = tomllib.loads((GENERATED / "codex" / "config.toml").read_text())
     assert config["model_provider"] == "openrouter"
-    assert config["providers"]["openrouter"]["base_url"] == "https://openrouter.ai/api/v1"
+    assert config["model_providers"]["openrouter"]["base_url"] == "https://openrouter.ai/api/v1"
 
 
 def test_omp_configs():

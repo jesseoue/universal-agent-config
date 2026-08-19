@@ -69,6 +69,7 @@ def validate_generated(models, routing) -> list[str]:
         "omp/models.yml",
         "omp/mcp.json",
         "claude-code/settings.json",
+        "claude-code/.mcp.json",
         "claude-code/CLAUDE.md",
         "codex/config.toml",
         "codex/AGENTS.md",
@@ -83,6 +84,9 @@ def validate_generated(models, routing) -> list[str]:
         "gateways/portkey/config.json",
         "providers/taxonomy.json",
         "providers/media.env.example.yml",
+        "tools/contract.yml",
+        "tools/mcp.json",
+        "tools/provider-semantics.json",
         "manifest.json",
     }
     for relative in expected:
@@ -169,6 +173,117 @@ def validate_provider_taxonomy(models, providers) -> list[str]:
     return errors
 
 
+def validate_tool_contract(models, routing, policy, tools) -> list[str]:
+    errors = []
+    contract = tools["contract"]
+    required_tools = {"read", "edit", "shell", "browser", "web_search"}
+    if set(contract["tools"]) != required_tools:
+        errors.append(f"tool contract mismatch: {sorted(contract['tools'])}")
+
+    if set(contract["interfaces"]) != {"mcp", "plugin", "native_tools"}:
+        errors.append("tool interfaces must cover MCP, plugins, and native tools")
+
+    expected_profiles = set(routing["profiles"])
+    actual_profiles = set(contract["profiles"])
+    if actual_profiles != expected_profiles:
+        errors.append(
+            f"tool profiles must match routing profiles: expected {sorted(expected_profiles)}, got {sorted(actual_profiles)}"
+        )
+
+    for profile_name, tool_profile in contract["profiles"].items():
+        policy_profile = policy["profiles"][profile_name]
+        defaults = policy["defaults"]
+        effective_edit = policy_profile.get("allow_edit", defaults["allow_edit"])
+        effective_shell = policy_profile.get("allow_shell", defaults["allow_shell"])
+        if tool_profile["edit"] != effective_edit:
+            errors.append(f"{profile_name}.edit does not match policy.allow_edit")
+        if tool_profile["shell"] != effective_shell:
+            errors.append(f"{profile_name}.shell does not match policy.allow_shell")
+
+    if contract["logging"]["telemetry"]:
+        errors.append("tool contract telemetry must be disabled")
+    if contract["logging"]["level"] != "error":
+        errors.append("tool contract logging level must be error")
+
+    required_redactions = {
+        "OPENROUTER_API_KEY", "CONTEXT7_API_KEY", "CLOUDFLARE_API_TOKEN",
+        "AI_GATEWAY_API_KEY", "LITELLM_PROXY_API_KEY", "PORTKEY_API_KEY",
+        "FAL_KEY", "REPLICATE_API_TOKEN",
+    }
+    if set(contract["logging"]["redact"]) != required_redactions:
+        errors.append("tool contract logging redaction set is incomplete")
+
+    generated_semantics = load_json(ROOT / "generated" / "tools" / "provider-semantics.json")
+    if set(generated_semantics) != set(tools["provider_tool_semantics"]):
+        errors.append("generated provider tool semantics are incomplete")
+    for gateway_name, semantics in tools["provider_tool_semantics"].items():
+        if not semantics.get("note"):
+            errors.append(f"{gateway_name} tool semantics lacks an operational note")
+    for media_name in ("fal", "replicate"):
+        if tools["media_providers"][media_name]["tools"] != "unsupported":
+            errors.append(f"{media_name} must not claim tool-call support")
+
+    return errors
+
+
+def validate_generated_tool_contract(tools) -> list[str]:
+    errors = []
+    omp = load_yaml(ROOT / "generated" / "omp" / "config.yml")
+    opencode = load_json(ROOT / "generated" / "opencode" / "opencode.json")
+    claude = load_json(ROOT / "generated" / "claude-code" / "settings.json")
+    codex = tomllib.loads((ROOT / "generated" / "codex" / "config.toml").read_text())
+    goose = load_yaml(ROOT / "generated" / "goose" / "config.yaml")
+
+    if omp["tools"]["approvalMode"] != "normal":
+        errors.append("omp approval mode must be normal")
+    if omp["logging"]["telemetry"] is not False:
+        errors.append("omp telemetry must be disabled")
+    if not omp["mcp"]["enableProjectConfig"]:
+        errors.append("omp project MCP config must be enabled")
+
+    if opencode["logLevel"] != "ERROR":
+        errors.append("OpenCode log level must be ERROR")
+    if opencode["tool_output"]["max_lines"] != 300 or opencode["tool_output"]["max_bytes"] != 12000:
+        errors.append("OpenCode tool output limits are incorrect")
+    if opencode["permission"]["bash"] != "allow":
+        errors.append("OpenCode shell permission must be allow for the balanced profile")
+    if opencode["mcp"]["context7"]["headers"]["CONTEXT7_API_KEY"] != "{env:CONTEXT7_API_KEY}":
+        errors.append("OpenCode Context7 auth header is incorrect")
+
+    if "Read(.env)" not in claude["permissions"]["deny"]:
+        errors.append("Claude Code must deny reading .env files")
+    if claude["env"].get("CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC") != "1":
+        errors.append("Claude Code nonessential traffic must be disabled")
+
+    if codex.get("log_level") != "error":
+        errors.append("Codex log level must be error")
+    if codex.get("approval_policy") != "on-request":
+        errors.append("Codex approval policy must be on-request")
+    if "openrouter" not in codex.get("model_providers", {}):
+        errors.append("Codex config must use model_providers.openrouter")
+    if "context7" not in codex.get("mcp_servers", {}):
+        errors.append("Codex config must include Context7 MCP")
+
+    claude_mcp = load_json(ROOT / "generated" / "claude-code" / ".mcp.json")
+    if "context7" not in claude_mcp.get("mcpServers", {}):
+        errors.append("Claude Code config must include Context7 MCP")
+
+    if goose["tools"]["shell"] is not True:
+        errors.append("Goose shell tool must be enabled for the balanced profile")
+    if goose["logging"]["level"] != "error":
+        errors.append("Goose log level must be error")
+    if goose["otel"]["enabled"] is not False:
+        errors.append("Goose OpenTelemetry must be disabled")
+
+    required_redactions = set(tools["contract"]["logging"]["redact"])
+    if set(omp["logging"]["redact"]) != required_redactions:
+        errors.append("omp logging redactions are incomplete")
+    if set(goose["logging"]["redact"]) != required_redactions:
+        errors.append("Goose logging redactions are incomplete")
+
+    return errors
+
+
 def validate_gateways(gateways) -> list[str]:
     errors = []
     expected = {"openrouter", "cloudflare", "vercel", "litellm", "portkey"}
@@ -215,6 +330,8 @@ def main() -> int:
     errors.extend(validate_generated(models, routing))
     errors.extend(validate_gateways(gateways))
     errors.extend(validate_provider_taxonomy(models, providers))
+    errors.extend(validate_tool_contract(models, routing, policy, load_yaml(ROOT / "core" / "tools.yml")))
+    errors.extend(validate_generated_tool_contract(load_yaml(ROOT / "core" / "tools.yml")))
 
     if errors:
         print("Validation failed:")

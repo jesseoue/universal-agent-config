@@ -23,9 +23,12 @@ retry:
     vision:
     - anthropic/claude-sonnet-5
 tools:
+  read: true
+  edit: true
+  bash: true
+  browser: true
+  web_search: true
   approvalMode: normal
-  bash:
-    autoBackground: true
 thinkingBudgets:
   defaultThinkingLevel: high
   minimal: 1024
@@ -39,3 +42,18 @@ compaction:
   reserveTokens: 16384
   keepRecentTokens: 20000
   autoContinue: true
+logging:
+  level: error
+  telemetry: false
+  redact:
+  - OPENROUTER_API_KEY
+  - CONTEXT7_API_KEY
+  - CLOUDFLARE_API_TOKEN
+  - AI_GATEWAY_API_KEY
+  - LITELLM_PROXY_API_KEY
+  - PORTKEY_API_KEY
+  - FAL_KEY
+  - REPLICATE_API_TOKEN
+mcp:
+  enableProjectConfig: true
+  renderMarkdownResults: true

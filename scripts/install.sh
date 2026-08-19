@@ -17,6 +17,7 @@ Usage: install.sh [command] --agent AGENT [--dry-run]
 Commands:
   install       Install one agent (default)
   doctor        Check environment, generated files, and install state
+  health        Alias for doctor
   uninstall     Remove Universal Agent Config symlinks
 
 Agents:
@@ -39,7 +40,7 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    install|doctor|uninstall)
+    install|doctor|health|uninstall)
       COMMAND="$1"; shift ;;
     --version) echo "universal-agent-config $VERSION"; exit 0 ;;
     --all) AGENT="all"; shift ;;
@@ -110,6 +111,8 @@ uninstall_file() {
 doctor() {
   local failed=false
   local destination target
+  local installed=0
+  local supported=5
 
   echo "Universal Agent Config doctor"
   if [[ "$(id -u)" != 0 ]]; then
@@ -143,6 +146,7 @@ doctor() {
       target="$(readlink "$destination")"
       if [[ "$target" == "$REPO"/generated/* ]]; then
         echo "  ✓ installed: $destination"
+        installed=$((installed + 1))
       else
         echo "  ⚠ other symlink: $destination"
       fi
@@ -155,7 +159,9 @@ doctor() {
     echo "Doctor failed."
     return 1
   fi
-  echo "Doctor passed."
+  echo "Doctor passed. ${installed}/${supported} global adapters installed."
+  echo "Install help: ./scripts/install.sh --agent AGENT [--dry-run]"
+  echo "Agents: opencode omp claude-code codex cursor aider goose"
 }
 
 uninstall_all() {
@@ -166,6 +172,7 @@ uninstall_all() {
     "$HOME/.omp/agent/models.yml"
     "$HOME/.omp/agent/mcp.json"
     "$HOME/.claude/settings.json"
+    "$HOME/.claude/.mcp.json"
     "$HOME/.claude/CLAUDE.md"
     "$HOME/.codex/config.toml"
     "$HOME/.codex/AGENTS.md"
@@ -179,7 +186,7 @@ uninstall_all() {
   done
 }
 
-if [[ "$COMMAND" == "doctor" ]]; then
+if [[ "$COMMAND" == "doctor" || "$COMMAND" == "health" ]]; then
   doctor
   exit $?
 fi
@@ -214,6 +221,7 @@ case "$AGENT" in
     target="$HOME/.claude"
     [[ "$DRY_RUN" == true ]] || mkdir -p "$target"
     install_file "$REPO/generated/claude-code/settings.json" "$target/settings.json"
+    install_file "$REPO/generated/claude-code/.mcp.json" "$target/.mcp.json"
     install_file "$REPO/generated/claude-code/CLAUDE.md" "$target/CLAUDE.md"
     ;;
   codex)

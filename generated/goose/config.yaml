@@ -6,3 +6,29 @@ provider:
   openrouter:
     base_url: https://openrouter.ai/api/v1
     api_key_env: OPENROUTER_API_KEY
+extensions:
+  developer:
+    enabled: true
+    timeout: 300
+  developer_docs:
+    enabled: true
+GOOSE_MODE: auto
+tools:
+  read: true
+  edit: true
+  shell: true
+  browser: true
+  web_search: true
+logging:
+  level: error
+  redact:
+  - OPENROUTER_API_KEY
+  - CONTEXT7_API_KEY
+  - CLOUDFLARE_API_TOKEN
+  - AI_GATEWAY_API_KEY
+  - LITELLM_PROXY_API_KEY
+  - PORTKEY_API_KEY
+  - FAL_KEY
+  - REPLICATE_API_TOKEN
+otel:
+  enabled: false

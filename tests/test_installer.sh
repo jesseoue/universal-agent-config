@@ -18,6 +18,8 @@ HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh
 test -L "$TEMP_HOME/.config/opencode/opencode.json"
 test -L "$TEMP_HOME/.omp/agent/config.yml"
 test -L "$TEMP_HOME/.claude/settings.json"
+test -L "$TEMP_HOME/.claude/.mcp.json"
+test -L "$TEMP_HOME/.claude/.mcp.json"
 test -L "$TEMP_HOME/.codex/config.toml"
 test -L "$TEMP_HOME/.config/goose/config.yaml"
 
@@ -27,5 +29,7 @@ HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh
 HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" uninstall >/dev/null
 test ! -e "$TEMP_HOME/.config/opencode/opencode.json"
 test ! -e "$TEMP_HOME/.omp/agent/config.yml"
+test ! -e "$TEMP_HOME/.claude/.mcp.json"
+test ! -e "$TEMP_HOME/.claude/.mcp.json"
 
 echo "doctor and uninstall sandbox tests OK"

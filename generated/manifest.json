@@ -15,7 +15,8 @@
     ],
     "claude-code": [
       "settings.json",
-      "CLAUDE.md"
+      "CLAUDE.md",
+      ".mcp.json"
     ],
     "codex": [
       "config.toml",
@@ -29,10 +30,6 @@
     ],
     "goose": [
       "config.yaml"
-    ],
-    "providers": [
-      "taxonomy.json",
-      "media.env.example.yml"
     ],
     "gateways": {
       "openrouter": [
@@ -51,7 +48,16 @@
       "portkey": [
         "config.json"
       ]
-    }
+    },
+    "providers": [
+      "taxonomy.json",
+      "media.env.example.yml"
+    ],
+    "tools": [
+      "contract.yml",
+      "mcp.json",
+      "provider-semantics.json"
+    ]
   },
   "model_count": 15
 }

@@ -3,12 +3,23 @@ model_provider = "openrouter"
 model_reasoning_effort = "high"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
+log_level = "error"
 
-[providers.openrouter]
+[model_providers.openrouter]
 name = "OpenRouter"
 base_url = "https://openrouter.ai/api/v1"
 env_key = "OPENROUTER_API_KEY"
 
-[providers.openrouter.http_headers]
+[model_providers.openrouter.http_headers]
 HTTP-Referer = "https://github.com/jesseoue/universal-agent-config"
 X-Title = "Universal Agent Config"
+
+[mcp_servers.context7]
+command = "npx"
+args = [
+    "-y",
+    "@upstash/context7-mcp",
+]
+
+[mcp_servers.context7.env]
+CONTEXT7_API_KEY = "${CONTEXT7_API_KEY}"

@@ -8,12 +8,14 @@
     "allow": [
       "Read",
       "Edit",
-      "Bash"
+      "Bash",
+      "WebFetch"
     ],
     "deny": [
       "Bash(rm -rf *)",
       "Read(.env)",
-      "Read(**/.env)"
+      "Read(**/.env)",
+      "Read(**/secrets/**)"
     ]
   },
   "model": "anthropic/claude-sonnet-5",

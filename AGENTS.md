@@ -9,6 +9,7 @@ This repository is a canonical model-routing and agent-policy monorepo.
 - `core/policy.yml`: permissions, safety, timeout, and telemetry defaults.
 - `core/providers.yml`: OpenRouter transport and attribution.
 - `core/gateways.yml`: routing-technology matrix and gateway-specific semantics.
+- `core/tools.yml`: canonical tool, MCP, plugin, provider-tool semantics, and logging contract.
 - `core/prompts/core.md`: shared agent behavior policy.
 
 ## Rules
@@ -20,6 +21,8 @@ This repository is a canonical model-routing and agent-policy monorepo.
 5. Keep public defaults conservative: telemetry off, secrets local, destructive commands confirmed.
 6. Adapter outputs must be native to each target agent and must not require this repository at runtime unless linked deliberately.
 7. Never commit API keys or local absolute paths.
+8. Keep adapter translation in `scripts/generators/` and shared serialization in `scripts/common.py`.
+9. Add generated-artifact checks when introducing a new adapter or tool interface.
 
 ## Adapter workflow
 

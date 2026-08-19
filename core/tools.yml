@@ -1,0 +1,115 @@
+version: 1
+contract:
+  tools:
+    - read
+    - edit
+    - shell
+    - browser
+    - web_search
+  interfaces:
+    mcp:
+      enabled: true
+      transports: [stdio, http, sse]
+      default_profile: balanced
+    plugin:
+      enabled: true
+      model_compatibility: required
+      default_profile: balanced
+    native_tools:
+      enabled: true
+      translation: adapter
+  profiles:
+    balanced:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+      confirm_destructive_commands: true
+    open-weight:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+      confirm_destructive_commands: true
+    low-cost:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+      confirm_destructive_commands: true
+    frontier:
+      read: true
+      edit: true
+      shell: true
+      browser: true
+      web_search: true
+      confirm_destructive_commands: true
+    content-analysis:
+      read: true
+      edit: false
+      shell: false
+      browser: false
+      web_search: false
+      confirm_destructive_commands: true
+  servers:
+    context7:
+      type: http
+      url: https://mcp.context7.com/mcp
+      auth:
+        env: CONTEXT7_API_KEY
+        required: false
+      purpose: library and framework documentation
+      compatible_profiles: [balanced, open-weight, low-cost, frontier]
+  logging:
+    level: error
+    telemetry: false
+    redact:
+      - OPENROUTER_API_KEY
+      - CONTEXT7_API_KEY
+      - CLOUDFLARE_API_TOKEN
+      - AI_GATEWAY_API_KEY
+      - LITELLM_PROXY_API_KEY
+      - PORTKEY_API_KEY
+      - FAL_KEY
+      - REPLICATE_API_TOKEN
+    tool_output:
+      max_lines: 300
+      max_bytes: 12000
+provider_tool_semantics:
+  openrouter:
+    tools: model_capability
+    transport: openai-tools
+    strict_schema: provider_dependent
+    note: OpenRouter passes tool calls through when the selected model supports tools.
+  cloudflare:
+    tools: passthrough
+    transport: openai-tools
+    strict_schema: provider_dependent
+    note: Cloudflare AI Gateway routes OpenAI-compatible requests; tool handling depends on target provider.
+  vercel:
+    tools: provider-options
+    transport: ai-sdk-provider-options
+    strict_schema: provider_dependent
+    note: Tool calling uses the AI SDK provider/model contract and gateway routing options.
+  litellm:
+    tools: normalized
+    transport: openai-tools
+    strict_schema: normalized
+    note: LiteLLM normalizes provider tool schemas behind its OpenAI-compatible API.
+  portkey:
+    tools: passthrough
+    transport: openai-tools
+    strict_schema: provider_dependent
+    note: Portkey routes OpenAI-compatible tool payloads; provider support remains decisive.
+media_providers:
+  fal:
+    tools: unsupported
+    transport: model-specific-queue-api
+    note: Media generation endpoints are not tool-call transports.
+  replicate:
+    tools: unsupported
+    transport: predictions-api
+    note: Prediction lifecycle is model-specific and not an agent tool-call API.

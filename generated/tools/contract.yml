@@ -1,0 +1,72 @@
+tools:
+- read
+- edit
+- shell
+- browser
+- web_search
+interfaces:
+  mcp:
+    enabled: true
+    transports:
+    - stdio
+    - http
+    - sse
+    default_profile: balanced
+  plugin:
+    enabled: true
+    model_compatibility: required
+    default_profile: balanced
+  native_tools:
+    enabled: true
+    translation: adapter
+profiles:
+  balanced:
+    read: true
+    edit: true
+    shell: true
+    browser: true
+    web_search: true
+    confirm_destructive_commands: true
+  open-weight:
+    read: true
+    edit: true
+    shell: true
+    browser: true
+    web_search: true
+    confirm_destructive_commands: true
+  low-cost:
+    read: true
+    edit: true
+    shell: true
+    browser: true
+    web_search: true
+    confirm_destructive_commands: true
+  frontier:
+    read: true
+    edit: true
+    shell: true
+    browser: true
+    web_search: true
+    confirm_destructive_commands: true
+  content-analysis:
+    read: true
+    edit: false
+    shell: false
+    browser: false
+    web_search: false
+    confirm_destructive_commands: true
+logging:
+  level: error
+  telemetry: false
+  redact:
+  - OPENROUTER_API_KEY
+  - CONTEXT7_API_KEY
+  - CLOUDFLARE_API_TOKEN
+  - AI_GATEWAY_API_KEY
+  - LITELLM_PROXY_API_KEY
+  - PORTKEY_API_KEY
+  - FAL_KEY
+  - REPLICATE_API_TOKEN
+  tool_output:
+    max_lines: 300
+    max_bytes: 12000
