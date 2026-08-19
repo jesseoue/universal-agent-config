@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { agentMetadata, catalog, gatewayById, modelById, presetMetadata, rulePacks } from "@/lib/catalog";
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
+import { agentMetadata, catalog, gatewayById, gatewayMetadata, laneTooltips, modelById, performanceTooltips, permissionTooltips, presetMetadata, rulePacks } from "@/lib/catalog";
 import { applyPreset, estimatedMonthlyCost, laneLabels } from "@/lib/config";
 import { buildArtifacts, createZip } from "@/lib/generate";
 import { validateConfig } from "@/lib/validate";
@@ -55,6 +56,7 @@ export function GeneratorStudio() {
   };
 
   return (
+  <TooltipProvider delayDuration={150}>
     <main className="min-h-screen studio-grid">
       <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 py-6 lg:px-8 lg:py-8">
         <header className="studio-panel flex flex-col gap-4 rounded-3xl p-5 lg:flex-row lg:items-center lg:justify-between lg:p-7">
@@ -73,6 +75,39 @@ export function GeneratorStudio() {
             <span className="text-lime-200">Client-only · no keys collected</span>
           </div>
         </header>
+
+
+        <section className="studio-panel grid gap-4 rounded-3xl p-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:p-7">
+          <div>
+            <div className="flex items-center gap-3">
+              <p className="font-mono text-xs uppercase tracking-[0.28em] text-lime-200/70">Live generation pipeline</p>
+              <Tooltip content="Every option below flows through this deterministic client-side pipeline. Nothing is sent to a server, and no keys are requested.">
+                <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[10px] text-white/50">?</span>
+              </Tooltip>
+            </div>
+            <div className="mt-4 grid gap-2 sm:grid-cols-5">
+              {[
+                { label: "Policy", value: config.preset, detail: "Preset + permissions" },
+                { label: "Gateway", value: gatewayById.get(config.gateway)?.name, detail: "Transport and model naming" },
+                { label: "Lanes", value: `${Object.keys(config.lanes).length}`, detail: "Primary and fallback models" },
+                { label: "Validation", value: `${issues.length} issue${issues.length === 1 ? "" : "s"}`, detail: "Capability and safety checks" },
+                { label: "Artifacts", value: `${artifacts.length}`, detail: "Native files in ZIP" },
+              ].map((node, index) => (
+                <div key={node.label} className="relative rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-white/35">{String(index + 1).padStart(2, "0")} · {node.label}</p>
+                  <p className="mt-2 truncate text-sm font-medium text-white">{node.value}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-white/45">{node.detail}</p>
+                  {index < 4 && <span aria-hidden="true" className="absolute -right-2 top-1/2 hidden h-px w-4 bg-lime-300/30 sm:block" />}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-2xl border border-lime-300/20 bg-lime-300/[0.06] p-4">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-lime-200/70">Estimated monthly</p>
+            <p className="mt-2 font-mono text-3xl font-semibold text-lime-100">${monthlyCost.toFixed(2)}</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-white/50">Modeled at 10M input / 1M output tokens using current catalog prices. Excludes cache savings.</p>
+          </div>
+        </section>
 
         <div className="grid min-h-[calc(100vh-190px)] gap-6 xl:grid-cols-[240px_minmax(0,1fr)_340px]">
           <nav aria-label="Wizard steps" className="studio-panel h-fit rounded-3xl p-3">
@@ -123,6 +158,11 @@ export function GeneratorStudio() {
                         <span>cost · {preset.costPosture}</span>
                         <span>safety · {preset.safetyPosture}</span>
                       </div>
+                      <div className="mt-4 flex flex-wrap gap-1">
+                        {preset.recommendedAgents.map((agentId) => (
+                          <span key={agentId} className="rounded-full border border-white/10 bg-white/5 px-2 py-1 font-mono text-[10px] text-white/45">{agentMetadata[agentId].name}</span>
+                        ))}
+                      </div>
                     </Card>
                   ))}
                 </div>
@@ -150,6 +190,14 @@ export function GeneratorStudio() {
                           </div>
                         </div>
                         <CardDescription className="mt-4">{agent.notes.join(" ")}</CardDescription>
+                        <div className="mt-4 grid gap-2">
+                          {agent.outputs.map((output) => (
+                            <div key={output.label} className="flex items-center justify-between gap-3 rounded-lg border border-white/8 bg-black/25 px-2 py-1.5">
+                              <span className="font-mono text-[10px] uppercase tracking-widest text-white/35">{output.label}</span>
+                              <span className="truncate font-mono text-[10px] text-lime-100/75">{output.value}</span>
+                            </div>
+                          ))}
+                        </div>
                         <div className="mt-4 font-mono text-[11px] text-white/45">{agent.files.join(" · ")}</div>
                       </Card>
                     );
@@ -172,7 +220,10 @@ export function GeneratorStudio() {
                         className={`p-5 text-left hover:border-lime-300/40 ${selected ? "border-lime-300/50 bg-lime-300/10" : ""}`}
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <CardTitle>{gateway.name}</CardTitle>
+                          <div className="flex items-center gap-3">
+                            <Image src={gatewayMetadata[id].logo} alt="" width={28} height={28} className="text-white/70" />
+                            <CardTitle>{gateway.name}</CardTitle>
+                          </div>
                           <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 font-mono text-[11px] text-white/50">{gateway.category}</span>
                         </div>
                         <CardDescription className="mt-3">{gateway.best_for?.join(" · ")}</CardDescription>
@@ -195,7 +246,12 @@ export function GeneratorStudio() {
                       <div key={lane} className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div>
-                            <h3 className="font-semibold">{laneLabels[lane]}</h3>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-semibold">{laneLabels[lane]}</h3>
+                              <Tooltip content={laneTooltips[lane]}>
+                                <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[10px] text-white/50">?</span>
+                              </Tooltip>
+                            </div>
                             <p className="font-mono text-xs text-white/45">{config.lanes[lane].primary}</p>
                           </div>
                           <div className="font-mono text-[11px] text-white/45">
@@ -204,6 +260,9 @@ export function GeneratorStudio() {
                         </div>
                         <label className="mt-4 block">
                           <span className="font-mono text-[11px] uppercase tracking-widest text-white/40">Primary model</span>
+                          <Tooltip content="Primary models receive the lane's normal traffic. Fallback models are used in order when the primary fails.">
+                            <span aria-hidden="true" className="ml-1 grid size-4 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[9px] text-white/45">?</span>
+                          </Tooltip>
                           <select
                             value={config.lanes[lane].primary}
                             onChange={(event) => setPrimaryModel(lane, event.target.value)}
@@ -233,7 +292,12 @@ export function GeneratorStudio() {
                 <div className="grid gap-3">
                   {(Object.entries(config.permissions) as Array<[keyof WizardConfig["permissions"], boolean]>).map(([key, value]) => (
                     <label key={key} className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-                      <span className="font-mono text-sm">{key}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-sm">{key}</span>
+                        <Tooltip content={permissionTooltips[key]}>
+                          <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[10px] text-white/50">?</span>
+                        </Tooltip>
+                      </div>
                       <Switch
                         checked={value}
                         onCheckedChange={(checked) => setPermissions({ ...config.permissions, [key]: checked })}
@@ -248,7 +312,12 @@ export function GeneratorStudio() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {(Object.entries(config.performance) as Array<[keyof WizardConfig["performance"], number | boolean | string]>).map(([key, value]) => (
                     <label key={key} className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-                      <span className="font-mono text-xs uppercase tracking-widest text-white/40">{key}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-xs uppercase tracking-widest text-white/40">{key}</span>
+                        <Tooltip content={performanceTooltips[key]}>
+                          <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[10px] text-white/50">?</span>
+                        </Tooltip>
+                      </div>
                       <input
                         value={String(value)}
                         type={typeof value === "number" ? "number" : "text"}
@@ -278,6 +347,7 @@ export function GeneratorStudio() {
                     >
                       <CardTitle>{pack.name}</CardTitle>
                       <CardDescription className="mt-2">{pack.description}</CardDescription>
+                      <div className="mt-4 font-mono text-[10px] text-white/35">alwaysApply · {String(pack.alwaysApply)}</div>
                     </Card>
                   ))}
                 </div>
@@ -310,6 +380,25 @@ export function GeneratorStudio() {
                       </ul>
                     </div>
                   ) : (
+                    <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
+                      <div className="grid gap-2">
+                        <div className="flex items-center gap-2">
+                          <p className="font-mono text-xs uppercase tracking-[0.24em] text-lime-200/70">Artifact graph</p>
+                          <Tooltip content="Each artifact is derived from your current policy, gateway, lanes, permissions, performance, and selected rule packs.">
+                            <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-white/15 font-mono text-[10px] text-white/50">?</span>
+                          </Tooltip>
+                        </div>
+                        {artifacts.map((artifact) => (
+                          <div key={artifact.path} className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                            <p className="truncate font-mono text-xs text-white">{artifact.path}</p>
+                            <p className="mt-2 text-[11px] leading-relaxed text-white/45">{artifact.description}</p>
+                            <div className="mt-3 flex flex-wrap gap-1">
+                              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 font-mono text-[10px] text-lime-100/70">{artifact.language}</span>
+                              <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 font-mono text-[10px] text-white/45">{artifact.adapter}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     <Tabs defaultValue={artifacts[0]?.path}>
                       <TabsList>
                         {artifacts.map((artifact) => <TabsTrigger key={artifact.path} value={artifact.path}>{artifact.path.split("/").pop()}</TabsTrigger>)}
@@ -328,6 +417,7 @@ export function GeneratorStudio() {
                         </TabsContent>
                       ))}
                     </Tabs>
+                    </div>
                   )}
                 </div>
               )}
@@ -380,6 +470,7 @@ export function GeneratorStudio() {
         </div>
       </div>
     </main>
+  </TooltipProvider>
   );
 }
 
