@@ -5,7 +5,8 @@ from pathlib import Path
 from common import dump_json
 
 ADAPTERS = {
-    "opencode": ["opencode.json", "AGENTS.md", "omo.jsonc"],
+    "opencode": ["opencode.json", "AGENTS.md"],
+    "opencode-omo": ["opencode.json", "AGENTS.md", "omo.jsonc"],
     "omp": ["config.yml", "models.yml", "mcp.json"],
     "claude-code": ["settings.json", "CLAUDE.md", ".mcp.json"],
     "codex": ["config.toml", "AGENTS.md"],

@@ -8,6 +8,10 @@
   "adapters": {
     "opencode": [
       "opencode.json",
+      "AGENTS.md"
+    ],
+    "opencode-omo": [
+      "opencode.json",
       "AGENTS.md",
       "omo.jsonc"
     ],

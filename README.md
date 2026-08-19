@@ -14,7 +14,7 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 
 | | |
 | --- | --- |
-| **Agents** | OpenCode + OMO · omp · Claude Code · Codex · Cursor · Aider · Goose |
+| **Agents** | OpenCode · OpenCode + optional OMO · omp · Claude Code · Codex · Cursor · Aider · Goose |
 | **Routing** | OpenRouter · Cloudflare · Vercel · LiteLLM · Portkey |
 | **Taxonomy** | Model gateways · model providers · media providers · inference runtimes |
 | **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
@@ -69,7 +69,8 @@ Remove the symlinks later:
 
 | Agent | Generated config | Install target | Status |
 | --- | --- | --- | --- |
-| OpenCode + OMO | `opencode.json`, `AGENTS.md`, `omo.jsonc` | `~/.config/opencode` + `~/.omo` | Generated |
+| OpenCode | `opencode.json`, `AGENTS.md` | `~/.config/opencode` | Generated |
+| OpenCode + OMO | `opencode.json`, `AGENTS.md`, `omo.jsonc` | `~/.config/opencode` + `~/.omo` | Optional generated profile |
 | omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` | Generated |
 | Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` | Generated |
 | Codex | `config.toml` + `AGENTS.md` | `~/.codex` | Generated |
@@ -78,6 +79,22 @@ Remove the symlinks later:
 | Goose | `config.yaml` | `~/.config/goose` | Generated |
 
 Generated means the native config is produced and structurally validated. It does not yet mean live end-to-end runtime tests are implemented for every agent CLI; those are tracked in [Issues](https://github.com/jesseoue/universal-agent-config/issues).
+
+### Native OpenCode or OpenCode + OMO?
+
+Install `opencode` when you want the smallest dependency surface. Native OpenCode already handles model routing, `small_model`, starter agents, permissions, MCP, logging, compaction, and `subagent_depth`.
+
+Install `opencode-omo` when you specifically want Oh My Openagent’s orchestration layer: background task orchestration, per-provider/model concurrency, absolute tool-call caps, and circuit breakers for repeated tool loops.
+
+```bash
+# Native, no third-party plugin
+./scripts/install.sh --agent opencode
+
+# Native config plus the OMO orchestration enhancement
+./scripts/install.sh --agent opencode-omo
+```
+
+OMO is optional rather than required. The base OpenCode install remains native-first; the generated `opencode-omo` profile adds the extra safety and concurrency controls without changing the canonical model policy.
 
 Cursor notes:
 
@@ -97,6 +114,53 @@ Cursor notes:
 
 ## Opinionated routing model
 
+### Visual architecture
+
+```mermaid
+flowchart LR
+  A[core/models.yml] --> D[Canonical generator]
+  B[core/routing.yml] --> D
+  C[core/policy.yml] --> D
+  D --> E[generated/opencode]
+  D --> E2[generated/opencode-omo]
+  D --> F[generated/omp]
+  D --> G[generated/claude-code]
+  D --> H[generated/codex]
+  D --> I[generated/cursor]
+  D --> J[generated/aider]
+  D --> K[generated/goose]
+  D --> L[generated/gateways]
+```
+
+### Routing escalation ladder
+
+```mermaid
+flowchart TD
+  A[Ordinary coding] --> B[GLM 5.3 daily lead]
+  B --> C{High blast radius?}
+  C -- No --> D[Targeted checks]
+  C -- Yes --> E[DeepSeek V4 Pro planning]
+  E --> F{Still failing or explicit quality need?}
+  F -- No --> G[Bounded implementation]
+  F -- Yes --> H[Frontier escalation]
+  B --> I[Background work]
+  I --> J[Laguna S 2.1]
+```
+
+### Cost-saving workflow loop
+
+```mermaid
+flowchart LR
+  A[User task] --> B[Read-only planning]
+  B --> C[Compact plan]
+  C --> D[Bounded implementation]
+  D --> E[Targeted verification]
+  E --> F{Pass?}
+  F -- Yes --> G[Handoff]
+  F -- No --> H[One focused retry]
+  H --> E
+```
+
 The optimized default follows a cost-aware escalation ladder:
 
 | Lane | Default model | Use it for | Why |
@@ -109,6 +173,40 @@ The optimized default follows a cost-aware escalation ladder:
 | Analysis | Hermes 4 405B | Toolless long-form analysis | Isolated because it does not support tool calls |
 
 Escalation is explicit: cheap/open lanes run first, DeepSeek Pro handles deep planning, and frontier spend is reserved for high blast radius or repeated cheap-model failure. This mirrors the OpenConfig model rather than blindly putting the most expensive model at every turn.
+
+## Current compatibility and model freshness
+
+Checked on **2026-08-19**. Agent releases move quickly; run each tool’s version command before debugging a compatibility issue.
+
+| Tool | Verified target | Notes |
+| --- | ---: | --- |
+| OpenCode | `1.18.18` | npm package and GitHub release checked |
+| Claude Code | `2.1.236` | Latest GitHub release |
+| Codex CLI | `0.148.0` | Latest GitHub release |
+| Goose | `1.46.0` | Latest GitHub release |
+| Aider | `0.86.0` | Latest GitHub release |
+| omp / Oh My Pi | `17.3.8` | Latest GitHub release |
+| oh-my-openagent | `4.19.4` | Pinned in the optional OpenCode + OMO profile |
+| Cursor | Current project-rules/MCP surfaces | Cursor does not expose a stable public version marker in the checked docs |
+
+The CI model-drift workflow tracks OpenRouter catalog changes. It does not automatically upgrade each agent CLI, so agent-version compatibility still requires the periodic manual check recorded here.
+
+### Model catalog dates and capability matrix
+
+The dates below are **OpenRouter catalog first-seen dates**, not each vendor’s official announcement date. Context, capabilities, and prices were refreshed from the live OpenRouter models endpoint on **2026-08-19**.
+
+| Model | Lane | Catalog date | Context | Tools | Vision | Input / output per 1M |
+| --- | --- | --- | ---: | --- | --- | ---: |
+| GLM 5.3 | Daily lead | 2026-08-18 | 1,048,576 | Yes | No | `$1.40` / `$4.40` |
+| Gemini 3.7 Flash | Vision | 2026-08-13 | 1,048,576 | Yes | Yes | `$0.375` / `$1.875` |
+| DeepSeek V4 Pro 0813 | Deep planning | 2026-08-12 | 1,048,576 | Yes | No | `$0.66` / `$1.98` |
+| Qwen3.8 Max | Fallback | 2026-08-03 | 1,000,000 | Yes | Yes | `$2.00` / `$6.00` |
+| DeepSeek V4 Flash 0731 | Cheap work | 2026-07-31 | 1,310,720 | Yes | No | `$0.14` / `$0.28` |
+| Claude Opus 5 | Frontier | 2026-07-24 | 1,000,000 | Yes | Yes | `$5.00` / `$25.00` |
+| Laguna S 2.1 | Background | 2026-07-21 | 1,048,576 | Yes | No | `$0.09` / `$0.18` |
+| Claude Sonnet 5 | Frontier | 2026-06-30 | 1,000,000 | Yes | Yes | `$2.00` / `$10.00` |
+| Kimi K2.7 Code | Fallback | 2026-06-12 | 262,144 | Yes | Yes | `$0.71` / `$3.50` |
+| Hermes 4 405B | Toolless analysis | 2025-08-26 | 131,072 | No | No | `$1.00` / `$3.00` |
 
 ## Cost-saving workflow patterns
 
@@ -267,7 +365,8 @@ Per-token prices used:
 
 | Agent | How the routing model is expressed |
 | --- | --- |
-| OpenCode + OMO | GLM lead, cheap title/summary/compaction agents, DeepSeek planning, review/analysis agents, OMO concurrency/circuit-breaker caps |
+| OpenCode | GLM lead, cheap `small_model`, DeepSeek planning, review/analysis agents, native permissions and compaction |
+| OpenCode + OMO | Native OpenCode plus background-task orchestration, model/provider concurrency, tool-call caps, and circuit breakers |
 | omp | `modelRoles` for default/smol/slow/plan/task/advisor, ordered fallback chains, snapcompact, tool output and approval limits |
 | Claude Code | Anthropic-compatible OpenRouter gateway, native model and capped fallback chain, small-fast model, auto-compact and effort settings |
 | Codex | OpenRouter `model_providers`, medium main reasoning, GLM default subagent model, bounded concurrent agent threads, provider/MCP timeouts |
@@ -302,7 +401,8 @@ Adapter-specific output:
 
 | Adapter | Tool/MCP output |
 | --- | --- |
-| OpenCode + OMO | Native starter agents, remote MCP, error logging, tool output caps, pinned OMO plugin, unified `omo.jsonc` |
+| OpenCode | Native starter agents, remote MCP, error logging, tool output caps, permissions |
+| OpenCode + OMO | The same native surfaces plus the pinned plugin and `omo.jsonc` orchestration policy |
 | omp | Role models, fallback chains, tool flags, approval mode, HTTP MCP, logging redaction |
 | Claude Code | Permission arrays, `.mcp.json`, nonessential traffic disabled, OpenRouter Anthropic-compatible gateway |
 | Codex | `model_providers`, MCP servers, sandbox/approval policy, agent defaults, logging |

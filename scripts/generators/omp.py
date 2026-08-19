@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-import tomllib
-
-import yaml
-
-import shutil
 from pathlib import Path
 
-from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
+from common import dump_json, dump_yaml
 def generate_omp(models, routing, policy, providers, starters=None) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     provider = providers["openrouter"]
@@ -67,7 +62,6 @@ def generate_omp(models, routing, policy, providers, starters=None) -> None:
             "reserveTokens": 16384,
             "midTurnEnabled": True,
             "keepRecentTokens": 20000,
-            "midTurnEnabled": True,
             "autoContinue": True,
         },
         "tools": {

@@ -22,6 +22,7 @@ Commands:
 
 Agents:
   opencode     ~/.config/opencode
+  opencode-omo ~/.config/opencode + ~/.omo (native config plus OMO orchestration)
   omp          ~/.omp/agent
   claude-code  ~/.claude
   codex        ~/.codex
@@ -220,7 +221,13 @@ case "$AGENT" in
     [[ "$DRY_RUN" == true ]] || mkdir -p "$target"
     install_file "$REPO/generated/opencode/opencode.json" "$target/opencode.json"
     install_file "$REPO/generated/opencode/AGENTS.md" "$target/AGENTS.md"
-    install_file "$REPO/generated/opencode/omo.jsonc" "$HOME/.omo/omo.jsonc"
+    ;;
+  opencode-omo)
+    target="$DEST_HOME/opencode"
+    [[ "$DRY_RUN" == true ]] || mkdir -p "$target"
+    install_file "$REPO/generated/opencode-omo/opencode.json" "$target/opencode.json"
+    install_file "$REPO/generated/opencode-omo/AGENTS.md" "$target/AGENTS.md"
+    install_file "$REPO/generated/opencode-omo/omo.jsonc" "$HOME/.omo/omo.jsonc"
     ;;
   omp)
     target="$HOME/.omp/agent"

@@ -2,34 +2,34 @@ model_list:
 - model_name: uac-default
   litellm_params:
     model: openrouter/z-ai/glm-5.3
-- model_name: uac-default
+- model_name: uac-default-moonshotai--kimi-k2.7-code
   litellm_params:
     model: openrouter/moonshotai/kimi-k2.7-code
-- model_name: uac-default
+- model_name: uac-default-poolside--laguna-s-2.1
   litellm_params:
     model: openrouter/poolside/laguna-s-2.1
 - model_name: uac-background
   litellm_params:
     model: openrouter/poolside/laguna-s-2.1
-- model_name: uac-background
+- model_name: uac-background-deepseek--deepseek-v4-flash-0731
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-flash-0731
-- model_name: uac-background
+- model_name: uac-background-google--gemini-3.7-flash
   litellm_params:
     model: openrouter/google/gemini-3.7-flash
 - model_name: uac-reasoning
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro-0813
-- model_name: uac-reasoning
+- model_name: uac-reasoning-anthropic--claude-opus-5
   litellm_params:
     model: openrouter/anthropic/claude-opus-5
-- model_name: uac-reasoning
+- model_name: uac-reasoning-anthropic--claude-sonnet-5
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-5
 - model_name: uac-vision
   litellm_params:
     model: openrouter/google/gemini-3.7-flash
-- model_name: uac-vision
+- model_name: uac-vision-anthropic--claude-sonnet-5
   litellm_params:
     model: openrouter/anthropic/claude-sonnet-5
 litellm_settings:
@@ -38,13 +38,13 @@ litellm_settings:
 router_settings:
   fallbacks:
   - uac-default:
-    - uac-default
-    - uac-default
+    - uac-default-moonshotai--kimi-k2.7-code
+    - uac-default-poolside--laguna-s-2.1
   - uac-background:
-    - uac-background
-    - uac-background
+    - uac-background-deepseek--deepseek-v4-flash-0731
+    - uac-background-google--gemini-3.7-flash
   - uac-reasoning:
-    - uac-reasoning
-    - uac-reasoning
+    - uac-reasoning-anthropic--claude-opus-5
+    - uac-reasoning-anthropic--claude-sonnet-5
   - uac-vision:
-    - uac-vision
+    - uac-vision-anthropic--claude-sonnet-5

@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-import tomllib
-
-import yaml
-
-import shutil
 from pathlib import Path
 
-from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
+from common import dump_json, dump_yaml
 def generate_gateway_configs(models, routing, policy, providers, gateways) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     roles = profile["roles"]
@@ -59,9 +54,10 @@ def generate_gateway_configs(models, routing, policy, providers, gateways) -> No
     litellm_models = []
     for role, lane in roles.items():
         for model_id in [lane["primary"], *lane.get("fallbacks", [])]:
+            deployment = model_names[role] if model_id == lane["primary"] else f"{model_names[role]}-{model_id.replace('/', '--')}"
             litellm_models.append(
                 {
-                    "model_name": model_names[role],
+                    "model_name": deployment,
                     "litellm_params": {"model": f"openrouter/{model_id}"},
                 }
             )
@@ -73,7 +69,12 @@ def generate_gateway_configs(models, routing, policy, providers, gateways) -> No
         },
         "router_settings": {
             "fallbacks": [
-                {model_names[role]: [model_names[role] for _ in lane.get("fallbacks", [])]}
+                {
+                    model_names[role]: [
+                        f"{model_names[role]}-{model_id.replace('/', '--')}"
+                        for model_id in lane.get("fallbacks", [])
+                    ]
+                }
                 for role, lane in roles.items()
                 if lane.get("fallbacks")
             ]

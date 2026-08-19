@@ -1,6 +1,7 @@
 model = "z-ai/glm-5.3"
 model_provider = "openrouter"
 model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
 model_reasoning_summary = "concise"
 model_verbosity = "low"
 approval_policy = "on-request"
@@ -38,3 +39,4 @@ enabled = true
 max_concurrent_threads_per_session = 4
 default_subagent_model = "z-ai/glm-5.3"
 default_subagent_reasoning_effort = "medium"
+interrupt_message = false

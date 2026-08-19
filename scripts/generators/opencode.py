@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-import tomllib
 import json
-
-import yaml
-
 import shutil
+from copy import deepcopy
 from pathlib import Path
 
-from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
+from common import dump_json, dump_text, model_option
+
+ROOT = Path(__file__).resolve().parents[2]
 def generate_opencode(models, routing, policy, providers, starters) -> None:
     profile = routing["profiles"][routing["default_profile"]]
     provider = providers["openrouter"]
@@ -55,7 +54,6 @@ def generate_opencode(models, routing, policy, providers, starters) -> None:
                 "models": opencode_models,
             }
         },
-        "plugin": [starters["adapters"]["opencode"]["pin"]],
         "instructions": "AGENTS.md",
         "share": False,
         "logLevel": "ERROR",
@@ -64,7 +62,6 @@ def generate_opencode(models, routing, policy, providers, starters) -> None:
             "auto": performance["compaction"]["auto"],
             "prune": performance["compaction"]["prune"],
             "reserved": performance["compaction"]["reserve_tokens"],
-            "tail_turns": performance["compaction"]["tail_turns"],
         },
         "permission": {
             "read": "allow" if permission_profile["read"] else "deny",
@@ -122,13 +119,12 @@ def generate_opencode(models, routing, policy, providers, starters) -> None:
                 "headers": {"CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"},
             }
         },
-        "omo": {
-            "path": "~/.omo/omo.jsonc",
-            "mode": "user",
-            "note": "OpenCode loads the oh-my-openagent plugin; OMO reads this unified user-layer file.",
-        },
     }
     dump_json(config, Path("generated") / "opencode" / "opencode.json")
+    omo_root = Path("generated") / "opencode-omo"
+    omo_enabled_config = deepcopy(config)
+    omo_enabled_config["plugin"] = [starters["adapters"]["opencode"]["pin"]]
+    dump_json(omo_enabled_config, omo_root / "opencode.json")
     omo_config = {
         "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
         "models": {
@@ -168,5 +164,6 @@ def generate_opencode(models, routing, policy, providers, starters) -> None:
             "tmux": {"enabled": False},
         },
     }
-    dump_text(json.dumps(omo_config, indent=2) + "\n", Path("generated") / "opencode" / "omo.jsonc")
-    shutil.copyfile(Path(__file__).resolve().parents[2] / "core" / "prompts" / "core.md", Path("generated") / "opencode" / "AGENTS.md")
+    dump_text(json.dumps(omo_config, indent=2) + "\n", omo_root / "omo.jsonc")
+    shutil.copyfile(ROOT / "core" / "prompts" / "core.md", Path("generated") / "opencode" / "AGENTS.md")
+    shutil.copyfile(ROOT / "core" / "prompts" / "core.md", omo_root / "AGENTS.md")

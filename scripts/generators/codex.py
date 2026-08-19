@@ -20,6 +20,7 @@ def generate_codex(models, routing, policy, providers, tools=None, starters=None
         "model": default_model,
         "model_provider": "openrouter",
         "model_reasoning_effort": performance["reasoning_effort"],
+        "plan_mode_reasoning_effort": starters["starters"]["plan"]["reasoning_effort"],
         "model_reasoning_summary": "concise",
         "model_verbosity": "low",
         "model_providers": {
@@ -55,6 +56,7 @@ def generate_codex(models, routing, policy, providers, tools=None, starters=None
             "max_concurrent_threads_per_session": agent_policy["max_concurrent_threads"],
             "default_subagent_model": agent_policy["default_subagent_model"],
             "default_subagent_reasoning_effort": agent_policy["default_subagent_reasoning_effort"],
+            "interrupt_message": False,
         },
     }
     dump_toml(config, Path("generated") / "codex" / "config.toml")

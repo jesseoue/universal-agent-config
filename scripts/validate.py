@@ -65,7 +65,9 @@ def validate_generated(models, routing) -> list[str]:
     expected = {
         "opencode/opencode.json",
         "opencode/AGENTS.md",
-        "opencode/omo.jsonc",
+        "opencode-omo/opencode.json",
+        "opencode-omo/AGENTS.md",
+        "opencode-omo/omo.jsonc",
         "omp/config.yml",
         "omp/models.yml",
         "omp/mcp.json",
@@ -111,8 +113,14 @@ def validate_generated(models, routing) -> list[str]:
             errors.append("OpenCode generated model set does not match canonical models")
         if config.get("enabled_providers") != ["openrouter"]:
             errors.append("OpenCode config must enable only OpenRouter")
+        if config.get("plugin"):
+            errors.append("native OpenCode config must not require a plugin")
+
+    opencode_omo = generated / "opencode-omo" / "opencode.json"
+    if opencode_omo.is_file():
+        config = load_json(opencode_omo)
         if config.get("plugin") != ["oh-my-openagent@4.19.4"]:
-            errors.append("OpenCode config must pin oh-my-openagent")
+            errors.append("OpenCode OMO profile must pin oh-my-openagent")
 
     omp = generated / "omp" / "config.yml"
     if omp.is_file():
@@ -368,6 +376,10 @@ def validate_gateways(gateways) -> list[str]:
     fallback_count = sum(len(entry.values()) for entry in litellm.get("router_settings", {}).get("fallbacks", []))
     if fallback_count == 0:
         errors.append("LiteLLM config has no fallbacks")
+    for fallback in litellm.get("router_settings", {}).get("fallbacks", []):
+        for source, targets in fallback.items():
+            if len(targets) != len(set(targets)) or source in targets:
+                errors.append(f"LiteLLM fallback lane {source} must route to distinct downstream models")
 
     cloudflare = load_json(ROOT / "generated" / "gateways" / "cloudflare" / "connection.json")
     if "{account_id}" not in cloudflare.get("base_url_template", ""):

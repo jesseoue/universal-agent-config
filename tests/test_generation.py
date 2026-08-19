@@ -12,7 +12,7 @@ GENERATED = ROOT / "generated"
 
 def test_all_adapters_generated():
     expected = {
-        "opencode", "omp", "claude-code", "codex", "cursor", "aider", "goose"
+        "opencode", "opencode-omo", "omp", "claude-code", "codex", "cursor", "aider", "goose"
     }
     actual = {
         p.name for p in GENERATED.iterdir()
@@ -30,7 +30,12 @@ def test_gateway_matrix_generated():
 def test_litellm_gateway_config():
     config = yaml.safe_load((GENERATED / "gateways" / "litellm" / "config.yaml").read_text())
     assert config["litellm_settings"]["num_retries"] == 5
-    assert config["router_settings"]["fallbacks"]
+    fallbacks = config["router_settings"]["fallbacks"]
+    assert fallbacks
+    for entry in fallbacks:
+        for source, targets in entry.items():
+            assert source not in targets
+            assert len(targets) == len(set(targets))
 
 
 def test_provider_taxonomy():
@@ -61,7 +66,7 @@ def test_tool_contract_and_generated_permissions():
 
     opencode = json.loads((GENERATED / "opencode" / "opencode.json").read_text())
     assert opencode["logLevel"] == "ERROR"
-    assert opencode["plugin"] == ["oh-my-openagent@4.19.4"]
+    assert "plugin" not in opencode
     assert opencode["agent"]["review"]["tools"]["edit"] is False
 
     goose = yaml.safe_load((GENERATED / "goose" / "config.yaml").read_text())
@@ -100,6 +105,8 @@ def test_codex_config():
     config = tomllib.loads((GENERATED / "codex" / "config.toml").read_text())
     assert config["model_provider"] == "openrouter"
     assert config["model_providers"]["openrouter"]["base_url"] == "https://openrouter.ai/api/v1"
+    assert config["plan_mode_reasoning_effort"] == "high"
+    assert config["agents"]["interrupt_message"] is False
     assert config["agents"]["default_subagent_model"] == "z-ai/glm-5.3"
     assert config["model_providers"]["openrouter"]["stream_idle_timeout_ms"] == 60000
 
@@ -119,10 +126,12 @@ def test_opinionated_starters_and_omo():
     assert starters["philosophy"]["frontier_policy"].startswith("Never make frontier spend")
 
     opencode = json.loads((GENERATED / "opencode" / "opencode.json").read_text())
-    omo = json.loads((GENERATED / "opencode" / "omo.jsonc").read_text())
-    assert opencode["plugin"] == ["oh-my-openagent@4.19.4"]
+    omo = json.loads((GENERATED / "opencode-omo" / "omo.jsonc").read_text())
+    omo_opencode = json.loads((GENERATED / "opencode-omo" / "opencode.json").read_text())
+    assert "plugin" not in opencode
+    assert omo_opencode["plugin"] == ["oh-my-openagent@4.19.4"]
     assert opencode["permission"]["bash"] == "allow"
-    assert opencode["compaction"]["tail_turns"] == 2
+    assert set(opencode["compaction"]) == {"auto", "prune", "reserved"}
     assert opencode["agent"]["prometheus"]["model"] == "openrouter/deepseek/deepseek-v4-pro-0813"
     assert omo["[opencode]"]["background_task"]["defaultConcurrency"] == 10
     assert omo["telemetry"]["enabled"] is False

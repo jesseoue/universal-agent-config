@@ -1,13 +1,9 @@
 from __future__ import annotations
 
 import tomllib
-
-import yaml
-
-import shutil
 from pathlib import Path
 
-from common import dump_json, dump_text, dump_toml, dump_yaml, load_json, load_yaml, model_option
+from common import dump_json, dump_toml, dump_yaml, load_json, load_yaml
 def generate_tool_contract(tools) -> None:
     contract = tools["contract"]
     dump_yaml(

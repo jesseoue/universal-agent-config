@@ -401,5 +401,8 @@
         "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
       }
     }
-  }
+  },
+  "plugin": [
+    "oh-my-openagent@4.19.4"
+  ]
 }
