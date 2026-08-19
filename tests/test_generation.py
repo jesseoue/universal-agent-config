@@ -14,8 +14,23 @@ def test_all_adapters_generated():
     expected = {
         "opencode", "omp", "claude-code", "codex", "cursor", "aider", "goose"
     }
-    actual = {p.name for p in GENERATED.iterdir() if p.is_dir()}
+    actual = {
+        p.name for p in GENERATED.iterdir()
+        if p.is_dir() and p.name != "gateways"
+    }
     assert actual == expected
+
+
+def test_gateway_matrix_generated():
+    expected = {"cloudflare", "litellm", "openrouter", "portkey", "vercel"}
+    actual = {p.name for p in (GENERATED / "gateways").iterdir() if p.is_dir()}
+    assert actual == expected
+
+
+def test_litellm_gateway_config():
+    config = yaml.safe_load((GENERATED / "gateways" / "litellm" / "config.yaml").read_text())
+    assert config["litellm_settings"]["num_retries"] == 5
+    assert config["router_settings"]["fallbacks"]
 
 
 def test_generation_is_deterministic():

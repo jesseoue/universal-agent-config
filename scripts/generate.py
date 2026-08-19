@@ -307,6 +307,93 @@ def generate_goose(models, routing, policy, providers) -> None:
     dump_yaml(config, GENERATED / "goose" / "config.yaml")
 
 
+def generate_gateway_configs(models, routing, policy, providers, gateways) -> None:
+    profile = routing["profiles"][routing["default_profile"]]
+    roles = profile["roles"]
+
+    # OpenRouter is generated for every agent adapter and remains the default.
+    openrouter_env = {
+        "OPENROUTER_API_KEY": "required",
+        "CONTEXT7_API_KEY": "optional",
+    }
+    dump_yaml(openrouter_env, GENERATED / "gateways" / "openrouter" / "env.example.yml")
+
+    # Cloudflare is OpenAI-compatible but requires an account-specific base URL.
+    cloudflare_env = {
+        "CLOUDFLARE_ACCOUNT_ID": "required",
+        "CLOUDFLARE_API_TOKEN": "required",
+        "CLOUDFLARE_GATEWAY_ID": "optional; defaults to default",
+    }
+    dump_yaml(cloudflare_env, GENERATED / "gateways" / "cloudflare" / "env.example.yml")
+    dump_json(
+        {
+            "base_url_template": gateways["gateways"]["cloudflare"]["base_url_template"],
+            "headers": gateways["gateways"]["cloudflare"]["headers"],
+            "model_format": "provider/model",
+            "notes": [
+                "Point OpenAI-compatible agents at the account-specific /ai/v1 endpoint.",
+                "Use a Cloudflare API token with the required AI permissions.",
+                "Gateway features include logging, caching, rate limiting, retries, and guardrails.",
+            ],
+        },
+        GENERATED / "gateways" / "cloudflare" / "connection.json",
+    )
+
+    # Vercel AI Gateway uses provider/model strings and supports provider options.
+    dump_yaml(
+        {
+            "AI_GATEWAY_API_KEY": "required outside Vercel OIDC",
+            "VERCEL_OIDC_TOKEN": "optional on Vercel deployments",
+        },
+        GENERATED / "gateways" / "vercel" / "env.example.yml",
+    )
+
+    # LiteLLM proxy config with role lanes and ordered fallbacks.
+    model_names = {
+        "default": "uac-default",
+        "background": "uac-background",
+        "reasoning": "uac-reasoning",
+        "vision": "uac-vision",
+    }
+    litellm_models = []
+    for role, lane in roles.items():
+        for model_id in [lane["primary"], *lane.get("fallbacks", [])]:
+            litellm_models.append(
+                {
+                    "model_name": model_names[role],
+                    "litellm_params": {"model": f"openrouter/{model_id}"},
+                }
+            )
+    litellm_config = {
+        "model_list": litellm_models,
+        "litellm_settings": {
+            "num_retries": policy["defaults"]["max_retries"],
+            "request_timeout": policy["defaults"]["request_timeout_seconds"],
+        },
+        "router_settings": {
+            "fallbacks": [
+                {model_names[role]: [model_names[role] for _ in lane.get("fallbacks", [])]}
+                for role, lane in roles.items()
+                if lane.get("fallbacks")
+            ]
+        },
+    }
+    dump_yaml(litellm_config, GENERATED / "gateways" / "litellm" / "config.yaml")
+
+    # Portkey fallback policy. Provider credentials remain Portkey virtual keys.
+    portkey_config = {
+        "strategy": {"mode": "fallback"},
+        "targets": [
+            {
+                "name": lane_name,
+                "override_params": {"model": lane["primary"]},
+            }
+            for lane_name, lane in roles.items()
+        ],
+    }
+    dump_json(portkey_config, GENERATED / "gateways" / "portkey" / "config.json")
+
+
 def dump_toml(data, path: Path) -> None:
     try:
         import tomli_w
@@ -330,6 +417,13 @@ def generate_manifest(models, routing, policy) -> None:
             "cursor": [".cursor/rules/universal-agent-config.mdc"],
             "aider": [".aider.conf.yml"],
             "goose": ["config.yaml"],
+            "gateways": {
+                "openrouter": ["env.example.yml"],
+                "cloudflare": ["env.example.yml", "connection.json"],
+                "vercel": ["env.example.yml"],
+                "litellm": ["config.yaml"],
+                "portkey": ["config.json"],
+            },
         },
         "model_count": len(models["models"]),
     }
@@ -341,6 +435,7 @@ def main() -> None:
     routing = load_yaml(ROOT / "core" / "routing.yml")
     policy = load_yaml(ROOT / "core" / "policy.yml")
     providers = load_yaml(ROOT / "core" / "providers.yml")
+    gateways = load_yaml(ROOT / "core" / "gateways.yml")
 
     if GENERATED.exists():
         shutil.rmtree(GENERATED)
@@ -353,6 +448,7 @@ def main() -> None:
     generate_cursor(models, routing, policy, providers)
     generate_aider(models, routing, policy, providers)
     generate_goose(models, routing, policy, providers)
+    generate_gateway_configs(models, routing, policy, providers, gateways)
     generate_manifest(models, routing, policy)
 
     print("Generated adapters:", ", ".join(sorted(p.name for p in GENERATED.iterdir() if p.is_dir())))

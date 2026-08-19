@@ -8,6 +8,7 @@ This repository is a canonical model-routing and agent-policy monorepo.
 - `core/routing.yml`: role lanes and fallback chains.
 - `core/policy.yml`: permissions, safety, timeout, and telemetry defaults.
 - `core/providers.yml`: OpenRouter transport and attribution.
+- `core/gateways.yml`: routing-technology matrix and gateway-specific semantics.
 - `core/prompts/core.md`: shared agent behavior policy.
 
 ## Rules

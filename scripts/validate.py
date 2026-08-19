@@ -73,6 +73,12 @@ def validate_generated(models, routing) -> list[str]:
         "cursor/.cursor/rules/universal-agent-config.mdc",
         "aider/.aider.conf.yml",
         "goose/config.yaml",
+        "gateways/openrouter/env.example.yml",
+        "gateways/cloudflare/env.example.yml",
+        "gateways/cloudflare/connection.json",
+        "gateways/vercel/env.example.yml",
+        "gateways/litellm/config.yaml",
+        "gateways/portkey/config.json",
         "manifest.json",
     }
     for relative in expected:
@@ -121,20 +127,62 @@ def validate_generated(models, routing) -> list[str]:
     return errors
 
 
+def validate_gateways(gateways) -> list[str]:
+    errors = []
+    expected = {"openrouter", "cloudflare", "vercel", "litellm", "portkey"}
+    actual = set(gateways["gateways"])
+    if actual != expected:
+        errors.append(f"gateway set mismatch: expected {sorted(expected)}, got {sorted(actual)}")
+
+    protocols = {
+        "openrouter": "openai-chat-completions",
+        "cloudflare": "openai-chat-completions",
+        "vercel": "provider-model-strings",
+        "litellm": "openai-compatible",
+        "portkey": "openai-compatible",
+    }
+    for gateway_name, protocol in protocols.items():
+        actual_protocol = gateways["gateways"][gateway_name].get("protocol")
+        if actual_protocol != protocol:
+            errors.append(f"{gateway_name} protocol must be {protocol}, got {actual_protocol}")
+
+    if gateways["default"] != "openrouter":
+        errors.append("default gateway must remain openrouter until runtime tests cover alternatives")
+
+    litellm = load_yaml(ROOT / "generated" / "gateways" / "litellm" / "config.yaml")
+    if not litellm.get("model_list"):
+        errors.append("LiteLLM config has no model list")
+    fallback_count = sum(len(entry.values()) for entry in litellm.get("router_settings", {}).get("fallbacks", []))
+    if fallback_count == 0:
+        errors.append("LiteLLM config has no fallbacks")
+
+    cloudflare = load_json(ROOT / "generated" / "gateways" / "cloudflare" / "connection.json")
+    if "{account_id}" not in cloudflare.get("base_url_template", ""):
+        errors.append("Cloudflare connection template must contain {account_id}")
+
+    return errors
+
+
 def main() -> int:
     models = load_yaml(ROOT / "core" / "models.yml")
     routing = load_yaml(ROOT / "core" / "routing.yml")
     policy = load_yaml(ROOT / "core" / "policy.yml")
     providers = load_yaml(ROOT / "core" / "providers.yml")
+    gateways = load_yaml(ROOT / "core" / "gateways.yml")
     errors = validate_core(models, routing, policy, providers)
     errors.extend(validate_generated(models, routing))
+    errors.extend(validate_gateways(gateways))
 
     if errors:
         print("Validation failed:")
         for error in errors:
             print(f"  - {error}")
         return 1
-    print(f"Validation OK: {len(models['models'])} models, {len(routing['profiles'])} profiles, 7 adapters")
+    print(
+        f"Validation OK: {len(models['models'])} models, "
+        f"{len(routing['profiles'])} profiles, 7 adapters, "
+        f"{len(gateways['gateways'])} gateways"
+    )
     return 0
 
 

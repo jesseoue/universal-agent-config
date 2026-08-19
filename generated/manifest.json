@@ -29,7 +29,25 @@
     ],
     "goose": [
       "config.yaml"
-    ]
+    ],
+    "gateways": {
+      "openrouter": [
+        "env.example.yml"
+      ],
+      "cloudflare": [
+        "env.example.yml",
+        "connection.json"
+      ],
+      "vercel": [
+        "env.example.yml"
+      ],
+      "litellm": [
+        "config.yaml"
+      ],
+      "portkey": [
+        "config.json"
+      ]
+    }
   },
   "model_count": 9
 }

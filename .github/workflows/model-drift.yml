@@ -1,0 +1,31 @@
+name: model-drift
+
+on:
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  detect-openrouter-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --quiet pyyaml tomli-w
+      - run: python scripts/refresh_models.py
+      - run: python scripts/generate.py
+      - name: Detect model drift
+        run: |
+          if git diff --exit-code; then
+            echo "No OpenRouter model metadata drift detected."
+          else
+            echo "OpenRouter model metadata changed." >> "$GITHUB_STEP_SUMMARY"
+            git diff -- core/models.yml generated/
+            echo "Run scripts/refresh_models.py, review routing lanes, and submit a PR." >> "$GITHUB_STEP_SUM"
+            exit 1
+          fi

@@ -1,62 +1,152 @@
-# Universal Agent Config
+# Universal Agent Config — One Config for Every Coding Agent
 
-One canonical model-routing and agent-policy repository, generating native configuration for common open-source coding agents.
-
-Model metadata in [`core/models.yml`](core/models.yml) is refreshed directly from the live [OpenRouter model catalog](https://openrouter.ai/api/v1/models). Run `python3 scripts/refresh_models.py` to update capabilities, context windows, and output limits from OpenRouter before changing routing lanes.
-
-Supported adapters:
-
-- OpenCode
-- omp (Oh My Pi)
-- Claude Code
-- Codex
-- Cursor
-- Aider
-- Goose
-
-Install an adapter from a clone:
+**Universal Agent Config** is the open-source model-routing and agent-policy framework for people who use more than one AI coding agent. Define your model lanes once, generate native configuration for every major agent, and keep provider drift out of your dotfiles.
 
 ```bash
+git clone https://github.com/jesseoue/universal-agent-config.git
+cd universal-agent-config
 ./scripts/install.sh --agent opencode
 ```
 
-Generate all native configs:
+## Why this exists
 
-```bash
-python3 scripts/generate.py
-```
+Every coding agent wants a different file in a different directory. Every model changes monthly. Every routing gateway has different auth, model naming, and failover semantics. The result is config sprawl: OpenCode JSON, omp YAML, Claude Code settings, Codex TOML, Cursor rules, Aider YAML, and Goose YAML, all drifting independently.
 
-Validate everything offline:
+Universal Agent Config fixes that with one canonical source of truth:
 
-```bash
-python3 scripts/validate.py
-```
+- Model routing and fallback lanes
+- Provider and gateway routing strategy
+- Tool permissions and safety defaults
+- Shared agent behavior policy
+- Generated native configuration for every supported agent
 
-## Requirements
+## Supported coding agents
 
-- Python 3.11+
-- PyYAML
-- `tomli-w` for Codex config generation
-- pytest for tests
+| Agent | Generated config | Install target |
+| --- | --- | --- |
+| OpenCode | `opencode.json` + `AGENTS.md` | `~/.config/opencode` |
+| omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` |
+| Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` |
+| Codex | `config.toml` + `AGENTS.md` | `~/.codex` |
+| Cursor | `.cursor/rules/universal-agent-config.mdc` | Project `.cursor/rules/` |
+| Aider | `.aider.conf.yml` | Project root |
+| Goose | `config.yaml` | `~/.config/goose` |
 
-Install locally:
+## Supported routing technologies
+
+Universal Agent Config treats routing technology as a deliberate deployment decision.
+
+| Gateway | Type | Best for | Main tradeoff |
+| --- | --- | --- | --- |
+| OpenRouter | Hosted model marketplace | Broad model access with one key and fast setup | Hosted control plane and account-level credits |
+| Cloudflare AI Gateway | Edge control plane | Cloudflare teams needing caching, logging, DLP, and security at the edge | Account-specific endpoints and Cloudflare policy management |
+| Vercel AI Gateway | Developer gateway | Vercel-native apps, OIDC auth, provider failover, and spend visibility | Strongest when your runtime also lives on Vercel |
+| LiteLLM Proxy | Self-hosted proxy | Direct provider contracts, Azure/Bedrock/Vertex, virtual keys, budgets | You operate the proxy and its state |
+| Portkey AI Gateway | Managed governance gateway | Guardrails, audit, policy, and managed failover | External account and routing policy state |
+
+Generated gateway starter configs are committed under `generated/gateways/`.
+
+## Quick start
 
 ```bash
 python3 -m pip install pyyaml tomli-w pytest
+python3 scripts/generate.py
+python3 scripts/validate.py
+./scripts/install.sh --agent opencode
 ```
 
-## Strategy
+Set your routing key:
 
-Humans edit `core/`; CI generates every adapter under `generated/`. This keeps model routing, fallback policy, permissions, and prompts consistent across agents while allowing each adapter to preserve the native configuration format and installation path expected by that tool.
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+```
 
-## Safety
+Install another agent without duplicating policy:
 
-- Public defaults preserve user confirmation for destructive commands.
-- Shell, editing, and browser tools are enabled, but the policy is auditable.
-- Telemetry is disabled by default.
-- API keys stay in local environment files and are never committed.
-- Installation is user-local and non-destructive.
+```bash
+./scripts/install.sh --agent claude-code
+./scripts/install.sh --agent codex
+./scripts/install.sh --agent goose
+```
 
-## Status
+## How routing works
 
-This repository is an initial public framework. OpenRouter model metadata was seeded from the current omp and OpenCode configurations on 2026-08-19. Live provider health should be revalidated before releases.
+Model metadata comes directly from the live [OpenRouter model catalog](https://openrouter.ai/api/v1/models). The canonical registry records context windows, output limits, tool support, vision support, and reasoning support.
+
+Routing profiles then define four reusable lanes:
+
+- `default` — general coding
+- `background` — titles, summaries, and cheap background work
+- `reasoning` — architecture and difficult debugging
+- `vision` — screenshots, diagrams, and multimodal work
+
+Available profiles:
+
+| Profile | Strategy |
+| --- | --- |
+| `balanced` | Frontier default with open-weight fallbacks |
+| `open-weight` | Open-weight-first routing |
+| `low-cost` | Cheap high-volume routing |
+| `frontier` | Maximum-quality frontier routing |
+
+## Maintenance workflow
+
+```bash
+# Refresh model metadata from OpenRouter
+python3 scripts/refresh_models.py
+
+# Generate all native agent configs
+python3 scripts/generate.py
+
+# Validate model references, capabilities, adapters, and gateways
+python3 scripts/validate.py
+
+# Run deterministic generation and installer tests
+pytest -q
+bash tests/test_installer.sh
+```
+
+## CI/CD
+
+Every pull request runs:
+
+- OpenRouter catalog refresh
+- Deterministic generation
+- Structural and cross-reference validation
+- Pytest generation tests
+- Sandboxed installer tests
+- ShellCheck
+- Gitleaks secret scan
+- Stale generated-artifact detection
+
+Daily jobs detect OpenRouter model drift and fail when canonical metadata changes.
+
+Tagged releases run the full verification suite before creating a GitHub Release.
+
+## Security and safety defaults
+
+- Telemetry disabled by default
+- No API keys committed
+- User-local installation only
+- Installer refuses root
+- Existing files are backed up, never silently overwritten
+- Destructive commands require confirmation by default
+- Shared policy requires reading code before editing and verifying changes
+
+## Project structure
+
+```text
+core/               Canonical models, routing, gateways, policy, prompts
+generated/          Native configs for every supported agent and gateway
+scripts/            Generation, validation, refresh, and installer
+tests/              Deterministic generation and sandbox installer tests
+.github/workflows/  CI, model drift detection, and release automation
+```
+
+## Contributing
+
+Read [AGENTS.md](AGENTS.md), edit the canonical files under `core/`, regenerate, validate, and submit a PR. Do not manually edit `generated/`.
+
+## License
+
+MIT © Jesse Ouellette

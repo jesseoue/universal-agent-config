@@ -1,0 +1,12 @@
+{
+  "base_url_template": "https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1",
+  "headers": {
+    "cf-aig-gateway-id": "default"
+  },
+  "model_format": "provider/model",
+  "notes": [
+    "Point OpenAI-compatible agents at the account-specific /ai/v1 endpoint.",
+    "Use a Cloudflare API token with the required AI permissions.",
+    "Gateway features include logging, caching, rate limiting, retries, and guardrails."
+  ]
+}

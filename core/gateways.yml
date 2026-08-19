@@ -1,0 +1,80 @@
+version: 1
+default: openrouter
+gateways:
+  openrouter:
+    name: OpenRouter
+    category: hosted-model-marketplace
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    protocol: openai-chat-completions
+    model_format: provider/model
+    best_for:
+      - Broad model and provider access with one key
+      - Fast setup across many agents
+      - Long-tail and newly released models
+    caveats:
+      - Hosted control plane; account, credits, and routing policy live with OpenRouter
+      - Provider routing is controlled by OpenRouter rather than your infrastructure
+      - Credit purchases can carry platform fees
+  cloudflare:
+    name: Cloudflare AI Gateway
+    category: edge-control-plane
+    base_url_template: https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1
+    api_key_env: CLOUDFLARE_API_TOKEN
+    protocol: openai-chat-completions
+    model_format: provider/model
+    headers:
+      cf-aig-gateway-id: default
+    best_for:
+      - Teams already using Cloudflare Workers or Cloudflare security tooling
+      - Edge caching, retries, logs, rate limits, and DLP
+      - Keeping provider credentials and contracts under your control
+    caveats:
+      - Requires a Cloudflare account ID and API token
+      - Dynamic routes are managed in Cloudflare rather than local config
+      - Gateway Run tokens are account-scoped, so key policy must be carefully designed
+  vercel:
+    name: Vercel AI Gateway
+    category: developer-gateway
+    base_url: https://ai-gateway.vercel.sh
+    api_key_env: AI_GATEWAY_API_KEY
+    protocol: provider-model-strings
+    model_format: provider/model
+    best_for:
+      - Vercel-native deployments and OIDC-based auth
+      - Fast multi-agent setup with provider failover and spend visibility
+      - Claude Code compatibility through an Anthropic-compatible endpoint
+    caveats:
+      - Strongest when your runtime and observability already live on Vercel
+      - OIDC token lifetime is short outside Vercel deployments
+      - Gateway-specific routing options belong in application provider options
+  litellm:
+    name: LiteLLM Proxy
+    category: self-hosted-proxy
+    base_url_env: LITELLM_PROXY_API_BASE
+    api_key_env: LITELLM_PROXY_API_KEY
+    protocol: openai-compatible
+    model_format: litellm-proxy/model-name
+    best_for:
+      - Self-hosted control over provider keys and logs
+      - Existing Azure, Bedrock, Vertex, or direct-provider contracts
+      - Virtual keys, budgets, cooldowns, retries, and ordered fallbacks
+    caveats:
+      - You operate the proxy and its persistence layer
+      - Model IDs are normalized through LiteLLM rather than the provider catalog
+      - Production reliability usually requires Redis-backed router state
+  portkey:
+    name: Portkey AI Gateway
+    category: managed-governance-gateway
+    base_url: https://api.portkey.ai/v1
+    api_key_env: PORTKEY_API_KEY
+    protocol: openai-compatible
+    model_format: "@provider/model"
+    best_for:
+      - Managed routing, guardrails, governance, and audit trails
+      - Fallback and load-balancing config stored as reusable policies
+      - Organizations that need centralized policy without operating a proxy
+    caveats:
+      - Provider credentials and routing policies are managed in Portkey
+      - Some model pricing must be configured for accurate cost analytics
+      - Saved config IDs are external state

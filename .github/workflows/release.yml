@@ -1,18 +1,16 @@
-name: ci
+name: release
 
 on:
   push:
-    branches: [main]
-  pull_request:
-  schedule:
-    - cron: "17 6 * * *"
+    tags:
+      - "v*.*.*"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  validate:
+  verify-and-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,30 +18,23 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install --quiet pyyaml pytest tomli-w
+      - run: python scripts/refresh_models.py
       - run: python scripts/generate.py
       - run: python scripts/validate.py
       - run: pytest -q
       - run: bash tests/test_installer.sh
-      - run: |
+      - run: shellcheck scripts/install.sh
+      - name: Check generated artifacts
+        run: |
           if git diff --exit-code; then
             echo "generated artifacts are current"
           else
-            echo "generated artifacts are stale; run python scripts/generate.py" >&2
+            echo "generated artifacts changed during release verification" >&2
+            git diff
             exit 1
           fi
-
-  shellcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: shellcheck scripts/install.sh
-
-  secrets:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
