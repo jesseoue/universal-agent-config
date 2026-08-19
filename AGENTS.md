@@ -34,3 +34,16 @@ This repository is a canonical model-routing and agent-policy monorepo.
 3. Add generated-file expectations and cross-reference tests.
 4. Add sandboxed install coverage.
 5. Document supported install paths in `README.md`.
+
+## Documentation and community files
+
+- `README.md`: public overview, compatibility, installation, and strategy.
+- `CONTRIBUTING.md`: contribution requirements and checks.
+- `SECURITY.md`: supported versions, scope, and private reporting.
+- `CODE_OF_CONDUCT.md`: community conduct policy.
+- `docs/wiki.md`: versioned wiki entry point and FAQ.
+- `docs/architecture.md`: system design and canonical data flow.
+- `docs/contributor-guide.md`: detailed workflows for adding adapters and gateways.
+- `docs/maintainer-guide.md`: maintenance, triage, and release process.
+
+When changing project behavior, update all affected community surfaces, not just the implementation.

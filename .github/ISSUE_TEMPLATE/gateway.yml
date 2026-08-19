@@ -1,0 +1,42 @@
+name: Gateway support
+description: Request or fix a routing technology integration
+title: "[Gateway]: "
+labels: ["gateway", "enhancement"]
+body:
+  - type: input
+    id: gateway
+    attributes:
+      label: Gateway
+      placeholder: OpenRouter, Cloudflare, Vercel, LiteLLM, Portkey
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        New gateway
+        Base URL/model naming
+        Auth
+        Fallback/failover
+        Tool-call semantics
+        Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Official documentation evidence
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Working starter config
+      description: Redact all credentials.

@@ -1,0 +1,53 @@
+name: Adapter support
+description: Request or fix configuration for a coding agent
+title: "[Adapter]: "
+labels: ["adapter", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this issue, check the target agent's current official documentation and the README compatibility table.
+  - type: input
+    id: agent
+    attributes:
+      label: Agent
+      placeholder: OpenCode, Claude Code, Codex, Cursor, Aider, Goose, omp
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Agent version
+      placeholder: "Example: 1.18.18"
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request type
+      options:
+        New adapter
+        Missing native setting
+        Incorrect generated config
+        Installation path problem
+        Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What cannot be expressed today?
+    validations:
+      required: true
+  - type: textarea
+    id: docs
+    attributes:
+      label: Official documentation evidence
+      description: Link the docs that prove the supported config key/path.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected generated output
+    validations:
+      required: true

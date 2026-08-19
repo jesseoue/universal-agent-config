@@ -53,6 +53,17 @@ If you use more than one coding agent, your model config is probably scattered a
 
 Universal Agent Config fixes that. One canonical routing brain. Native generated configs. OpenRouter model metadata refreshed from the live catalog. Daily drift detection. Clean installs.
 
+## Documentation map
+
+- `/README.md`: primary landing page and quick start
+- `/CONTRIBUTING.md`: contribution rules and checks
+- `/SECURITY.md`: supported versions and private reporting
+- `/CODE_OF_CONDUCT.md`: community standards
+- `/docs/wiki.md`: wiki-style entry point and FAQ
+- `/docs/architecture.md`: canonical files and generation pipeline
+- `/docs/contributor-guide.md`: detailed contributor workflows
+- `/docs/maintainer-guide.md`: maintenance and release cadence
+
 ## GitHub repository topics
 
 ai-agents, coding-agent, ai-config, model-routing, openrouter, litellm, cloudflare-ai-gateway, vercel-ai-gateway, portkey, opencode, claude-code, codex, cursor, aider, goose, developer-tools, configuration-management, llm-gateway

@@ -2,6 +2,10 @@
 
 Thanks for helping improve Universal Agent Config.
 
+This project wants contributions from people who use different coding agents, gateways, and model providers. You do not need to be an AI expert to contribute; clear bug reports, docs, and compatibility checks are just as useful as adapter code.
+
+Read [Code of Conduct](CODE_OF_CONDUCT.md), [Architecture](docs/architecture.md), and the [Contributor guide](docs/contributor-guide.md) before your first PR.
+
 ## Development setup
 
 ```bash
@@ -29,6 +33,7 @@ bash tests/test_installer.sh
 - `git diff --check` passes
 - README compatibility matrix is updated
 - New behavior is documented
+- No secrets, local absolute paths, or personal data are included
 
 ## Adapter contributions
 
@@ -49,3 +54,13 @@ bash tests/test_installer.sh
 ## Reporting bugs
 
 Include the agent name, version, generated config, expected behavior, and actual behavior. Redact all credentials.
+
+For vulnerabilities, use [SECURITY.md](SECURITY.md) instead of a public issue.
+
+## Project values
+
+- Native output over magic wrappers
+- Conservative safety defaults
+- Documented compatibility with dates and versions
+- Deterministic generated artifacts
+- Useful contributions over activity theater

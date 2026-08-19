@@ -20,6 +20,7 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 | **Trust** | CI · daily model drift detection · sandboxed install tests · secret scan |
 | **Install** | User-local · dry-run · backups · uninstall · doctor |
 | **Tools** | Native tools · MCP · plugins · provider-aware semantics |
+| **Community** | [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Architecture](docs/architecture.md) · [Wiki](docs/wiki.md) · [Discussions](https://github.com/jesseoue/universal-agent-config/discussions) |
 
 ## 30-second start
 
@@ -537,7 +538,17 @@ tests/              Deterministic generation and sandbox installer tests
 
 ## Contributing
 
-Read [AGENTS.md](AGENTS.md), edit the canonical files under `core/`, regenerate, validate, and submit a PR. Do not manually edit `generated/`.
+Read [AGENTS.md](AGENTS.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [docs/contributor-guide.md](docs/contributor-guide.md), edit the canonical files under `core/`, regenerate, validate, and submit a PR. Do not manually edit `generated/`.
+
+Good first contributions:
+
+- add a documented native adapter setting
+- improve installer doctor checks
+- clarify a gateway tradeoff
+- expand compatibility testing
+- fix documentation drift
+
+Maintainers can follow [docs/maintainer-guide.md](docs/maintainer-guide.md).
 
 ## Community
 

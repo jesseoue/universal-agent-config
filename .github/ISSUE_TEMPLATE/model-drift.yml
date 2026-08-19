@@ -1,0 +1,32 @@
+name: Model drift
+description: Report changed OpenRouter metadata or model capabilities
+title: "[Model drift]: "
+labels: ["model-drift"]
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Model
+    validations:
+      required: true
+  - type: textarea
+    id: drift
+    attributes:
+      label: What changed?
+      description: Include pricing, context window, tool support, vision support, availability, or catalog date.
+    validations:
+      required: true
+  - type: textarea
+    id: routing
+    attributes:
+      label: Suggested routing change
+      description: Explain the safety and cost implications.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link the OpenRouter catalog or provider documentation.
+    validations:
+      required: true

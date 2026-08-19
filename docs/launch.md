@@ -35,3 +35,4 @@ Stop maintaining seven copies of your AI coding agent config.
 - Sandboxed install tests
 - MIT license
 - Explicit safety defaults
+- Code of Conduct, security policy, contributor guide, and maintainer guide
