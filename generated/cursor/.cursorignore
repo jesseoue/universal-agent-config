@@ -1,0 +1,30 @@
+# Secrets and credentials
+.env*
+**/.env*
+**/.env.*
+**/credentials.json
+**/secrets.json
+**/secrets/**
+**/*.key
+**/*.pem
+**/id_rsa
+**/id_ed25519
+
+# Build output and dependencies
+node_modules/
+dist/
+build/
+out/
+coverage/
+.next/
+.nuxt/
+.venv/
+__pycache__/
+
+# Local caches and generated artifacts
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.turbo/
+.DS_Store

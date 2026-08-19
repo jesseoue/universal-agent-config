@@ -9,6 +9,17 @@ for agent in opencode omp claude-code codex goose; do
   HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" --agent "$agent" --dry-run >/dev/null
 done
 
+INSTALL_PROJECT="$(mktemp -d)"
+(
+  cd "$INSTALL_PROJECT"
+  HOME="$TEMP_HOME" "$ROOT/scripts/install.sh" --agent cursor --dry-run >/dev/null
+  HOME="$TEMP_HOME" "$ROOT/scripts/install.sh" --agent cursor >/dev/null
+  test -L .cursorignore
+  test -L .cursor/mcp.json
+  test "$(find .cursor/rules -type l -name '*.mdc' | wc -l)" -eq 8
+)
+rm -rf "$INSTALL_PROJECT"
+
 HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" --agent opencode >/dev/null
 HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" --agent omp >/dev/null
 HOME="$TEMP_HOME" XDG_CONFIG_HOME="$TEMP_HOME/.config" "$ROOT/scripts/install.sh" --agent claude-code >/dev/null

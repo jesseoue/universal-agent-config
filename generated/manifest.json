@@ -26,7 +26,16 @@
       "AGENTS.md"
     ],
     "cursor": [
-      ".cursor/rules/universal-agent-config.mdc"
+      ".cursorignore",
+      ".cursor/mcp.json",
+      ".cursor/rules/00-universal-agent-core.mdc",
+      ".cursor/rules/01-model-routing.mdc",
+      ".cursor/rules/02-planning.mdc",
+      ".cursor/rules/03-testing.mdc",
+      ".cursor/rules/04-typescript.mdc",
+      ".cursor/rules/05-python.mdc",
+      ".cursor/rules/06-documentation.mdc",
+      ".cursor/rules/07-security-review.mdc"
     ],
     "aider": [
       ".aider.conf.yml"

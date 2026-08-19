@@ -179,7 +179,16 @@ uninstall_all() {
     "$HOME/.codex/config.toml"
     "$HOME/.codex/AGENTS.md"
     "$DEST_HOME/goose/config.yaml"
-    "$PWD/.cursor/rules/universal-agent-config.mdc"
+    "$PWD/.cursorignore"
+    "$PWD/.cursor/mcp.json"
+    "$PWD/.cursor/rules/00-universal-agent-core.mdc"
+    "$PWD/.cursor/rules/01-model-routing.mdc"
+    "$PWD/.cursor/rules/02-planning.mdc"
+    "$PWD/.cursor/rules/03-testing.mdc"
+    "$PWD/.cursor/rules/04-typescript.mdc"
+    "$PWD/.cursor/rules/05-python.mdc"
+    "$PWD/.cursor/rules/06-documentation.mdc"
+    "$PWD/.cursor/rules/07-security-review.mdc"
     "$PWD/.aider.conf.yml"
   )
   local destination
@@ -234,7 +243,16 @@ case "$AGENT" in
     install_file "$REPO/generated/codex/AGENTS.md" "$target/AGENTS.md"
     ;;
   cursor)
-    install_file "$REPO/generated/cursor/.cursor/rules/universal-agent-config.mdc" "$PWD/.cursor/rules/universal-agent-config.mdc"
+    install_file "$REPO/generated/cursor/.cursorignore" "$PWD/.cursorignore"
+    install_file "$REPO/generated/cursor/.cursor/mcp.json" "$PWD/.cursor/mcp.json"
+    install_file "$REPO/generated/cursor/.cursor/rules/00-universal-agent-core.mdc" "$PWD/.cursor/rules/00-universal-agent-core.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/01-model-routing.mdc" "$PWD/.cursor/rules/01-model-routing.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/02-planning.mdc" "$PWD/.cursor/rules/02-planning.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/03-testing.mdc" "$PWD/.cursor/rules/03-testing.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/04-typescript.mdc" "$PWD/.cursor/rules/04-typescript.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/05-python.mdc" "$PWD/.cursor/rules/05-python.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/06-documentation.mdc" "$PWD/.cursor/rules/06-documentation.mdc"
+    install_file "$REPO/generated/cursor/.cursor/rules/07-security-review.mdc" "$PWD/.cursor/rules/07-security-review.mdc"
     ;;
   aider)
     install_file "$REPO/generated/aider/.aider.conf.yml" "$PWD/.aider.conf.yml"

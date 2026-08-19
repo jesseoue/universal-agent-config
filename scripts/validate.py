@@ -74,7 +74,16 @@ def validate_generated(models, routing) -> list[str]:
         "claude-code/CLAUDE.md",
         "codex/config.toml",
         "codex/AGENTS.md",
-        "cursor/.cursor/rules/universal-agent-config.mdc",
+        "cursor/.cursorignore",
+        "cursor/.cursor/mcp.json",
+        "cursor/.cursor/rules/00-universal-agent-core.mdc",
+        "cursor/.cursor/rules/01-model-routing.mdc",
+        "cursor/.cursor/rules/02-planning.mdc",
+        "cursor/.cursor/rules/03-testing.mdc",
+        "cursor/.cursor/rules/04-typescript.mdc",
+        "cursor/.cursor/rules/05-python.mdc",
+        "cursor/.cursor/rules/06-documentation.mdc",
+        "cursor/.cursor/rules/07-security-review.mdc",
         "aider/.aider.conf.yml",
         "goose/config.yaml",
         "gateways/openrouter/env.example.yml",
@@ -134,6 +143,44 @@ def validate_generated(models, routing) -> list[str]:
         config = load_yaml(goose_config)
         if config["default"]["model"] not in models["models"]:
             errors.append("Goose config references unknown model")
+
+    cursor_rules_dir = generated / "cursor" / ".cursor" / "rules"
+    if cursor_rules_dir.is_dir():
+        rule_files = sorted(path.name for path in cursor_rules_dir.glob("*.mdc"))
+        if rule_files[0] != "00-universal-agent-core.mdc" or len(rule_files) != 8:
+            errors.append("Cursor rule set must contain exactly eight ordered rules")
+        always_applied = 0
+        for filename in rule_files:
+            content = (cursor_rules_dir / filename).read_text()
+            if "alwaysApply: true" in content:
+                always_applied += 1
+            if "alwaysApply: false" not in content and "alwaysApply: true" not in content:
+                errors.append(f"Cursor rule lacks explicit alwaysApply value: {filename}")
+        if always_applied != 2:
+            errors.append("Cursor must have exactly two always-applied rules")
+        routing_rule = (cursor_rules_dir / "01-model-routing.mdc")
+        if routing_rule.is_file():
+            content = routing_rule.read_text()
+            if "https://openrouter.ai/api/v1/cursor" not in content:
+                errors.append("Cursor routing rule must document the OpenRouter Cursor endpoint")
+            if "https://openrouter.ai/api/v1` in Cursor" not in content:
+                errors.append("Cursor routing rule must warn against the generic OpenRouter endpoint")
+
+    cursor_mcp = generated / "cursor" / ".cursor" / "mcp.json"
+    if cursor_mcp.is_file():
+        config = load_json(cursor_mcp)
+        server = config.get("mcpServers", {}).get("context7")
+        if not server:
+            errors.append("Cursor MCP config must include Context7")
+        elif server.get("headers", {}).get("CONTEXT7_API_KEY") != "${env:CONTEXT7_API_KEY}":
+            errors.append("Cursor Context7 auth must use environment expansion")
+
+    cursor_ignore = generated / "cursor" / ".cursorignore"
+    if cursor_ignore.is_file():
+        patterns = set(cursor_ignore.read_text().splitlines())
+        for pattern in (".env*", "**/*.key", "**/*.pem", "**/secrets/**", "node_modules/", "dist/", "coverage/"):
+            if pattern not in patterns:
+                errors.append(f"Cursor ignore file is missing pattern: {pattern}")
 
     return errors
 

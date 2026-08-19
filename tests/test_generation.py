@@ -133,3 +133,30 @@ def test_claude_code_uses_openrouter_anthropic_compatible_gateway():
     assert config["env"]["ANTHROPIC_BASE_URL"] == "https://openrouter.ai/api"
     assert config["env"]["ANTHROPIC_API_KEY"] == "${OPENROUTER_API_KEY}"
     assert config["model"] == "anthropic/claude-sonnet-5"
+
+
+def test_cursor_native_project_surfaces():
+    rules_dir = GENERATED / "cursor" / ".cursor" / "rules"
+    rule_files = sorted(path.name for path in rules_dir.glob("*.mdc"))
+    assert len(rule_files) == 8
+    assert rule_files[0] == "00-universal-agent-core.mdc"
+
+    always_applied = [
+        filename for filename in rule_files
+        if f"alwaysApply: true" in (rules_dir / filename).read_text()
+    ]
+    assert always_applied == ["00-universal-agent-core.mdc", "01-model-routing.mdc"]
+
+    testing = (rules_dir / "03-testing.mdc").read_text()
+    assert "globs: **/test*" in testing
+
+    routing = (rules_dir / "01-model-routing.mdc").read_text()
+    assert "https://openrouter.ai/api/v1/cursor" in routing
+    assert "https://openrouter.ai/api/v1` in Cursor" in routing
+
+    mcp = json.loads((GENERATED / "cursor" / ".cursor" / "mcp.json").read_text())
+    assert mcp["mcpServers"]["context7"]["headers"]["CONTEXT7_API_KEY"] == "${env:CONTEXT7_API_KEY}"
+
+    ignore = (GENERATED / "cursor" / ".cursorignore").read_text().splitlines()
+    assert ".env*" in ignore
+    assert "node_modules/" in ignore

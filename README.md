@@ -73,11 +73,17 @@ Remove the symlinks later:
 | omp / Oh My Pi | `config.yml`, `models.yml`, `mcp.json` | `~/.omp/agent` | Generated |
 | Claude Code | `settings.json` + `CLAUDE.md` | `~/.claude` | Generated |
 | Codex | `config.toml` + `AGENTS.md` | `~/.codex` | Generated |
-| Cursor | `.cursor/rules/universal-agent-config.mdc` | Project `.cursor/rules/` | Generated |
+| Cursor | Scoped `.cursor/rules/*.mdc`, `.cursor/mcp.json`, `.cursorignore` | Project `.cursor/` and root | Generated |
 | Aider | `.aider.conf.yml` | Project root | Generated |
 | Goose | `config.yaml` | `~/.config/goose` | Generated |
 
 Generated means the native config is produced and structurally validated. It does not yet mean live end-to-end runtime tests are implemented for every agent CLI; those are tracked in [Issues](https://github.com/jesseoue/universal-agent-config/issues).
+
+Cursor notes:
+
+- Project rules use comma-separated glob strings in `.mdc` frontmatter.
+- Context7 auth uses Cursor-native `${env:CONTEXT7_API_KEY}` interpolation.
+- If Cursor is launched from the desktop, make sure `CONTEXT7_API_KEY` is available to that process, then restart Cursor and check MCP logs.
 
 ## Routing technology decision matrix
 
@@ -113,7 +119,7 @@ Escalation is explicit: cheap/open lanes run first, DeepSeek Pro handles deep pl
 | Claude Code | Anthropic-compatible OpenRouter gateway, native model and capped fallback chain, small-fast model, auto-compact and effort settings |
 | Codex | OpenRouter `model_providers`, medium main reasoning, GLM default subagent model, bounded concurrent agent threads, provider/MCP timeouts |
 | Goose | OpenRouter default model, dedicated DeepSeek planner model, 100-turn cap, 80% auto-compact threshold, disabled telemetry |
-| Cursor | Rule-based routing guidance for lead, deep, background, and vision lanes |
+| Cursor | Rule-based lead/deep/background/vision guidance, OpenRouter Cursor endpoint warning, Context7 MCP, secret and noise ignores |
 | Aider | GLM default with cheap editor-model lane |
 
 ## Tool, plugin, and MCP contract
@@ -147,6 +153,7 @@ Adapter-specific output:
 | omp | Role models, fallback chains, tool flags, approval mode, HTTP MCP, logging redaction |
 | Claude Code | Permission arrays, `.mcp.json`, nonessential traffic disabled, OpenRouter Anthropic-compatible gateway |
 | Codex | `model_providers`, MCP servers, sandbox/approval policy, agent defaults, logging |
+| Cursor | Scoped `.mdc` rules, project `.cursor/mcp.json`, and `.cursorignore` privacy/noise controls |
 | Goose | Extensions, permission mode, tool flags, planner model, OTel disabled |
 
 ## Provider and media taxonomy
