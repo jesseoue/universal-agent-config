@@ -169,3 +169,11 @@ def test_cursor_native_project_surfaces():
     ignore = (GENERATED / "cursor" / ".cursorignore").read_text().splitlines()
     assert ".env*" in ignore
     assert "node_modules/" in ignore
+
+
+def test_cursor_rules_use_only_documented_frontmatter_keys():
+    rules_dir = GENERATED / "cursor" / ".cursor" / "rules"
+    for path in rules_dir.glob("*.mdc"):
+        frontmatter = path.read_text().split("---", 2)[1]
+        keys = {line.split(":", 1)[0] for line in frontmatter.strip().splitlines() if line}
+        assert keys <= {"description", "globs", "alwaysApply"}

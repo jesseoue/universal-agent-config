@@ -1,5 +1,5 @@
 import { stringify } from "yaml";
-import type { GeneratedArtifact, WizardConfig } from "@/lib/types";
+import type { GeneratedArtifact, RulePackId, WizardConfig } from "@/lib/types";
 
 const providerId = "openrouter";
 
@@ -362,20 +362,217 @@ function buildCodex(config: WizardConfig) {
   ];
 }
 
-function buildCursor(config: WizardConfig) {
-  const routingRule = `---\ndescription: Cost-aware model lane selection and escalation\nalwaysApply: ${config.rulePacks.includes("model-routing")}\n---\n# Model routing\n\n- Daily lead: \`${modelId(config, "default")}\`\n- Background: \`${modelId(config, "background")}\`\n- Reasoning: \`${modelId(config, "reasoning")}\`\n- Vision: \`${modelId(config, "vision")}\`\n- Analysis: \`${modelId(config, "analysis")}\`\n\nFrontier escalation: ${config.frontier.enabled ? "enabled" : "disabled"}\n\n## Cursor endpoint and usage pricing\n\n- Use OpenRouter's dedicated Cursor endpoint: \`https://openrouter.ai/api/v1/cursor\`. It translates Cursor's flat tool-call format; generic \`/api/v1\` may break tools.\n- Cursor Teams/Enterprise usage is billed at **$0.25 per million tokens**, including BYOK requests through OpenRouter. Budget Cursor usage in addition to OpenRouter model pricing.\n`;
+type CursorRule = {
+  filename: string;
+  pack: RulePackId;
+  description: string;
+  alwaysApply: boolean;
+  globs?: string;
+  body: string;
+};
+
+function cursorFrontmatter(rule: Pick<CursorRule, "description" | "alwaysApply" | "globs">): string {
   return [
-    { path: "cursor/.cursor/rules/00-universal-agent-core.mdc", contents: `---\ndescription: Universal Agent Config core policy\nalwaysApply: ${config.rulePacks.includes("core")}\n---\n${sharedPrompt}`, language: "markdown" as const, adapter: "cursor" as const, description: "Cursor core behavior rule" },
-    { path: "cursor/.cursor/rules/01-model-routing.mdc", contents: routingRule, language: "markdown" as const, adapter: "cursor" as const, description: "Cursor model routing rule" },
-    { path: "cursor/.cursor/rules/02-verification.mdc", contents: `---\ndescription: Verification policy\nalwaysApply: true\n---\n${verificationPrompt(config)}\n`, language: "markdown" as const, adapter: "cursor" as const, description: "Cursor verification rule" },
+    "---",
+    `description: ${rule.description}`,
+    ...(rule.globs ? [`globs: ${rule.globs}`] : []),
+    `alwaysApply: ${rule.alwaysApply}`,
+    "---",
+    "",
+  ].join("\n");
+}
+
+function cursorRules(config: WizardConfig): CursorRule[] {
+  return [
+    {
+      filename: "00-universal-agent-core.mdc",
+      pack: "core",
+      description: "Universal Agent Config core behavior and safety policy",
+      alwaysApply: true,
+      body: `${sharedPrompt.trim()}\n`,
+    },
+    {
+      filename: "01-model-routing.mdc",
+      pack: "model-routing",
+      description: "Cost-aware model lane selection and escalation policy",
+      alwaysApply: true,
+      body: `# Model routing
+
+Lane defaults:
+
+- Daily coding lead: \`${modelId(config, "default")}\`
+- Background summaries and bounded subtasks: \`${modelId(config, "background")}\`
+- Deep planning and difficult debugging: \`${modelId(config, "reasoning")}\`
+- Screenshots and multimodal input: \`${modelId(config, "vision")}\`
+- Toolless analysis: \`${modelId(config, "analysis")}\`
+
+Routing policy:
+
+- Start on the daily lead for tool-driven coding.
+- Escalate to the deep lane for architecture, migrations, security-sensitive changes, or repeated failure.
+- Use frontier models only when the user explicitly accepts that spend or the blast radius justifies it. Current frontier escalation: ${config.frontier.enabled ? "enabled" : "disabled"}.
+- Keep generated titles, summaries, and compaction on the cheap background lane.
+- When switching the OpenAI base URL or model family, start a fresh Cursor chat instead of reusing a stale thread.
+
+Cursor + OpenRouter setup:
+
+- Override the OpenAI Base URL with \`https://openrouter.ai/api/v1/cursor\`.
+- Do not use \`https://openrouter.ai/api/v1\` in Cursor; the dedicated Cursor endpoint translates its flat tool-call format.
+- Use exact OpenRouter model IDs from the model list. Router aliases require the \`~\` prefix.
+- Set \`OPENROUTER_API_KEY\` in Cursor's API-key settings, never in repository files.
+- Cursor Teams and Enterprise bill usage at $0.25 per million tokens, including BYOK requests through OpenRouter. Budget Cursor usage in addition to OpenRouter model pricing.
+`,
+    },
+    {
+      filename: "02-planning.mdc",
+      pack: "planning",
+      description: "Planning workflow for architecture, migrations, and high-blast-radius changes",
+      alwaysApply: false,
+      body: `# Planning
+
+Before implementation:
+
+- Identify current behavior, affected surfaces, rollback path, and verification commands.
+- Check migration journals, API contracts, ownership boundaries, and dependent callers.
+- Split work into reversible steps when possible.
+- Define completion as both implementation and evidence, not prose.
+
+For migrations, verify that the journal and deployed schema agree. For multi-file changes, map each consumer before editing shared interfaces.
+`,
+    },
+    {
+      filename: "03-testing.mdc",
+      pack: "testing",
+      description: "Reproduce-first testing, targeted checks, and honest verification policy",
+      globs: "**/test*,**/tests/**,**/spec*,**/specs/**,**/e2e/**,**/*.test.*,**/*.spec.*",
+      alwaysApply: false,
+      body: `# Testing
+
+- Reproduce a failure before changing code.
+- Prefer the narrowest useful checks, then the project's full verification suite when risk justifies it.
+- Do not delete, skip, weaken, or mark tests as expected to fail merely to make a run pass.
+- Investigate flaky tests with evidence and scope before retrying.
+- Report exact commands and outcomes, and distinguish unit checks from runtime or end-to-end verification.
+`,
+    },
+    {
+      filename: "04-typescript.mdc",
+      pack: "typescript",
+      description: "TypeScript and React implementation conventions",
+      globs: "**/*.ts,**/*.tsx,**/*.mts,**/*.cts",
+      alwaysApply: false,
+      body: `# TypeScript
+
+- Prefer precise types over broad casts or \`any\`.
+- Keep public interfaces explicit and update consumers when contracts change.
+- Use immutable updates for state and data transformations.
+- Keep component logic small and colocated; extract reusable behavior only when it has a second consumer.
+- Run the project formatter, typecheck, and relevant test command before handoff.
+`,
+    },
+    {
+      filename: "05-python.mdc",
+      pack: "python",
+      description: "Python implementation conventions",
+      globs: "**/*.py",
+      alwaysApply: false,
+      body: `# Python
+
+- Follow the project's packaging, import, and formatting conventions.
+- Prefer explicit boundaries over global mutable state.
+- Use \`pathlib\` for filesystem paths and safe temporary directories for generated artifacts.
+- Keep dependencies pinned to the project manifest.
+- Run targeted pytest tests, plus lint and typecheck when configured.
+`,
+    },
+    {
+      filename: "06-documentation.mdc",
+      pack: "documentation",
+      description: "Documentation, changelog, and README writing conventions",
+      globs: "**/*.md,**/*.mdx",
+      alwaysApply: false,
+      body: `# Documentation
+
+- Lead with the outcome, then the setup or decision rationale.
+- Keep installation, configuration, and troubleshooting steps copyable.
+- Mark time-sensitive model, pricing, and availability claims as such.
+- Prefer one canonical explanation over duplicated statements that can drift.
+- Do not describe untested behavior as verified or deployed.
+`,
+    },
+    {
+      filename: "07-security-review.mdc",
+      pack: "security-review",
+      description: "Security review checklist for authentication, secrets, dependencies, injection, and severity",
+      alwaysApply: false,
+      body: `# Security review
+
+Check:
+
+- Authentication, authorization, tenant isolation, and session boundaries.
+- Secret storage, logging, shell interpolation, SSRF, path traversal, and injection sinks.
+- Dependency reachability and exploitability, not just advisory presence.
+- Rollback and blast radius for proposed remediation.
+
+High or critical findings require a demonstrated exploit and meaningful impact. HTTP status, simulated output, or a suspicious sink alone is insufficient evidence.
+`,
+    },
+  ];
+}
+
+const cursorIgnorePolicy = `# Secrets and credentials
+.env*
+**/.env*
+**/.env.*
+**/credentials.json
+**/secrets.json
+**/secrets/**
+**/*.key
+**/*.pem
+**/id_rsa
+**/id_ed25519
+
+# Build output and dependencies
+node_modules/
+dist/
+build/
+out/
+coverage/
+.next/
+.nuxt/
+.venv/
+__pycache__/
+
+# Local caches and generated artifacts
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.turbo/
+.DS_Store
+`;
+
+function buildCursor(config: WizardConfig) {
+  const selectedPacks = new Set(config.rulePacks);
+  const rules = cursorRules(config)
+    .filter((rule) => selectedPacks.has(rule.pack))
+    .map((rule) => ({
+      path: `cursor/.cursor/rules/${rule.filename}`,
+      contents: `${cursorFrontmatter(rule)}${rule.body}`,
+      language: "markdown" as const,
+      adapter: "cursor" as const,
+      description: "Cursor project rule",
+    }));
+
+  return [
+    ...rules,
     {
       path: "cursor/.cursor/mcp.json",
       contents: json({
         mcpServers: {
           context7: {
-            type: "http",
             url: "https://mcp.context7.com/mcp",
-            headers: { "CONTEXT7_API_KEY": "${env:CONTEXT7_API_KEY}" },
+            headers: { CONTEXT7_API_KEY: "${env:CONTEXT7_API_KEY}" },
           },
         },
       }),
@@ -383,7 +580,7 @@ function buildCursor(config: WizardConfig) {
       adapter: "cursor" as const,
       description: "Cursor MCP servers",
     },
-    { path: "cursor/.cursorignore", contents: ".env\n.env.*\n.dev.vars\nsecrets/**\n", language: "text" as const, adapter: "cursor" as const, description: "Cursor secret ignore policy" },
+    { path: "cursor/.cursorignore", contents: cursorIgnorePolicy, language: "text" as const, adapter: "cursor" as const, description: "Cursor secret and generated-output ignore policy" },
   ];
 }
 

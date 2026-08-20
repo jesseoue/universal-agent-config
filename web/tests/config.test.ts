@@ -87,6 +87,47 @@ describe("wizard configuration", () => {
     expect(routingRule?.contents).toContain("flat tool-call format");
   });
 
+  it("generates Cursor project rules from selected rule packs", () => {
+    const config = structuredClone(defaultConfig);
+    config.agents = ["cursor"];
+    config.rulePacks = ["core", "model-routing", "testing", "typescript"];
+    const artifacts = buildArtifacts(config);
+    const rulePaths = artifacts
+      .filter((artifact) => artifact.path.startsWith("cursor/.cursor/rules/"))
+      .map((artifact) => artifact.path);
+
+    expect(rulePaths).toEqual([
+      "cursor/.cursor/rules/00-universal-agent-core.mdc",
+      "cursor/.cursor/rules/01-model-routing.mdc",
+      "cursor/.cursor/rules/03-testing.mdc",
+      "cursor/.cursor/rules/04-typescript.mdc",
+    ]);
+
+    const testingRule = artifacts.find((artifact) => artifact.path === "cursor/.cursor/rules/03-testing.mdc");
+    expect(testingRule?.contents).toContain("alwaysApply: false");
+    expect(testingRule?.contents).toContain("globs: **/test*");
+
+    const coreRule = artifacts.find((artifact) => artifact.path === "cursor/.cursor/rules/00-universal-agent-core.mdc");
+    expect(coreRule?.contents).toContain("alwaysApply: true");
+  });
+
+  it("keeps Cursor MCP and ignore output native and secret-safe", () => {
+    const config = structuredClone(defaultConfig);
+    config.agents = ["cursor"];
+    const artifacts = buildArtifacts(config);
+    const mcp = JSON.parse(artifacts.find((artifact) => artifact.path === "cursor/.cursor/mcp.json")?.contents ?? "{}");
+    const ignore = artifacts.find((artifact) => artifact.path === "cursor/.cursorignore")?.contents ?? "";
+
+    expect(mcp.mcpServers.context7).toEqual({
+      url: "https://mcp.context7.com/mcp",
+      headers: { CONTEXT7_API_KEY: "${env:CONTEXT7_API_KEY}" },
+    });
+    expect(ignore).toContain(".env*");
+    expect(ignore).toContain("**/*.pem");
+    expect(ignore).toContain("node_modules/");
+    expect(ignore).toContain(".next/");
+  });
+
   it("estimates monthly cost deterministically", () => {
     expect(estimatedMonthlyCost(defaultConfig)).toBeGreaterThan(0);
   });
