@@ -61,27 +61,27 @@ export function GeneratorStudio() {
       <div className="studio-rise mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-4 py-6 lg:px-8 lg:py-8">
         <header className="studio-panel flex flex-col gap-4 rounded-3xl p-5 lg:flex-row lg:items-center lg:justify-between lg:p-7">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.28em] text-accent/70">Agent control plane</p>
-            <h1 className="mt-3 max-w-4xl text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">Agent control plane</p>
+            <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-balance sm:text-6xl">
               Turn one policy into every coding-agent config.
             </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted sm:text-base">
-              One control plane for every coding agent. Generate native configs, validate model capability, estimate spend, and download a ready-to-deploy configuration package.
+            <p className="mt-5 max-w-2xl text-base font-light leading-relaxed text-muted sm:text-lg">
+              Generate, validate, and download agent config in one pass.
             </p>
           </div>
           <div className="grid gap-2 font-mono text-xs text-muted">
             <span>Catalog {catalog.updated}</span>
             <span>{catalog.models.length} verified models</span>
-            <span className="text-lime-200">Client-only · no keys collected</span>
+            <span className="text-accent">Client-only · no keys collected</span>
           </div>
           <div className="grid gap-2 sm:grid-cols-2 lg:w-[430px]">
             <div className="rounded-2xl border border-accent/25 bg-accent/8 p-4">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-accent/70">Run it now</p>
-              <p className="mt-2 text-sm leading-relaxed text-text/80">Client-only generation. No account, no server, no keys.</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">Run it now</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">Client-only. No account or keys.</p>
             </div>
-            <div className="rounded-2xl border border-line bg-white/[0.03] p-4">
-              <p className="font-mono text-[10px] uppercase tracking-widest text-faint">Own the platform</p>
-              <p className="mt-2 text-sm leading-relaxed text-text/80">Self-host the container, plug in your gateway, and become the provider layer.</p>
+            <div className="rounded-2xl border border-line bg-surface p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">Own the platform</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">Private container. Your gateway. Your policy.</p>
             </div>
           </div>
         </header>
@@ -90,8 +90,8 @@ export function GeneratorStudio() {
         <section className="studio-panel grid gap-4 rounded-3xl p-5 lg:grid-cols-[minmax(0,1fr)_260px] lg:p-7">
           <div>
             <div className="flex items-center gap-3">
-              <p className="font-mono text-xs uppercase tracking-[0.28em] text-accent/70">Generation control plane</p>
-              <Tooltip content="Every option below flows through this deterministic client-side pipeline. Nothing is sent to a server, and no keys are requested.">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-accent">Generation control plane</p>
+              <Tooltip content="Policy → files. Runs in your browser.">
                 <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-line-strong font-mono text-[10px] text-faint">?</span>
               </Tooltip>
             </div>
@@ -103,9 +103,9 @@ export function GeneratorStudio() {
                 { label: "Validation", value: `${issues.length} issue${issues.length === 1 ? "" : "s"}`, detail: "Capability and safety checks" },
                 { label: "Artifacts", value: `${artifacts.length}`, detail: "Native files in ZIP" },
               ].map((node, index) => (
-                <div key={node.label} className="relative rounded-2xl border border-line bg-black/30 p-4">
-                  <p className="font-mono text-[10px] uppercase tracking-widest text-faint">{String(index + 1).padStart(2, "0")} · {node.label}</p>
-                  <p className="mt-2 truncate text-sm font-medium text-white">{node.value}</p>
+                <div key={node.label} className="relative rounded-2xl border border-line bg-surface-soft p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">{String(index + 1).padStart(2, "0")} · {node.label}</p>
+                  <p className="mt-2 truncate text-sm font-medium text-text">{node.value}</p>
                   <p className="mt-1 text-[11px] leading-relaxed text-faint">{node.detail}</p>
                   {index < 4 && <span aria-hidden="true" className="absolute -right-2 top-1/2 hidden h-px w-4 bg-accent/30 sm:block" />}
                 </div>
@@ -113,25 +113,25 @@ export function GeneratorStudio() {
             </div>
           </div>
           <div className="rounded-2xl border border-accent/25 bg-accent/8 p-4">
-            <p className="font-mono text-[10px] uppercase tracking-widest text-accent/70">Estimated monthly</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">Estimated monthly</p>
             <p className="mt-2 font-mono text-3xl font-semibold text-accent-strong">${monthlyCost.toFixed(2)}</p>
-            <p className="mt-2 text-[11px] leading-relaxed text-white/50">Modeled at 10M input / 1M output tokens using current catalog prices. Excludes cache savings.</p>
+            <p className="mt-2 text-[11px] leading-relaxed text-text/50">10M input / 1M output tokens. Catalog prices, no cache savings.</p>
           </div>
         </section>
 
         <section className="studio-panel-flat grid gap-4 rounded-3xl p-5 lg:grid-cols-3 lg:p-7">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-accent/70">Control-plane modes</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">Control-plane modes</p>
             <h2 className="mt-3 text-xl font-semibold tracking-tight">Run it client-only or own the whole layer.</h2>
           </div>
           <div className="lg:col-span-2 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-line bg-black/25 p-4">
+            <div className="rounded-2xl border border-line bg-surface-soft p-4">
               <p className="font-mono text-xs text-accent-strong">Instant</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">The current app generates native configs entirely in your browser. No account, no API route, no telemetry.</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">Runs entirely in your browser. No server or telemetry.</p>
             </div>
-            <div className="rounded-2xl border border-line bg-black/25 p-4">
+            <div className="rounded-2xl border border-line bg-surface-soft p-4">
               <p className="font-mono text-xs text-accent-strong">Self-hosted</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">The same policy model can drive a hosted container, private gateway, and organization-wide agent defaults.</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">One policy for your gateway, containers, and team defaults.</p>
             </div>
           </div>
         </section>
@@ -145,7 +145,7 @@ export function GeneratorStudio() {
                     type="button"
                     onClick={() => setStep(index)}
                     className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left font-mono text-xs transition ${
-                      index === step ? "bg-accent-soft text-accent-strong" : "text-muted hover:bg-white/[0.045] hover:text-white"
+                      index === step ? "bg-accent-soft text-accent-strong" : "text-muted hover:bg-surface hover:text-text"
                     }`}
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
@@ -159,7 +159,7 @@ export function GeneratorStudio() {
           <section aria-live="polite" className="studio-panel flex min-h-[540px] flex-col rounded-3xl p-5 lg:p-7">
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
-                <p className="font-mono text-xs text-accent/70">{`step ${step + 1}/${wizardSteps.length}`}</p>
+                <p className="font-mono text-xs text-accent">{`step ${step + 1}/${wizardSteps.length}`}</p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight">{wizardSteps[step]}</h2>
               </div>
               <label className="flex items-center gap-2 font-mono text-xs text-muted">
@@ -179,7 +179,7 @@ export function GeneratorStudio() {
                       onClick={() => updateConfig(applyPreset(id, config))}
                       className={`p-5 text-left hover:border-accent/40 ${config.preset === id ? "border-accent/50 bg-accent-soft" : ""}`}
                     >
-                      <CardTitle>{preset.name}</CardTitle>
+                      <CardTitle className="text-lg">{preset.name}</CardTitle>
                       <CardDescription className="mt-2">{preset.goal}</CardDescription>
                       <div className="mt-4 grid gap-1 font-mono text-[11px] text-faint">
                         <span>cost · {preset.costPosture}</span>
@@ -187,7 +187,7 @@ export function GeneratorStudio() {
                       </div>
                       <div className="mt-4 flex flex-wrap gap-1">
                         {preset.recommendedAgents.map((agentId) => (
-                          <span key={agentId} className="rounded-full border border-line bg-white/[0.045] px-2 py-1 font-mono text-[10px] text-faint">{agentMetadata[agentId].name}</span>
+                          <span key={agentId} className="rounded-full border border-line bg-surface px-2 py-1 font-mono text-[10px] text-faint">{agentMetadata[agentId].name}</span>
                         ))}
                       </div>
                     </Card>
@@ -210,18 +210,18 @@ export function GeneratorStudio() {
                         className={`p-5 hover:border-accent/40 ${selected ? "border-accent/50 bg-accent-soft" : ""}`}
                       >
                         <div className="flex items-start gap-3">
-                          <Image src={agent.logo} alt="" width={38} height={38} className="rounded-lg bg-white/[0.045] p-1" />
+                          <Image src={agent.logo} alt="" width={38} height={38} className="rounded-lg bg-surface p-1" />
                           <div>
-                            <CardTitle>{agent.name}</CardTitle>
+                            <CardTitle className="text-lg">{agent.name}</CardTitle>
                             <CardDescription className="mt-1 font-mono text-xs">{agent.version}</CardDescription>
                           </div>
                         </div>
-                        <CardDescription className="mt-4">{agent.notes.join(" ")}</CardDescription>
+                        <CardDescription className="mt-4">{agent.notes[0]}</CardDescription>
                         <div className="mt-4 grid gap-2">
                           {agent.outputs.map((output) => (
-                            <div key={output.label} className="flex items-center justify-between gap-3 rounded-lg border border-line bg-black/30 px-2 py-1.5">
-                              <span className="font-mono text-[10px] uppercase tracking-widest text-faint">{output.label}</span>
-                              <span className="truncate font-mono text-[10px] text-accent-strong/75">{output.value}</span>
+                            <div key={output.label} className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface-soft px-2 py-1.5">
+                              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-faint">{output.label}</span>
+                              <span className="truncate font-mono text-[10px] text-accent">{output.value}</span>
                             </div>
                           ))}
                         </div>
@@ -248,12 +248,12 @@ export function GeneratorStudio() {
                       >
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex items-center gap-3">
-                            <Image src={gatewayMetadata[id].logo} alt="" width={28} height={28} className="text-text/80" />
-                            <CardTitle>{gateway.name}</CardTitle>
+                            <Image src={gatewayMetadata[id].logo} alt="" width={28} height={28} className="text-muted" />
+                            <CardTitle className="text-lg">{gateway.name}</CardTitle>
                           </div>
-                          <span className="rounded-full border border-line bg-white/[0.045] px-2 py-1 font-mono text-[11px] text-white/50">{gateway.category}</span>
+                          <span className="rounded-full border border-line bg-surface px-2 py-1 font-mono text-[11px] text-text/50">{gateway.category}</span>
                         </div>
-                        <CardDescription className="mt-3">{gateway.best_for?.join(" · ")}</CardDescription>
+                        <CardDescription className="mt-3">{gateway.best_for?.[0] ?? "Gateway routing"}</CardDescription>
                         <div className="mt-4 grid gap-1 font-mono text-[11px] text-faint">
                           <span>protocol · {gateway.protocol}</span>
                           <span>model · {gateway.model_format}</span>
@@ -270,7 +270,7 @@ export function GeneratorStudio() {
                   {laneIds.map((lane) => {
                     const selected = modelById.get(config.lanes[lane].primary);
                     return (
-                      <div key={lane} className="rounded-2xl border border-line bg-white/[0.022] p-4">
+                      <div key={lane} className="rounded-2xl border border-line bg-surface p-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div>
                             <div className="flex items-center gap-2">
@@ -287,13 +287,13 @@ export function GeneratorStudio() {
                         </div>
                         <label className="mt-4 block">
                           <span className="font-mono text-[11px] uppercase tracking-widest text-faint">Primary model</span>
-                          <Tooltip content="Primary models receive the lane's normal traffic. Fallback models are used in order when the primary fails.">
+                          <Tooltip content="Primary gets normal traffic. Fallbacks run in order.">
                             <span aria-hidden="true" className="ml-1 grid size-4 cursor-help place-items-center rounded-full border border-line-strong font-mono text-[9px] text-faint">?</span>
                           </Tooltip>
                           <select
                             value={config.lanes[lane].primary}
                             onChange={(event) => setPrimaryModel(lane, event.target.value)}
-                            className="mt-2 w-full rounded-xl border border-line bg-black/40 px-3 py-2 font-mono text-sm text-white focus:border-accent/50 focus:outline-none"
+                            className="mt-2 w-full rounded-xl border border-line bg-surface px-3 py-2 font-mono text-sm text-text focus:border-accent/50 focus:outline-none"
                           >
                             {catalog.models.map((model) => (
                               <option key={model.id} value={model.id}>
@@ -304,8 +304,8 @@ export function GeneratorStudio() {
                         </label>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {config.lanes[lane].fallbacks.map((fallback) => (
-                            <span key={fallback} className="rounded-full border border-line bg-white/[0.045] px-2 py-1 font-mono text-[11px] text-muted">
-                              fallback · {fallback}
+                            <span key={fallback} className="rounded-full border border-line bg-surface px-2 py-1 font-mono text-[11px] text-muted">
+                              {fallback}
                             </span>
                           ))}
                         </div>
@@ -318,7 +318,7 @@ export function GeneratorStudio() {
               {step === 4 && (
                 <div className="grid gap-3">
                   {(Object.entries(config.permissions) as Array<[keyof WizardConfig["permissions"], boolean]>).map(([key, value]) => (
-                    <label key={key} className="flex items-center justify-between gap-4 rounded-2xl border border-line bg-white/[0.022] p-4">
+                    <label key={key} className="flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface p-4">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-sm">{key}</span>
                         <Tooltip content={permissionTooltips[key]}>
@@ -338,7 +338,7 @@ export function GeneratorStudio() {
               {step === 5 && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   {(Object.entries(config.performance) as Array<[keyof WizardConfig["performance"], number | boolean | string]>).map(([key, value]) => (
-                    <label key={key} className="rounded-2xl border border-line bg-white/[0.022] p-4">
+                    <label key={key} className="rounded-2xl border border-line bg-surface p-4">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-xs uppercase tracking-widest text-faint">{key}</span>
                         <Tooltip content={performanceTooltips[key]}>
@@ -354,7 +354,7 @@ export function GeneratorStudio() {
                             [key]: typeof value === "number" ? Number(event.target.value) : event.target.value,
                           })
                         }
-                        className="mt-2 w-full rounded-xl border border-line bg-black/40 px-3 py-2 font-mono text-sm focus:border-accent/50 focus:outline-none"
+                        className="mt-2 w-full rounded-xl border border-line bg-surface px-3 py-2 font-mono text-sm focus:border-accent/50 focus:outline-none"
                       />
                     </label>
                   ))}
@@ -372,7 +372,7 @@ export function GeneratorStudio() {
                       onClick={() => toggleRulePack(pack.id)}
                       className={`p-4 hover:border-accent/40 ${config.rulePacks.includes(pack.id) ? "border-accent/50 bg-accent-soft" : ""}`}
                     >
-                      <CardTitle>{pack.name}</CardTitle>
+                      <CardTitle className="text-lg">{pack.name}</CardTitle>
                       <CardDescription className="mt-2">{pack.description}</CardDescription>
                       <div className="mt-4 font-mono text-[10px] text-faint">alwaysApply · {String(pack.alwaysApply)}</div>
                     </Card>
@@ -402,7 +402,7 @@ export function GeneratorStudio() {
                   {blockingIssues.length > 0 ? (
                     <div className="rounded-2xl border border-red-400/30 bg-red-400/10 p-5">
                       <p className="font-semibold">Fix blocking issues before downloading.</p>
-                      <ul className="mt-3 grid gap-2 text-sm text-text/80">
+                      <ul className="mt-3 grid gap-2 text-sm text-muted">
                         {blockingIssues.map((issue) => <li key={issue.message}>{issue.message}</li>)}
                       </ul>
                     </div>
@@ -410,18 +410,18 @@ export function GeneratorStudio() {
                     <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
                       <div className="grid gap-2">
                         <div className="flex items-center gap-2">
-                          <p className="font-mono text-xs uppercase tracking-[0.24em] text-accent/70">Artifact graph</p>
-                          <Tooltip content="Each artifact is derived from your current policy, gateway, lanes, permissions, performance, and selected rule packs.">
+                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Artifact graph</p>
+                          <Tooltip content="Files derive from your current choices.">
                             <span aria-hidden="true" className="grid size-5 cursor-help place-items-center rounded-full border border-line-strong font-mono text-[10px] text-faint">?</span>
                           </Tooltip>
                         </div>
                         {artifacts.map((artifact) => (
-                          <div key={artifact.path} className="rounded-2xl border border-line bg-black/30 p-4">
-                            <p className="truncate font-mono text-xs text-white">{artifact.path}</p>
+                          <div key={artifact.path} className="rounded-2xl border border-line bg-surface-soft p-4">
+                            <p className="truncate font-mono text-xs text-text">{artifact.path}</p>
                             <p className="mt-2 text-[11px] leading-relaxed text-faint">{artifact.description}</p>
                             <div className="mt-3 flex flex-wrap gap-1">
-                              <span className="rounded-full border border-line bg-white/[0.045] px-2 py-1 font-mono text-[10px] text-accent-strong/70">{artifact.language}</span>
-                              <span className="rounded-full border border-line bg-white/[0.045] px-2 py-1 font-mono text-[10px] text-faint">{artifact.adapter}</span>
+                              <span className="rounded-full border border-line bg-surface px-2 py-1 font-mono text-[10px] text-accent">{artifact.language}</span>
+                              <span className="rounded-full border border-line bg-surface px-2 py-1 font-mono text-[10px] text-faint">{artifact.adapter}</span>
                             </div>
                           </div>
                         ))}
@@ -432,13 +432,13 @@ export function GeneratorStudio() {
                       </TabsList>
                       {artifacts.map((artifact) => (
                         <TabsContent key={artifact.path} value={artifact.path} className="mt-4">
-                          <div className="flex items-center justify-between gap-3 rounded-t-2xl border border-line bg-white/[0.045] px-4 py-3">
+                          <div className="flex items-center justify-between gap-3 rounded-t-2xl border border-line bg-surface px-4 py-3">
                             <span className="font-mono text-xs text-muted">{artifact.path}</span>
                             <Button size="sm" variant="primary" onClick={() => copyArtifact(artifact.path, artifact.contents)}>
                               {copyState === artifact.path ? "Copied" : "Copy"}
                             </Button>
                           </div>
-                          <pre className="studio-code max-h-[430px] overflow-auto rounded-b-2xl border border-t-0 border-line bg-black/50 p-4 font-mono text-xs leading-relaxed text-accent-strong">
+                          <pre className="studio-code max-h-[430px] overflow-auto rounded-b-2xl border border-t-0 border-line bg-[#f7faf4] p-4 font-mono text-xs leading-relaxed text-[#1f3d10]">
                             <code>{artifact.contents}</code>
                           </pre>
                         </TabsContent>
@@ -450,7 +450,7 @@ export function GeneratorStudio() {
               )}
             </div>
 
-            <div className="sticky bottom-0 mt-6 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-t from-black/80 to-transparent pt-4">
+            <div className="sticky bottom-0 mt-6 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-t from-white/85 to-transparent pt-4">
               <Button variant="ghost" onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}>Back</Button>
               <div className="flex flex-wrap gap-2">
                 <Button variant="secondary" onClick={reset}>Reset</Button>
@@ -464,7 +464,7 @@ export function GeneratorStudio() {
           </section>
 
           <aside className="studio-panel h-fit rounded-3xl p-5">
-            <h2 className="font-mono text-xs uppercase tracking-[0.24em] text-accent/70">Live config</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Live config</h2>
             <div className="mt-5 grid gap-4">
               <SummaryTile label="Gateway" value={gatewayById.get(config.gateway)?.name ?? config.gateway} />
               <SummaryTile label="Primary" value={config.lanes.default.primary} />
@@ -503,9 +503,9 @@ export function GeneratorStudio() {
 
 function SummaryTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-white/[0.022] p-4">
+    <div className="rounded-2xl border border-line bg-surface p-4">
       <p className="font-mono text-[11px] uppercase tracking-widest text-faint">{label}</p>
-      <p className="mt-2 truncate font-mono text-sm text-white">{value}</p>
+      <p className="mt-2 truncate font-mono text-sm text-text">{value}</p>
     </div>
   );
 }

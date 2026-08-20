@@ -13,7 +13,7 @@ export function TabsTrigger({ className, ...props }: TabsPrimitive.TabsTriggerPr
   return (
     <TabsPrimitive.Trigger
       className={cn(
-        "rounded-lg border border-line bg-white/[0.03] px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-text data-[state=active]:border-accent/40 data-[state=active]:bg-accent-soft data-[state=active]:text-accent-strong",
+        "rounded-lg border border-line bg-surface px-3 py-1.5 font-mono text-xs text-muted transition-colors hover:text-text data-[state=active]:border-accent/40 data-[state=active]:bg-accent-soft data-[state=active]:text-accent-strong",
         className,
       )}
       {...props}

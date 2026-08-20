@@ -3,20 +3,21 @@
 @theme inline {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --color-canvas: #060706;
-  --color-surface: #0b0d0a;
-  --color-surface-raised: #10130d;
-  --color-line: rgba(217, 248, 113, 0.11);
-  --color-line-strong: rgba(217, 248, 113, 0.24);
-  --color-accent: #d9f871;
-  --color-accent-strong: #eaffa1;
-  --color-accent-soft: rgba(217, 248, 113, 0.12);
-  --color-data: #6ee7ff;
-  --color-warning: #fbbf24;
-  --color-danger: #fb7185;
-  --color-text: #f8faf3;
-  --color-muted: rgba(248, 250, 243, 0.58);
-  --color-faint: rgba(248, 250, 243, 0.38);
+  --color-canvas: #f5f8f2;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-soft: #f7faf4;
+  --color-line: rgba(21, 45, 24, 0.11);
+  --color-line-strong: rgba(21, 45, 24, 0.2);
+  --color-accent: #3f7314;
+  --color-accent-strong: #2b5907;
+  --color-accent-soft: rgba(120, 170, 48, 0.13);
+  --color-data: #12678c;
+  --color-warning: #a15c07;
+  --color-danger: #b42318;
+  --color-text: #14210f;
+  --color-muted: rgba(20, 33, 15, 0.65);
+  --color-faint: rgba(20, 33, 15, 0.48);
 }
 
 * {
@@ -24,44 +25,41 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
   scroll-behavior: smooth;
 }
 
 body {
   background:
-    radial-gradient(circle at 12% -4%, rgba(217, 248, 113, 0.09), transparent 30rem),
-    radial-gradient(circle at 88% 4%, rgba(110, 231, 255, 0.07), transparent 34rem),
-    linear-gradient(180deg, #080a08 0%, #060706 100%);
+    radial-gradient(circle at 12% -4%, rgba(120, 170, 48, 0.16), transparent 30rem),
+    radial-gradient(circle at 88% 2%, rgba(18, 103, 140, 0.1), transparent 34rem),
+    linear-gradient(180deg, #fbfdf8 0%, #f2f7ee 100%);
   color: var(--color-text);
   font-feature-settings: "ss01" on;
 }
 
 .studio-grid {
   background-image:
-    linear-gradient(rgba(217, 248, 113, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 248, 113, 0.045) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
-  background-size: 56px 56px, 56px 56px, 14px 14px, 14px 14px;
-  mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0, 0, 0, 0.35) 55%, transparent 85%);
+    linear-gradient(rgba(63, 115, 20, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63, 115, 20, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 0%, black 0%, rgba(0, 0, 0, 0.35) 55%, transparent 88%);
 }
 
 .studio-panel {
   border: 1px solid var(--color-line);
   background:
-    linear-gradient(160deg, rgba(217, 248, 113, 0.055), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.012)),
-    rgba(10, 12, 10, 0.9);
-  backdrop-filter: blur(18px);
+    linear-gradient(160deg, rgba(120, 170, 48, 0.07), transparent 35%),
+    rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
   box-shadow:
-    0 24px 70px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    0 18px 50px rgba(35, 58, 31, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
 }
 
 .studio-panel-flat {
   border: 1px solid var(--color-line);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008));
+  background: rgba(255, 255, 255, 0.68);
 }
 
 .studio-focus:focus-visible {
@@ -70,7 +68,7 @@ body {
 }
 
 .studio-code {
-  scrollbar-color: rgba(217, 248, 113, 0.45) transparent;
+  scrollbar-color: rgba(63, 115, 20, 0.35) transparent;
   scrollbar-width: thin;
 }
 
@@ -80,7 +78,7 @@ body {
 }
 
 .studio-code::-webkit-scrollbar-thumb {
-  background: rgba(217, 248, 113, 0.4);
+  background: rgba(63, 115, 20, 0.3);
   border-radius: 999px;
 }
 

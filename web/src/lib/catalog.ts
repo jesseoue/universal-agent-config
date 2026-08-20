@@ -31,7 +31,7 @@ export const agentMetadata: Record<
     installTarget: "~/.config/opencode",
     notes: ["Native-first; no plugin dependency.", "Supports model, small model, agents, permissions, MCP, and compaction."],
     logo: "/brand/opencode.svg",
-    tooltip: "Generates a native OpenCode JSON config and shared AGENTS.md. This mode stays plugin-free.",
+    tooltip: "Native JSON + AGENTS.md. Plugin-free.",
     outputs: [
       { label: "Route", value: "model + small_model" },
       { label: "Guardrail", value: "permission map" },
@@ -45,7 +45,7 @@ export const agentMetadata: Record<
     installTarget: "~/.config/opencode + ~/.omo",
     notes: ["Optional Oh My Openagent orchestration layer.", "Adds concurrency, tool-call caps, and circuit breakers."],
     logo: "/brand/opencode.svg",
-    tooltip: "Adds the optional Oh My Openagent layer for background orchestration, concurrency caps, and circuit breakers.",
+    tooltip: "Adds OMO orchestration and loop guards.",
     outputs: [
       { label: "Route", value: "model + small_model" },
       { label: "Guardrail", value: "OMO circuit breaker" },
@@ -59,7 +59,7 @@ export const agentMetadata: Record<
     installTarget: "~/.omp/agent",
     notes: ["Role-based model routing with fallback chains.", "Snapcompact and tool output limits are supported."],
     logo: "/brand/omp.svg",
-    tooltip: "Translates lanes into omp model roles such as default, smol, slow, plan, and advisor.",
+    tooltip: "Maps lanes to omp model roles.",
     outputs: [
       { label: "Route", value: "modelRoles" },
       { label: "Guardrail", value: "approval mode" },
@@ -73,7 +73,7 @@ export const agentMetadata: Record<
     installTarget: "~/.claude",
     notes: ["Uses the Anthropic-compatible OpenRouter endpoint.", "Supports fallback and small-fast model roles."],
     logo: "/brand/claude-code.svg",
-    tooltip: "Emits Claude settings.json using the Anthropic-compatible OpenRouter endpoint, fallback models, and permission arrays.",
+    tooltip: "Emits Claude settings, fallback, and permissions.",
     outputs: [
       { label: "Route", value: "model + fallbackModel" },
       { label: "Guardrail", value: "permissions allow/deny" },
@@ -87,7 +87,7 @@ export const agentMetadata: Record<
     installTarget: "~/.codex",
     notes: ["Uses OpenRouter through the Responses-compatible provider.", "Reasoning effort, verbosity, and subagent policy are supported."],
     logo: "/brand/codex.svg",
-    tooltip: "Generates Codex TOML with provider transport, reasoning effort, subagent policy, and approval behavior.",
+    tooltip: "Emits Codex provider, reasoning, and approval policy.",
     outputs: [
       { label: "Route", value: "model_providers" },
       { label: "Guardrail", value: "approval_policy" },
@@ -101,7 +101,7 @@ export const agentMetadata: Record<
     installTarget: "Project root",
     notes: ["Uses the dedicated OpenRouter Cursor endpoint.", "Project rules and MCP are generated at repository scope."],
     logo: "/brand/cursor.svg",
-    tooltip: "Creates scoped Cursor .mdc project rules, MCP config, and privacy-aware ignore patterns.",
+    tooltip: "Creates Cursor rules, MCP, and ignore policy.",
     outputs: [
       { label: "Route", value: "routing rule" },
       { label: "Guardrail", value: ".cursorignore" },
@@ -115,7 +115,7 @@ export const agentMetadata: Record<
     installTarget: "Project root",
     notes: ["Supports main/editor model split and repo-map limits.", "Auto commits remain disabled by default."],
     logo: "/brand/aider.svg",
-    tooltip: "Generates Aider's main/editor model split while keeping auto commits disabled.",
+    tooltip: "Sets Aider model split. Commits stay off.",
     outputs: [
       { label: "Route", value: "model + editor-model" },
       { label: "Guardrail", value: "auto-commits off" },
@@ -129,7 +129,7 @@ export const agentMetadata: Record<
     installTarget: "~/.config/goose",
     notes: ["Supports default/planner model split, max turns, and auto-compaction.", "Telemetry remains disabled."],
     logo: "/brand/goose.svg",
-    tooltip: "Generates Goose's default/planner model split, turn cap, auto-compaction threshold, and tool flags.",
+    tooltip: "Sets Goose models, turn cap, and compaction.",
     outputs: [
       { label: "Route", value: "default + planner" },
       { label: "Guardrail", value: "GOOSE_MAX_TURNS" },
@@ -178,40 +178,40 @@ export const presetMetadata: Record<string, { name: string; goal: string; costPo
 
 
 export const gatewayMetadata: Record<GatewayId, { logo: string; tooltip: string }> = {
-  openrouter: { logo: "/brand/openrouter.svg", tooltip: "One hosted marketplace key with broad model access. The default because it is broadly compatible and easy to validate." },
-  cloudflare: { logo: "/brand/cloudflare.svg", tooltip: "Cloudflare edge control plane for caching, logging, DLP, retries, and rate limits. Requires an account-specific endpoint." },
-  vercel: { logo: "/brand/vercel.svg", tooltip: "Vercel AI Gateway with provider/model strings, OIDC support, and spend visibility. Strongest for Vercel-hosted apps." },
-  litellm: { logo: "/brand/litellm.svg", tooltip: "Self-hosted proxy with normalized model IDs, virtual keys, budgets, and ordered fallbacks. You operate the proxy." },
-  portkey: { logo: "/brand/portkey.svg", tooltip: "Managed governance gateway with guardrails, audit, policy, and reusable failover config." },
+  openrouter: { logo: "/brand/openrouter.svg", tooltip: "One marketplace key. Broad model access." },
+  cloudflare: { logo: "/brand/cloudflare.svg", tooltip: "Edge routing, caching, and DLP." },
+  vercel: { logo: "/brand/vercel.svg", tooltip: "Vercel-native gateway and spend view." },
+  litellm: { logo: "/brand/litellm.svg", tooltip: "Self-hosted proxy. You control keys." },
+  portkey: { logo: "/brand/portkey.svg", tooltip: "Managed routing, guardrails, and audit." },
 };
 
 export const laneTooltips: Record<RoutingLaneId, string> = {
-  default: "The main coding lane for ordinary tool-driven work and orchestration.",
-  background: "Cheap lane for titles, summaries, compaction, and bounded background work.",
-  reasoning: "Deep planning lane for architecture, migrations, security-sensitive changes, and difficult debugging.",
-  vision: "Multimodal lane for screenshots, diagrams, and image input.",
-  analysis: "Toolless lane for long-form or sensitive-content analysis where edit and shell tools are disabled.",
+  default: "Main lane for tool-driven coding.",
+  background: "Cheap lane for summaries and compaction.",
+  reasoning: "Deep planning and hard debugging.",
+  vision: "Screenshots and image input.",
+  analysis: "Toolless long-form analysis.",
 };
 
 export const performanceTooltips: Record<keyof WizardConfig["performance"], string> = {
-  requestTimeoutSeconds: "Maximum time a full model request may take before failing over or retrying.",
-  stalledStreamTimeoutSeconds: "How long a stream may remain silent before it is considered stalled.",
-  retries: "Transport retry count. High values can amplify cost during provider outages.",
-  mcpTimeoutSeconds: "Timeout for MCP server calls such as Context7.",
-  concurrency: "Default parallel work budget across compatible agents and OMO.",
-  compaction: "Automatically compact context when the window fills.",
-  reasoningEffort: "Reasoning depth requested from models that expose reasoning controls.",
-  toolOutputMaxLines: "Maximum lines of tool output retained in context.",
-  toolOutputMaxBytes: "Maximum bytes of tool output retained in context.",
+  requestTimeoutSeconds: "Maximum time per model request.",
+  stalledStreamTimeoutSeconds: "Silence limit before a stream stalls.",
+  retries: "Transport retry count.",
+  mcpTimeoutSeconds: "Timeout for MCP calls.",
+  concurrency: "Parallel work budget.",
+  compaction: "Compact context automatically.",
+  reasoningEffort: "Reasoning depth when supported.",
+  toolOutputMaxLines: "Tool output line cap.",
+  toolOutputMaxBytes: "Tool output byte cap.",
 };
 
 export const permissionTooltips: Record<keyof WizardConfig["permissions"], string> = {
-  read: "Allow reading files. Read-only review lanes keep this enabled while edit and shell stay disabled.",
-  edit: "Allow file edits. Disable for review, planning, or analysis-only workflows.",
-  shell: "Allow shell command execution. This is the highest-risk coding tool.",
-  browser: "Allow fetching web pages or browser-based tools.",
-  webSearch: "Allow search queries.",
-  confirmDestructiveCommands: "Require confirmation before destructive commands run. Keep enabled unless the environment is disposable.",
+  read: "Read files and code.",
+  edit: "Edit files. Disable for review.",
+  shell: "Run shell commands. Highest risk.",
+  browser: "Fetch pages.",
+  webSearch: "Run web searches.",
+  confirmDestructiveCommands: "Confirm before destructive commands.",
 };
 
 export const modelFamilyLogos: Record<string, string> = {
