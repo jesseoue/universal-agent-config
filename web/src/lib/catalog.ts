@@ -21,6 +21,7 @@ export const agentMetadata: Record<
     notes: string[];
     logo: string;
     tooltip: string;
+    pricingCallout?: string;
     outputs: Array<{ label: string; value: string }>;
   }
 > = {
@@ -106,6 +107,7 @@ export const agentMetadata: Record<
     ],
     logo: "/brand/cursor.svg",
     tooltip: "Creates Cursor rules, MCP, and ignore policy.",
+    pricingCallout: "Cursor Teams/Enterprise usage: $0.25 per 1M tokens — even with BYOK.",
     outputs: [
       { label: "Route", value: "routing rule" },
       { label: "Cursor usage", value: "$0.25 / 1M tokens" },

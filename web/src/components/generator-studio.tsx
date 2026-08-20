@@ -189,6 +189,11 @@ export function GeneratorStudio() {
                             </div>
                           </div>
                           <CardDescription className="mt-4">{agent.tooltip}</CardDescription>
+                          {agent.pricingCallout && (
+                            <div className="mt-4 rounded-[14px] border border-accent/25 bg-accent-soft px-3 py-2 font-mono text-[11px] text-accent-strong">
+                              {agent.pricingCallout}
+                            </div>
+                          )}
                         </Card>
                       );
                     })}
