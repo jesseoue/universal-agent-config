@@ -66,7 +66,7 @@
             ]
           },
           "contextWindow": 1048576,
-          "maxTokens": 384000,
+          "maxTokens": 32768,
           "reasoning": true,
           "tool_call": true,
           "attachment": false

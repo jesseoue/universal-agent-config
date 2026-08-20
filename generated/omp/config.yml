@@ -20,11 +20,8 @@ retry:
     smol:
     - deepseek/deepseek-v4-flash-0731
     - google/gemini-3.7-flash
-    slow:
-    - anthropic/claude-opus-5
-    - anthropic/claude-sonnet-5
-    vision:
-    - anthropic/claude-sonnet-5
+    slow: []
+    vision: []
 cycleOrder:
 - smol
 - default

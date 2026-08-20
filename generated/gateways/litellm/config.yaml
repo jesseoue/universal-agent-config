@@ -20,18 +20,9 @@ model_list:
 - model_name: uac-reasoning
   litellm_params:
     model: openrouter/deepseek/deepseek-v4-pro-0813
-- model_name: uac-reasoning-anthropic--claude-opus-5
-  litellm_params:
-    model: openrouter/anthropic/claude-opus-5
-- model_name: uac-reasoning-anthropic--claude-sonnet-5
-  litellm_params:
-    model: openrouter/anthropic/claude-sonnet-5
 - model_name: uac-vision
   litellm_params:
     model: openrouter/google/gemini-3.7-flash
-- model_name: uac-vision-anthropic--claude-sonnet-5
-  litellm_params:
-    model: openrouter/anthropic/claude-sonnet-5
 litellm_settings:
   num_retries: 5
   request_timeout: 300
@@ -43,8 +34,3 @@ router_settings:
   - uac-background:
     - uac-background-deepseek--deepseek-v4-flash-0731
     - uac-background-google--gemini-3.7-flash
-  - uac-reasoning:
-    - uac-reasoning-anthropic--claude-opus-5
-    - uac-reasoning-anthropic--claude-sonnet-5
-  - uac-vision:
-    - uac-vision-anthropic--claude-sonnet-5

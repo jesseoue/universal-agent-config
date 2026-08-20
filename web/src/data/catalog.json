@@ -11,6 +11,29 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": true,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "stop",
+        "structured_outputs",
+        "tool_choice",
+        "tools",
+        "verbosity"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "xhigh",
+        "high",
+        "medium",
+        "low"
+      ],
+      "defaultReasoningEffort": "high",
+      "catalogCreated": 1782843083,
       "providers": [
         "anthropic"
       ],
@@ -30,6 +53,30 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": true,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "verbosity"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "xhigh",
+        "high",
+        "medium",
+        "low"
+      ],
+      "defaultReasoningEffort": "high",
+      "catalogCreated": 1784912544,
       "providers": [
         "anthropic"
       ],
@@ -45,10 +92,40 @@
       "displayName": "DeepSeek V4 Pro 0813",
       "family": "deepseek",
       "contextWindow": 1048576,
-      "maxOutputTokens": 384000,
+      "maxOutputTokens": 32768,
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "high",
+        "low"
+      ],
+      "defaultReasoningEffort": "high",
+      "catalogCreated": 1786549364,
       "providers": [
         "siliconflow",
         "fireworks",
@@ -72,6 +149,38 @@
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_a",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "high",
+        "low"
+      ],
+      "defaultReasoningEffort": "high",
+      "catalogCreated": 1785478908,
       "providers": [
         "deepinfra",
         "baseten",
@@ -95,6 +204,28 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "defaultReasoningEffort": "medium",
+      "catalogCreated": 1786640581,
       "providers": [
         "google-ai-studio",
         "google-vertex"
@@ -115,6 +246,18 @@
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "temperature",
+        "tool_choice",
+        "tools"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1784652683,
       "providers": [
         "poolside"
       ],
@@ -134,6 +277,32 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1781266361,
       "providers": [
         "moonshot"
       ],
@@ -153,6 +322,35 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "xhigh",
+        "high",
+        "medium",
+        "low",
+        "minimal"
+      ],
+      "defaultReasoningEffort": "xhigh",
+      "catalogCreated": 1785731612,
       "providers": [
         "qwen"
       ],
@@ -172,6 +370,26 @@
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "high",
+        "low"
+      ],
+      "defaultReasoningEffort": "max",
+      "catalogCreated": 1787086655,
       "providers": [
         "z-ai"
       ],
@@ -191,6 +409,29 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": true,
+      "supportedParameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "xhigh",
+        "high",
+        "medium",
+        "low",
+        "none"
+      ],
+      "defaultReasoningEffort": "medium",
+      "catalogCreated": 1783590854,
       "providers": [
         "openai"
       ],
@@ -210,6 +451,36 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": true,
+      "frontier": true,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [
+        "max",
+        "high",
+        "low"
+      ],
+      "defaultReasoningEffort": "max",
+      "catalogCreated": 1784215858,
       "providers": [
         "moonshot"
       ],
@@ -229,6 +500,22 @@
       "supportsTools": false,
       "supportsVision": false,
       "reasoning": false,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "max_tokens",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "temperature",
+        "top_k",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1756235463,
       "providers": [
         "nebius"
       ],
@@ -248,6 +535,20 @@
       "supportsTools": false,
       "supportsVision": false,
       "reasoning": false,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "stop",
+        "temperature",
+        "top_k",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1752094966,
       "providers": [
         "venice"
       ],
@@ -267,6 +568,24 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": false,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "max_tokens",
+        "prediction",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1754079630,
       "providers": [
         "mistral"
       ],
@@ -286,6 +605,26 @@
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": false,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "logprobs",
+        "max_tokens",
+        "presence_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1758662707,
       "providers": [
         "qwen"
       ],
@@ -305,6 +644,31 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": false,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1780245374,
       "providers": [
         "minimax"
       ],
@@ -324,6 +688,27 @@
       "supportsTools": true,
       "supportsVision": false,
       "reasoning": true,
+      "frontier": false,
+      "supportedParameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "repetition_penalty",
+        "seed",
+        "stop",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1784554658,
       "providers": [
         "meituan"
       ],
@@ -343,6 +728,24 @@
       "supportsTools": true,
       "supportsVision": true,
       "reasoning": false,
+      "frontier": true,
+      "supportedParameters": [
+        "include_reasoning",
+        "logprobs",
+        "max_tokens",
+        "reasoning",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_logprobs",
+        "top_p"
+      ],
+      "reasoningEfforts": [],
+      "defaultReasoningEffort": null,
+      "catalogCreated": 1774979019,
       "providers": [
         "x-ai"
       ],
@@ -377,16 +780,11 @@
           },
           "reasoning": {
             "primary": "deepseek/deepseek-v4-pro-0813",
-            "fallbacks": [
-              "anthropic/claude-opus-5",
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           },
           "vision": {
             "primary": "google/gemini-3.7-flash",
-            "fallbacks": [
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           }
         }
       },
@@ -417,9 +815,7 @@
           },
           "vision": {
             "primary": "google/gemini-3.7-flash",
-            "fallbacks": [
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           }
         }
       },
@@ -430,8 +826,7 @@
           "default": {
             "primary": "deepseek/deepseek-v4-pro-0813",
             "fallbacks": [
-              "z-ai/glm-5.3",
-              "anthropic/claude-sonnet-5"
+              "z-ai/glm-5.3"
             ]
           },
           "background": {
@@ -448,9 +843,7 @@
           },
           "vision": {
             "primary": "google/gemini-3.7-flash",
-            "fallbacks": [
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           }
         }
       },
@@ -478,9 +871,7 @@
           },
           "vision": {
             "primary": "google/gemini-3.7-flash",
-            "fallbacks": [
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           }
         }
       },
@@ -537,9 +928,7 @@
           },
           "vision": {
             "primary": "google/gemini-3.7-flash",
-            "fallbacks": [
-              "anthropic/claude-sonnet-5"
-            ]
+            "fallbacks": []
           }
         }
       }
@@ -616,6 +1005,51 @@
       "description": "Explicit opt-in profile for experienced users.",
       "inherits": "defaults",
       "confirm_destructive_commands": false
+    },
+    "openrouter_routing": {
+      "default_strategy": "latency",
+      "strategies": [
+        "latency",
+        "throughput",
+        "price",
+        "auto"
+      ],
+      "provider_controls": {
+        "sort": [
+          "price",
+          "throughput",
+          "latency"
+        ],
+        "allow_fallbacks": true,
+        "require_parameters": true,
+        "data_collection": "deny",
+        "zdr": true,
+        "ignore": []
+      },
+      "fallbacks": {
+        "models": [
+          {
+            "id": "z-ai/glm-5.3"
+          },
+          {
+            "id": "moonshotai/kimi-k2.7-code"
+          }
+        ],
+        "route": "fallback"
+      }
+    },
+    "verification": {
+      "default": "required",
+      "read_only_planning": true,
+      "targeted_commands": true,
+      "exact_output_reporting": true,
+      "one_focused_retry": true
+    },
+    "frontier_policy": {
+      "default_enabled": false,
+      "requires_explicit_opt_in": true,
+      "trigger_after_failed_attempts": 2,
+      "high_blast_radius_only": true
     }
   },
   "gateways": [
@@ -1040,6 +1474,16 @@
         "model_starter": "balanced",
         "planner_starter": "plan"
       }
+    },
+    "omo_policy": {
+      "frontier_default": false,
+      "lead_model": "z-ai/glm-5.3",
+      "background_model": "poolside/laguna-s-2.1",
+      "reasoning_model": "deepseek/deepseek-v4-pro-0813",
+      "verification_agent": "read-only",
+      "max_depth": 2,
+      "max_tool_calls": 200,
+      "circuit_breaker": true
     }
   }
 }

@@ -193,6 +193,27 @@ export const laneTooltips: Record<RoutingLaneId, string> = {
   analysis: "Toolless long-form analysis.",
 };
 
+export const routingTooltips: Record<keyof WizardConfig["routing"], string> = {
+  providerStrategy: "OpenRouter sorts matching providers by latency, throughput, or price.",
+  allowProviderFallbacks: "Fall back to other qualified OpenRouter providers.",
+  requireParameters: "Only use providers that support the requested parameters.",
+  denyDataCollection: "Prevent providers from using requests for training.",
+  preferZeroDataRetention: "Prefer providers with zero-data-retention guarantees.",
+};
+
+export const frontierTooltips: Record<keyof WizardConfig["frontier"], string> = {
+  enabled: "Explicit opt-in before frontier-priced models can be selected.",
+  triggerAfterFailedAttempts: "Cheap-lane attempts before escalation is considered.",
+  highBlastRadiusOnly: "Restrict escalation to architecturally risky work.",
+};
+
+export const verificationTooltips: Record<keyof WizardConfig["verification"], string> = {
+  mode: "Required means every change reports targeted verification.",
+  readOnlyPlanning: "Plan without edits before implementation spend.",
+  targetedCommands: "Run the narrowest useful checks first.",
+  oneFocusedRetry: "Retry once with a corrected prompt before escalation.",
+};
+
 export const performanceTooltips: Record<keyof WizardConfig["performance"], string> = {
   requestTimeoutSeconds: "Maximum time per model request.",
   stalledStreamTimeoutSeconds: "Silence limit before a stream stalls.",

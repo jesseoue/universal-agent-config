@@ -1,8 +1,9 @@
-import { modelById } from "@/lib/catalog";
+import { catalog, modelById } from "@/lib/catalog";
 import type { RoutingLaneId, ValidationIssue, WizardConfig } from "@/lib/types";
 
 export function validateConfig(config: WizardConfig): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
+  const frontierIds = new Set(catalog.models.filter((model) => model.frontier).map((model) => model.id));
 
   if (config.agents.length === 0) {
     issues.push({
@@ -71,7 +72,48 @@ export function validateConfig(config: WizardConfig): ValidationIssue[] {
           suggestedFix: "Remove it or move it to the analysis lane.",
         });
       }
+
+      if (!config.frontier.enabled && frontierIds.has(fallbackId)) {
+        issues.push({
+          severity: "error",
+          message: `${fallbackId} is a frontier model, but frontier escalation is not enabled.`,
+          affectedOption: `lanes.${lane}.fallbacks`,
+          suggestedFix: "Enable frontier escalation or choose a non-frontier fallback.",
+        });
+      }
     }
+
+    if (!config.frontier.enabled && frontierIds.has(selection.primary)) {
+      issues.push({
+        severity: "error",
+        message: `${selection.primary} is a frontier model, but frontier escalation is not enabled.`,
+        affectedOption: `lanes.${lane}.primary`,
+        suggestedFix: "Enable frontier escalation or choose a non-frontier model.",
+      });
+    }
+
+    if (lane === "reasoning" && primary?.reasoning && primary.reasoningEfforts.length > 0) {
+      const effort = config.performance.reasoningEffort;
+      const aliases: Record<string, string> = { minimal: "low" };
+      const normalized = aliases[effort] ?? effort;
+      if (!primary.reasoningEfforts.includes(normalized)) {
+        issues.push({
+          severity: "error",
+          message: `${primary.displayName} does not support ${effort} reasoning effort.`,
+          affectedOption: "performance.reasoningEffort",
+          suggestedFix: `Choose one of: ${primary.reasoningEfforts.join(", ")}.`,
+        });
+      }
+    }
+  }
+
+  if (config.gateway === "openrouter" && config.routing.denyDataCollection === false) {
+    issues.push({
+      severity: "warning",
+      message: "Provider data collection is not denied.",
+      affectedOption: "routing.denyDataCollection",
+      suggestedFix: "Deny data collection unless the workflow explicitly permits it.",
+    });
   }
 
   if (config.gateway !== "openrouter") {

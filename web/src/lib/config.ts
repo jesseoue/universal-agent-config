@@ -17,8 +17,8 @@ export const defaultConfig: WizardConfig = {
   lanes: {
     default: { primary: "z-ai/glm-5.3", fallbacks: ["moonshotai/kimi-k2.7-code", "poolside/laguna-s-2.1"] },
     background: { primary: "poolside/laguna-s-2.1", fallbacks: ["deepseek/deepseek-v4-flash-0731", "google/gemini-3.7-flash"] },
-    reasoning: { primary: "deepseek/deepseek-v4-pro-0813", fallbacks: ["anthropic/claude-opus-5", "anthropic/claude-sonnet-5"] },
-    vision: { primary: "google/gemini-3.7-flash", fallbacks: ["anthropic/claude-sonnet-5"] },
+    reasoning: { primary: "deepseek/deepseek-v4-pro-0813", fallbacks: ["z-ai/glm-5.3", "moonshotai/kimi-k2.7-code"] },
+    vision: { primary: "google/gemini-3.7-flash", fallbacks: ["qwen/qwen3.8-max", "minimax/minimax-m3"] },
     analysis: { primary: "nousresearch/hermes-4-405b", fallbacks: ["cognitivecomputations/dolphin-mistral-24b-venice-edition"] },
   },
   permissions: {
@@ -30,6 +30,24 @@ export const defaultConfig: WizardConfig = {
     confirmDestructiveCommands: true,
   },
   tools: { context7: true },
+  routing: {
+    providerStrategy: "latency",
+    allowProviderFallbacks: true,
+    requireParameters: true,
+    denyDataCollection: true,
+    preferZeroDataRetention: true,
+  },
+  frontier: {
+    enabled: false,
+    triggerAfterFailedAttempts: 2,
+    highBlastRadiusOnly: true,
+  },
+  verification: {
+    mode: "required",
+    readOnlyPlanning: true,
+    targetedCommands: true,
+    oneFocusedRetry: true,
+  },
   performance: {
     requestTimeoutSeconds: 300,
     stalledStreamTimeoutSeconds: 60,
@@ -37,7 +55,7 @@ export const defaultConfig: WizardConfig = {
     mcpTimeoutSeconds: 30,
     concurrency: 10,
     compaction: true,
-    reasoningEffort: "medium",
+    reasoningEffort: "high",
     toolOutputMaxLines: 300,
     toolOutputMaxBytes: 12000,
   },
@@ -64,6 +82,12 @@ export function applyPreset(presetId: string, config: WizardConfig = defaultConf
         fallbacks: ["cognitivecomputations/dolphin-mistral-24b-venice-edition"],
       },
     },
+    routing: { ...defaultConfig.routing },
+    frontier: {
+      ...defaultConfig.frontier,
+      enabled: presetId === "frontier",
+    },
+    verification: { ...defaultConfig.verification },
   };
 }
 

@@ -3,7 +3,8 @@ description: Opinionated starting points translated into each agent's native mod
 default_starter: balanced
 philosophy:
   principle: Cheap fast turns by default, deliberate expensive reasoning only when the task earns it.
-  frontier_policy: Never make frontier spend the default. Escalate only for architecture, high-blast-radius changes, or repeated cheap-model failure.
+  frontier_policy: Never make frontier spend the default. Escalate only for architecture, high-blast-radius changes, or repeated
+    cheap-model failure.
   provider_policy: Prefer OpenRouter so every adapter shares one catalog, one key, and one routing vocabulary.
 starters:
   balanced:
@@ -15,9 +16,9 @@ starters:
     deep_model: deepseek/deepseek-v4-pro-0813
     frontier_model: anthropic/claude-sonnet-5
     fallback_models:
-      - moonshotai/kimi-k2.7-code
-      - poolside/laguna-s-2.1
-      - qwen/qwen3.8-max
+    - moonshotai/kimi-k2.7-code
+    - poolside/laguna-s-2.1
+    - qwen/qwen3.8-max
     reasoning_effort: medium
     background_model_role: background
     mcp_server: context7
@@ -46,9 +47,9 @@ starters:
     background_model: deepseek/deepseek-v4-flash-0731
     frontier_model: anthropic/claude-opus-5
     fallback_models:
-      - z-ai/glm-5.3
-      - moonshotai/kimi-k2.7-code
-      - qwen/qwen3.8-max
+    - z-ai/glm-5.3
+    - moonshotai/kimi-k2.7-code
+    - qwen/qwen3.8-max
     reasoning_effort: high
     background_model_role: background
     mcp_server: context7
@@ -79,9 +80,9 @@ starters:
     background_model: poolside/laguna-s-2.1
     deep_model: deepseek/deepseek-v4-pro-0813
     fallback_models:
-      - qwen/qwen3.8-max
-      - poolside/laguna-s-2.1
-      - meituan/longcat-2.0
+    - qwen/qwen3.8-max
+    - poolside/laguna-s-2.1
+    - meituan/longcat-2.0
     reasoning_effort: high
     permissions:
       read: true
@@ -113,7 +114,8 @@ adapters:
     model: anthropic/claude-sonnet-5
     fallback_model: anthropic/claude-opus-5
     small_fast_model: anthropic/claude-haiku-4.5
-    rationale: Claude Code supports Anthropic-compatible LLM gateways through ANTHROPIC_BASE_URL, preserving the single OpenRouter key model.
+    rationale: Claude Code supports Anthropic-compatible LLM gateways through ANTHROPIC_BASE_URL, preserving the single OpenRouter
+      key model.
   codex:
     native_starters:
       default: balanced
@@ -131,3 +133,12 @@ adapters:
   goose:
     model_starter: balanced
     planner_starter: plan
+omo_policy:
+  frontier_default: false
+  lead_model: z-ai/glm-5.3
+  background_model: poolside/laguna-s-2.1
+  reasoning_model: deepseek/deepseek-v4-pro-0813
+  verification_agent: read-only
+  max_depth: 2
+  max_tool_calls: 200
+  circuit_breaker: true

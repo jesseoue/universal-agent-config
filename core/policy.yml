@@ -55,3 +55,36 @@ advanced:
   description: Explicit opt-in profile for experienced users.
   inherits: defaults
   confirm_destructive_commands: false
+openrouter_routing:
+  default_strategy: latency
+  strategies:
+  - latency
+  - throughput
+  - price
+  - auto
+  provider_controls:
+    sort:
+    - price
+    - throughput
+    - latency
+    allow_fallbacks: true
+    require_parameters: true
+    data_collection: deny
+    zdr: true
+    ignore: []
+  fallbacks:
+    models:
+    - id: z-ai/glm-5.3
+    - id: moonshotai/kimi-k2.7-code
+    route: fallback
+verification:
+  default: required
+  read_only_planning: true
+  targeted_commands: true
+  exact_output_reporting: true
+  one_focused_retry: true
+frontier_policy:
+  default_enabled: false
+  requires_explicit_opt_in: true
+  trigger_after_failed_attempts: 2
+  high_blast_radius_only: true

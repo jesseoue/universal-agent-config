@@ -10,6 +10,8 @@ export type AgentId =
 
 export type GatewayId = "openrouter" | "cloudflare" | "vercel" | "litellm" | "portkey";
 export type RoutingLaneId = "default" | "background" | "reasoning" | "vision" | "analysis";
+export type ProviderStrategy = "auto" | "latency" | "throughput" | "price";
+export type VerificationMode = "required" | "planning-only" | "off";
 export type RulePackId =
   | "core"
   | "model-routing"
@@ -35,6 +37,24 @@ export interface WizardConfig {
     confirmDestructiveCommands: boolean;
   };
   tools: { context7: boolean };
+  routing: {
+    providerStrategy: ProviderStrategy;
+    allowProviderFallbacks: boolean;
+    requireParameters: boolean;
+    denyDataCollection: boolean;
+    preferZeroDataRetention: boolean;
+  };
+  frontier: {
+    enabled: boolean;
+    triggerAfterFailedAttempts: number;
+    highBlastRadiusOnly: boolean;
+  };
+  verification: {
+    mode: VerificationMode;
+    readOnlyPlanning: boolean;
+    targetedCommands: boolean;
+    oneFocusedRetry: boolean;
+  };
   performance: {
     requestTimeoutSeconds: number;
     stalledStreamTimeoutSeconds: number;
@@ -58,6 +78,11 @@ export interface ModelRecord {
   supportsTools: boolean;
   supportsVision: boolean;
   reasoning: boolean;
+  frontier: boolean;
+  supportedParameters: string[];
+  reasoningEfforts: string[];
+  defaultReasoningEffort: string | null;
+  catalogCreated: number | null;
   providers: string[];
   lane: string | null;
   liveVerified: string;

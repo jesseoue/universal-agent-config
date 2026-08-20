@@ -32,6 +32,9 @@ interface WizardState {
   setGateway: (gateway: WizardConfig["gateway"]) => void;
   setPermissions: (permissions: WizardConfig["permissions"]) => void;
   setPerformance: (performance: WizardConfig["performance"]) => void;
+  setRouting: (routing: WizardConfig["routing"]) => void;
+  setFrontier: (frontier: WizardConfig["frontier"]) => void;
+  setVerification: (verification: WizardConfig["verification"]) => void;
   setPrimaryModel: (lane: keyof WizardConfig["lanes"], modelId: string) => void;
   toggleRulePack: (pack: string) => void;
   setStep: (step: number) => void;
@@ -81,6 +84,9 @@ export const useWizard = create<WizardState>()(
       setGateway: (gateway) => set((state) => ({ config: { ...state.config, gateway } })),
       setPermissions: (permissions) => set((state) => ({ config: { ...state.config, permissions } })),
       setPerformance: (performance) => set((state) => ({ config: { ...state.config, performance } })),
+      setRouting: (routing) => set((state) => ({ config: { ...state.config, routing } })),
+      setFrontier: (frontier) => set((state) => ({ config: { ...state.config, frontier } })),
+      setVerification: (verification) => set((state) => ({ config: { ...state.config, verification } })),
       setPrimaryModel: (lane, modelId) =>
         set((state) => ({
           config: {

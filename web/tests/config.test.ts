@@ -30,11 +30,30 @@ describe("wizard configuration", () => {
     expect(errors.some((issue) => issue.message.includes("does not support vision"))).toBe(true);
   });
 
+  it("blocks frontier models unless explicitly enabled", () => {
+    const config = structuredClone(defaultConfig);
+    config.lanes.reasoning.primary = "anthropic/claude-sonnet-5";
+    const errors = validateConfig(config).filter((issue) => issue.severity === "error");
+    expect(errors.some((issue) => issue.message.includes("frontier"))).toBe(true);
+  });
+
+  it("uses non-frontier default fallbacks", () => {
+    expect(defaultConfig.frontier.enabled).toBe(false);
+    expect(Object.values(defaultConfig.lanes).flatMap((lane) => [lane.primary, ...lane.fallbacks])).not.toContain("anthropic/claude-opus-5");
+  });
+
   it("generates artifacts for selected adapters", () => {
     const artifacts = buildArtifacts(defaultConfig);
     expect(artifacts.some((artifact) => artifact.path === "opencode/opencode.json")).toBe(true);
     expect(artifacts.some((artifact) => artifact.path === "README-install.md")).toBe(true);
     expect(artifacts.some((artifact) => artifact.path === "uac.config.json")).toBe(true);
+    const allAgents = structuredClone(defaultConfig);
+    allAgents.agents = ["opencode", "opencode-omo", "omp", "claude-code", "codex", "cursor", "aider", "goose"];
+    const allArtifacts = buildArtifacts(allAgents);
+    expect(allArtifacts.some((artifact) => artifact.path === "opencode-omo/omo.jsonc")).toBe(true);
+    expect(allArtifacts.some((artifact) => artifact.path === "omp/models.yml")).toBe(true);
+    expect(allArtifacts.some((artifact) => artifact.path === "cursor/.cursor/mcp.json")).toBe(true);
+    expect(allArtifacts.some((artifact) => artifact.contents.includes("data_collection: deny"))).toBe(true);
   });
 
   it("estimates monthly cost deterministically", () => {
