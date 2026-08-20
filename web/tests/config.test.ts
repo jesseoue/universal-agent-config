@@ -56,6 +56,27 @@ describe("wizard configuration", () => {
     expect(allArtifacts.some((artifact) => artifact.contents.includes("data_collection: deny"))).toBe(true);
   });
 
+  it("does not duplicate OpenCode files when OMO is selected", () => {
+    const config = structuredClone(defaultConfig);
+    config.agents = ["opencode", "opencode-omo"];
+    const artifacts = buildArtifacts(config);
+    expect(artifacts.filter((artifact) => artifact.path.endsWith("opencode.json"))).toHaveLength(1);
+    expect(artifacts.some((artifact) => artifact.path === "opencode-omo/opencode.json")).toBe(true);
+    expect(artifacts.some((artifact) => artifact.path === "opencode/opencode.json")).toBe(false);
+  });
+
+  it("uses lane-specific fallbacks in generated OpenRouter model policy", () => {
+    const config = structuredClone(defaultConfig);
+    config.agents = ["opencode"];
+    const artifact = buildArtifacts(config).find((item) => item.path === "opencode/opencode.json");
+    const parsed = JSON.parse(artifact?.contents ?? "{}");
+    const models = parsed.provider.openrouter.models;
+    expect(models[config.lanes.background.primary].models.map((item: { id: string }) => item.id))
+      .toEqual(config.lanes.background.fallbacks);
+    expect(models[config.lanes.reasoning.primary].models.map((item: { id: string }) => item.id))
+      .toEqual(config.lanes.reasoning.fallbacks);
+  });
+
   it("estimates monthly cost deterministically", () => {
     expect(estimatedMonthlyCost(defaultConfig)).toBeGreaterThan(0);
   });

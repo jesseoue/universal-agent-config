@@ -137,6 +137,11 @@ function buildOpenCode(config: WizardConfig, root: string, adapter: GeneratedArt
             provider: providerPolicy,
             models: fallbackModels(config, "background"),
           },
+          [modelId(config, "reasoning")]: {
+            reasoning: { effort: "high", exclude: true },
+            provider: providerPolicy,
+            models: fallbackModels(config, "reasoning"),
+          },
         },
       },
     };
@@ -240,7 +245,7 @@ function buildOmp(config: WizardConfig) {
             lane.primary,
             {
               openRouterRouting: openRouterProviderPolicy(config),
-              openRouterModels: fallbackModels(config, "default"),
+              openRouterModels: lane.fallbacks.map((id) => ({ id })),
             },
           ]),
         ),
@@ -421,10 +426,11 @@ function buildGoose(config: WizardConfig) {
 export function buildArtifacts(config: WizardConfig): GeneratedArtifact[] {
   const artifacts: GeneratedArtifact[] = [];
 
-  if (config.agents.includes("opencode")) artifacts.push(...buildOpenCode(config, "opencode", "opencode", false));
   if (config.agents.includes("opencode-omo")) {
     artifacts.push(...buildOpenCode(config, "opencode-omo", "opencode-omo", true));
     addArtifact(artifacts, "opencode-omo/omo.jsonc", json(buildOmo(config)), "json", "opencode-omo", "OMO orchestration, concurrency, and circuit breakers");
+  } else if (config.agents.includes("opencode")) {
+    artifacts.push(...buildOpenCode(config, "opencode", "opencode", false));
   }
   if (config.agents.includes("omp")) artifacts.push(...buildOmp(config));
   if (config.agents.includes("claude-code")) artifacts.push(...buildClaudeCode(config));
