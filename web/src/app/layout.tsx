@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://universal-agent-config.vercel.app"),
+  metadataBase: new URL("https://universal-agent-config.leadmagic.sh"),
   title: {
     default: "Universal Agent Config | AI Coding Agent Configuration Generator",
     template: "%s | Universal Agent Config",
@@ -39,18 +39,18 @@ export const metadata: Metadata = {
   creator: "Jesse Ouellette",
   openGraph: {
     type: "website",
-    url: "https://universal-agent-config.vercel.app",
+    url: "https://universal-agent-config.leadmagic.sh",
     siteName: "Universal Agent Config",
     title: "Universal Agent Config | AI Coding Agent Configuration Generator",
     description:
-      "Build perfect coding-agent configs in one page. Generate native files for seven agents, five gateways, validated model routing, and download a ZIP.",
+      "Build perfect coding-agent configs in one page. Generate native files for eight agent profiles, five gateways, validated OpenRouter routing, and download a ZIP.",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Universal Agent Config | AI Coding Agent Configuration Generator",
     description:
-      "One page. Seven coding agents. Five routing technologies. Generate native config and download it.",
+      "One page. Eight agent profiles. Five routing technologies. Generate native OpenRouter routing and download it.",
   },
   robots: {
     index: true,
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#080a08",
+  themeColor: "#f6f7f2",
   width: "device-width",
   initialScale: 1,
 };
