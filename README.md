@@ -26,7 +26,7 @@ Universal Agent Config keeps model routing, fallbacks, permissions, and prompts 
 
 Try the web generator first:
 
-[https://universal-agent-config.leadmagic.sh](https://universal-agent-config.leadmagic.sh)
+[https://universal-agent-config.vercel.app](https://universal-agent-config.vercel.app)
 
 The current hosted app is intentionally client-only: it generates native config in the browser, requests no API keys, and runs no server API. The same canonical policy model is designed for teams that want to own the next layer: host the generator/container privately, connect a self-hosted LiteLLM or Cloudflare gateway, and distribute organization-wide coding-agent defaults from one source of truth.
 

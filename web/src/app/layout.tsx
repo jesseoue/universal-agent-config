@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://universal-agent-config.leadmagic.sh"),
+  metadataBase: new URL("https://universal-agent-config.vercel.app"),
   title: {
     default: "Universal Agent Config | AI Coding Agent Configuration Generator",
     template: "%s | Universal Agent Config",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   creator: "Jesse Ouellette",
   openGraph: {
     type: "website",
-    url: "https://universal-agent-config.leadmagic.sh",
+    url: "https://universal-agent-config.vercel.app",
     siteName: "Universal Agent Config",
     title: "Universal Agent Config | AI Coding Agent Configuration Generator",
     description:
