@@ -77,6 +77,16 @@ describe("wizard configuration", () => {
       .toEqual(config.lanes.reasoning.fallbacks);
   });
 
+  it("highlights Cursor usage pricing and the compatibility endpoint", () => {
+    const config = structuredClone(defaultConfig);
+    config.agents = ["cursor"];
+    const artifacts = buildArtifacts(config);
+    const routingRule = artifacts.find((artifact) => artifact.path === "cursor/.cursor/rules/01-model-routing.mdc");
+    expect(routingRule?.contents).toContain("$0.25 per million tokens");
+    expect(routingRule?.contents).toContain("https://openrouter.ai/api/v1/cursor");
+    expect(routingRule?.contents).toContain("flat tool-call format");
+  });
+
   it("estimates monthly cost deterministically", () => {
     expect(estimatedMonthlyCost(defaultConfig)).toBeGreaterThan(0);
   });

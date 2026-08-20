@@ -110,6 +110,8 @@ Cursor notes:
 - Project rules use comma-separated glob strings in `.mdc` frontmatter.
 - Context7 auth uses Cursor-native `${env:CONTEXT7_API_KEY}` interpolation.
 - If Cursor is launched from the desktop, make sure `CONTEXT7_API_KEY` is available to that process, then restart Cursor and check MCP logs.
+- **Cursor usage pricing:** Teams and Enterprise requests are billed at **$0.25 per million tokens**, including BYOK requests through OpenRouter. Budget for both Cursor usage and OpenRouter model cost.
+- **OpenRouter endpoint:** use `https://openrouter.ai/api/v1/cursor` rather than generic `/api/v1`. The dedicated endpoint translates Cursor's flat tool-call format and prevents broken tool calls. It does not add an OpenRouter premium.
 
 ## Routing technology decision matrix
 
@@ -380,7 +382,7 @@ Per-token prices used:
 | Claude Code | Anthropic-compatible OpenRouter gateway, native model and capped fallback chain, small-fast model, auto-compact and effort settings |
 | Codex | OpenRouter `model_providers`, medium main reasoning, GLM default subagent model, bounded concurrent agent threads, provider/MCP timeouts |
 | Goose | OpenRouter default model, dedicated DeepSeek planner model, 100-turn cap, 80% auto-compact threshold, disabled telemetry |
-| Cursor | Rule-based lead/deep/background/vision guidance, OpenRouter Cursor endpoint warning, Context7 MCP, secret and noise ignores |
+| Cursor | Rule-based lead/deep/background/vision guidance, dedicated OpenRouter Cursor endpoint for tool compatibility, $0.25/M usage warning, Context7 MCP, secret and noise ignores |
 | Aider | GLM default with cheap editor-model lane |
 
 ## Tool, plugin, and MCP contract

@@ -99,13 +99,18 @@ export const agentMetadata: Record<
     version: "Current project rules / MCP",
     files: [".cursor/rules/*.mdc", ".cursor/mcp.json", ".cursorignore"],
     installTarget: "Project root",
-    notes: ["Uses the dedicated OpenRouter Cursor endpoint.", "Project rules and MCP are generated at repository scope."],
+    notes: [
+      "Uses the dedicated OpenRouter Cursor endpoint for tool-call compatibility.",
+      "Cursor Teams/Enterprise usage is $0.25 per million tokens, even with BYOK.",
+      "Project rules and MCP are generated at repository scope.",
+    ],
     logo: "/brand/cursor.svg",
     tooltip: "Creates Cursor rules, MCP, and ignore policy.",
     outputs: [
       { label: "Route", value: "routing rule" },
+      { label: "Cursor usage", value: "$0.25 / 1M tokens" },
+      { label: "Endpoint", value: "/api/v1/cursor" },
       { label: "Guardrail", value: ".cursorignore" },
-      { label: "Context", value: "scoped MDC packs" },
     ],
   },
   aider: {

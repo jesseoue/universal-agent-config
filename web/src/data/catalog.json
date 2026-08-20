@@ -1465,7 +1465,10 @@
         }
       },
       "cursor": {
-        "rule_starter": "balanced"
+        "rule_starter": "balanced",
+        "endpoint": "https://openrouter.ai/api/v1/cursor",
+        "endpoint_rationale": "Cursor sends a flat tool-call format that generic OpenAI-compatible endpoints may reject. OpenRouter's dedicated Cursor endpoint translates that format and is the compatibility path, not a premium routing upgrade.",
+        "pricing_note": "Cursor Teams and Enterprise bill requests at $0.25 per million tokens, including requests sent through your own OpenRouter key. Compare that platform fee against direct CLI agents when volume is high."
       },
       "aider": {
         "model_starter": "balanced"

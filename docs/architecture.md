@@ -68,6 +68,12 @@ This makes an adapter change auditable: the diff shows both canonical policy and
 
 The app collects no keys, has no API route, and requests no external CDN assets at runtime.
 
+### Cursor pricing and endpoint nuance
+
+Cursor Teams and Enterprise bill usage at `$0.25` per million tokens, including BYOK requests sent through OpenRouter. The generator surfaces this because OpenRouter model pricing alone understates Cursor's total cost.
+
+OpenRouter's dedicated Cursor endpoint, `https://openrouter.ai/api/v1/cursor`, is required for tool-call compatibility: Cursor sends a flat tool-call format that generic OpenAI-compatible endpoints may reject. The endpoint is a compatibility translation rather than a harmful or premium routing hop.
+
 ### Provider-level hosting path
 
 The public app stays client-only. A self-hosted deployment can evolve the same policy model into an organization's provider layer:
